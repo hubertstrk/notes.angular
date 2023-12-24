@@ -1,14 +1,19 @@
 import { Component } from '@angular/core';
-import { ButtonModule } from 'primeng/button';
-import { SidebarModule } from 'primeng/sidebar';
+import { EditorComponent } from '../editor/editor.component';
+import { PreviewComponent } from '../preview/preview.component';
+import { SidebarComponent } from '../sidebar/sidebar.component';
+import { HeaderComponent } from '../header/header.component';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [ButtonModule, SidebarModule],
+  imports: [
+    HeaderComponent,
+    SidebarComponent,
+    EditorComponent,
+    PreviewComponent,
+  ],
   templateUrl: './home.component.html',
-  styleUrl: './home.component.scss'
+  styleUrl: './home.component.scss',
 })
-export class HomeComponent {
-
-}
+export class HomeComponent {}
