@@ -6,9 +6,11 @@
     <app-sidebar></app-sidebar>
   </div>
   <div id="editor">
-    <app-editor></app-editor>
+    <app-editor
+      (textChanged)="onTextChanged($event)"
+      [text]="editorChange.text"></app-editor>
   </div>
   <div id="preview">
-    <app-preview></app-preview>
+    <app-preview [editorChange]="editorChange"></app-preview>
   </div>
 </div>

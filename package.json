@@ -20,6 +20,8 @@
     "@angular/platform-browser": "^17.0.0",
     "@angular/platform-browser-dynamic": "^17.0.0",
     "@angular/router": "^17.0.0",
+    "ace-builds": "^1.32.2",
+    "marked": "^11.1.0",
     "primeflex": "^3.3.1",
     "primeicons": "^6.0.1",
     "primeng": "^17.2.0",
