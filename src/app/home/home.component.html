@@ -2,12 +2,21 @@
   <header class="bg-gray-700 text-white p-3 flex items-center justify-between">
     <h1 class="text-xl">Notes</h1>
 
-    <app-button
-      variant="primary"
-      size="md"
-      (clicked)="collapsed = !collapsed"
-      >{{ collapsed ? '>' : '<' }}</app-button
-    >
+    <div class="flex gap-2 items-center">
+      <app-button
+        variant="primary"
+        size="md"
+        (clicked)="collapsed = !collapsed"
+        >{{ collapsed ? '>' : '<' }}</app-button
+      >
+      <app-button
+        variant="primary"
+        size="md"
+        [iconSvg]="checkIcon"
+        iconPosition="left">
+        Settings</app-button
+      >
+    </div>
   </header>
 
   <div class="grid grid-cols-[auto_1fr] overflow-hidden">

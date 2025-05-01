@@ -2,5 +2,13 @@
   [ngClass]="computedClasses"
   [disabled]="disabled"
   (click)="onClick($event)">
+  <span
+    *ngIf="iconSvg && iconPosition === 'left'"
+    class="mr-2"
+    [innerHTML]="iconSvg"></span>
   <ng-content></ng-content>
+  <span
+    *ngIf="iconSvg && iconPosition === 'right'"
+    class="ml-2"
+    [innerHTML]="iconSvg"></span>
 </button>

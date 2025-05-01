@@ -11,6 +11,10 @@ export class ButtonComponent {
   @Input() variant: 'primary' | 'secondary' | 'danger' = 'primary';
   @Input() size: 'sm' | 'md' | 'lg' = 'md';
   @Input() disabled = false;
+
+  @Input() iconSvg?: string;
+  @Input() iconPosition: 'left' | 'right' = 'left';
+
   @Output() clicked = new EventEmitter<Event>();
 
   get computedClasses(): string {
