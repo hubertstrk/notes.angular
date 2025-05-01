@@ -1,27 +1,25 @@
 <div class="h-screen w-screen grid grid-rows-[auto_1fr]">
-  <!-- Header -->
-  <header class="bg-gray-800 text-white p-4">
+  <header class="bg-gray-700 text-white p-3 flex items-center justify-between">
     <h1 class="text-xl">Notes</h1>
+
+    <app-button
+      variant="primary"
+      size="md"
+      (clicked)="collapsed = !collapsed"
+      >{{ collapsed ? '>' : '<' }}</app-button
+    >
   </header>
 
-  <!-- Body -->
   <div class="grid grid-cols-[auto_1fr] overflow-hidden">
     <aside
-      [ngClass]="{ 'w-64': !collapsed, 'w-14': collapsed }"
-      class="bg-gray-200 transition-all duration-300 overflow-auto">
-      <app-button
-        variant="primary"
-        size="lg"
-        (clicked)="collapsed = !collapsed"
-        >{{ collapsed ? '>' : '<' }}</app-button
-      >
-
-      <div *ngIf="!collapsed" class="p-4">Sidebar content here</div>
+      [ngClass]="{ 'w-72': !collapsed, 'w-0': collapsed }"
+      class="bg-gray-700 text-white transition-all duration-300 overflow-auto">
+      <div *ngIf="!collapsed" class="p-4"></div>
     </aside>
 
     <main class="grid grid-cols-1 md:grid-cols-2 overflow-none">
-      <div class="bg-blue-100 rounded shadow">Content Area 1</div>
-      <div class="bg-green-100 rounded shadow">Content Area 2</div>
+      <div class="bg-blue-100 rounded shadow"></div>
+      <div class="bg-gray-700 rounded shadow"></div>
     </main>
   </div>
 </div>
