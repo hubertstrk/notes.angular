@@ -1,16 +1,23 @@
-<div class="home">
-  <div id="header">
-    <app-header></app-header>
-  </div>
-  <div id="sidebar">
-    <app-sidebar></app-sidebar>
-  </div>
-  <div id="editor">
-    <app-editor
-      (textChanged)="onTextChanged($event)"
-      [text]="editorChange.text"></app-editor>
-  </div>
-  <div id="preview">
-    <app-preview [editorChange]="editorChange"></app-preview>
+<div class="h-screen w-screen grid grid-rows-[auto_1fr]">
+  <!-- Header -->
+  <header class="bg-gray-800 text-white p-4">
+    <h1 class="text-xl">Notes</h1>
+  </header>
+
+  <!-- Body -->
+  <div class="grid grid-cols-[auto_1fr] overflow-hidden">
+    <aside
+      [ngClass]="{ 'w-64': !collapsed, 'w-14': collapsed }"
+      class="bg-gray-200 transition-all duration-300 overflow-auto">
+      <button (click)="collapsed = !collapsed" class="p-2 w-full text-left">
+        Toggle
+      </button>
+      <div *ngIf="!collapsed" class="p-4">Sidebar content here</div>
+    </aside>
+
+    <main class="grid grid-cols-1 md:grid-cols-2 overflow-none">
+      <div class="bg-blue-100 rounded shadow">Content Area 1</div>
+      <div class="bg-green-100 rounded shadow">Content Area 2</div>
+    </main>
   </div>
 </div>

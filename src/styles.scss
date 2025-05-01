@@ -1,7 +1,6 @@
-@import "primeng/resources/themes/md-dark-indigo/theme.css";
-@import "primeng/resources/primeng.css";
-@import "primeicons/primeicons.css";
-@import "primeflex/primeflex.css";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 body {
   padding: 0;
