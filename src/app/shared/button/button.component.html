@@ -1,1 +1,6 @@
-<p>button works!</p>
+<button
+  [ngClass]="computedClasses"
+  [disabled]="disabled"
+  (click)="onClick($event)">
+  <ng-content></ng-content>
+</button>

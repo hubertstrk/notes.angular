@@ -9,9 +9,13 @@
     <aside
       [ngClass]="{ 'w-64': !collapsed, 'w-14': collapsed }"
       class="bg-gray-200 transition-all duration-300 overflow-auto">
-      <button (click)="collapsed = !collapsed" class="p-2 w-full text-left">
-        Toggle
-      </button>
+      <app-button
+        variant="primary"
+        size="lg"
+        (clicked)="collapsed = !collapsed"
+        >{{ collapsed ? '>' : '<' }}</app-button
+      >
+
       <div *ngIf="!collapsed" class="p-4">Sidebar content here</div>
     </aside>
 

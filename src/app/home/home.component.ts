@@ -3,10 +3,12 @@ import { EditorChange } from '../../model/editor';
 import { SettingsService } from '../../service/settings-service';
 import { CommonModule } from '@angular/common';
 
+import { ButtonComponent } from '../shared/button/button.component';
+
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, ButtonComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
 })
