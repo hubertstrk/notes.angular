@@ -21,9 +21,11 @@
 
   <div class="grid grid-cols-[auto_1fr] overflow-hidden">
     <aside
-      [ngClass]="{ 'w-72': !collapsed, 'w-0': collapsed }"
+      [ngClass]="{ 'w-96': !collapsed, 'w-0': collapsed }"
       class="bg-gray-700 text-white transition-all duration-300 overflow-auto">
-      <div *ngIf="!collapsed" class="p-4"></div>
+      <div *ngIf="!collapsed" class="p-4">
+        <app-sidebar></app-sidebar>
+      </div>
     </aside>
 
     <main class="grid grid-cols-1 md:grid-cols-2 overflow-none">

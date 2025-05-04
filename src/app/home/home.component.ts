@@ -5,10 +5,12 @@ import { CommonModule } from '@angular/common';
 
 import { ButtonComponent } from '../shared/button/button.component';
 
+import { SidebarComponent } from '../sidebar/sidebar.component';
+
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, ButtonComponent],
+  imports: [CommonModule, ButtonComponent, SidebarComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
 })

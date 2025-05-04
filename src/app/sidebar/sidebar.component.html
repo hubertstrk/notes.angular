@@ -1,1 +1,6 @@
-<p>sidebar works!</p>
+<div *ngFor="let note of notes$ | async">
+  <div class="bg-gray-700 text-white p-4 rounded shadow mb-4">
+    <h2 class="text-xl">{{ note.path }}</h2>
+    <p>{{ note.markdown }}</p>
+  </div>
+</div>
