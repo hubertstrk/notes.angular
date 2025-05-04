@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Settings } from '../model/settings';
+import { Settings } from '../model/settings.model';
 import { writeTextFile, readTextFile, BaseDirectory } from '@tauri-apps/api/fs';
 
 @Injectable({

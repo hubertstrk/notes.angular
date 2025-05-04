@@ -4,6 +4,11 @@ import { provideAnimations } from '@angular/platform-browser/animations';
 import { routes } from './app.routes';
 
 import { initSettingsFactory } from '../factory/settings-factory';
+import { provideStore } from '@ngrx/store';
+import { provideEffects } from '@ngrx/effects';
+
+import { noteReducer } from '../store/note.reducers';
+import { NoteEffects } from '../store/note.effect';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -14,5 +19,7 @@ export const appConfig: ApplicationConfig = {
       useFactory: () => initSettingsFactory,
       multi: true,
     },
+    provideStore({ note: noteReducer }),
+    provideEffects([NoteEffects]),
   ],
 };

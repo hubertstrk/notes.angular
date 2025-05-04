@@ -31,7 +31,10 @@
           "$APPDATA/**",
           "$APPDATA/*",
           "$APPDATA/",
-          "$APPDATA"
+          "$APPDATA",
+          "$HOME/**",
+          "$DOCUMENT/**",
+          "$DOWNLOAD/**"
          ]
       }
     },

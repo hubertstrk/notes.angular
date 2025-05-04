@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { EditorChange } from '../../model/editor';
+import { EditorChange } from '../../model/editor.model';
 import { SettingsService } from '../../service/settings-service';
 import { CommonModule } from '@angular/common';
 

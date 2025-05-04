@@ -11,7 +11,7 @@ import {
 import { PreviewComponent } from '../preview/preview.component';
 
 import * as ace from 'ace-builds';
-import { EditorChange } from '../../model/editor';
+import { EditorChange } from '../../model/editor.model';
 
 @Component({
   selector: 'app-editor',

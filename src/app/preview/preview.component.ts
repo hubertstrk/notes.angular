@@ -5,7 +5,7 @@ import {
   Input,
   ViewChild,
 } from '@angular/core';
-import { EditorChange } from '../../model/editor';
+import { EditorChange } from '../../model/editor.model';
 import { marked } from 'marked';
 
 @Component({
