@@ -1,6 +1,7 @@
-<div *ngFor="let note of notes$ | async">
-  <div class="bg-gray-700 text-white p-4 rounded shadow mb-4">
-    <h2 class="text-xl">{{ note.path }}</h2>
-    <p>{{ note.markdown }}</p>
+<div *ngFor="let note of notes$ | async" class="mb-2">
+  <div
+    class="bg-teal-600 text-white p-2 rounded border-rounded-lg cursor-pointer hover:bg-teal-500 transition-colors duration-200">
+    <div class="text-lg">{{ extractHeading(note) }}</div>
+    <div class="text-sm">{{ note.path }}</div>
   </div>
 </div>

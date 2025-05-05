@@ -3,6 +3,11 @@ import { readDir, readTextFile } from '@tauri-apps/api/fs';
 import { join } from '@tauri-apps/api/path';
 import { Note } from '../model/note.model';
 
+import { unified } from 'unified';
+import remarkParse from 'remark-parse';
+
+import type { Root } from 'mdast';
+
 @Injectable({
   providedIn: 'root',
 })
@@ -34,8 +39,10 @@ export class NotesService {
 
     for (const path of paths) {
       try {
-        const content = await readTextFile(path);
-        results.push({ markdown: content, path: path });
+        const markdown = await readTextFile(path);
+        const tree: Root = unified().use(remarkParse).parse(markdown);
+
+        results.push({ markdown, tree, path });
       } catch (error) {
         console.error(`Failed to read ${path}:`, error);
       }
@@ -47,6 +54,7 @@ export class NotesService {
   async getMarkdownFiles(directory: string): Promise<Note[]> {
     const paths = await this.getMarkdownFilePathsRecursive(directory);
     const notes = await this.readMarkdownFiles(paths);
+
     return notes;
   }
 }
