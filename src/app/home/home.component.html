@@ -24,7 +24,7 @@
       [ngClass]="{ 'w-96': !collapsed, 'w-0': collapsed }"
       class="bg-gray-800 text-white transition-all duration-300 overflow-auto">
       <div *ngIf="!collapsed" class="px-3">
-        <app-sidebar></app-sidebar>
+        <app-sidebar (noteSelected)="noteSelected($event)"></app-sidebar>
       </div>
     </aside>
 
@@ -33,7 +33,9 @@
 
       <!-- Make this the scrollable container -->
       <div class="bg-gray-800 w-full md:w-1/2 overflow-auto">
-        <app-preview class="h-full w-full block"></app-preview>
+        <app-preview
+          [note]="selectedNote"
+          class="h-full w-full block"></app-preview>
       </div>
     </main>
   </div>

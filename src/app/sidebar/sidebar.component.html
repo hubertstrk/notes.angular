@@ -1,5 +1,6 @@
 <div *ngFor="let note of notes$ | async" class="mb-2">
   <div
+    (click)="onNoteClick(note)"
     class="bg-gray-700 text-white p-2 rounded border-rounded-lg cursor-pointer hover:bg-gray-500 transition-colors duration-200">
     <div class="text-lg">{{ extractHeading(note) }}</div>
     <div class="text-sm">{{ note.path }}</div>

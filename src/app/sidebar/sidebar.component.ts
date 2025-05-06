@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Store } from '@ngrx/store';
 import { selectNotes } from '../../store/note.selectors';
@@ -10,9 +10,10 @@ import { Heading, Text } from 'mdast';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './sidebar.component.html',
-  styleUrl: './sidebar.component.scss',
 })
 export class SidebarComponent {
+  @Output() noteSelected = new EventEmitter<Note>();
+
   constructor(private store: Store) {}
 
   notes$ = this.store.select(selectNotes);
@@ -35,5 +36,9 @@ export class SidebarComponent {
     const title = (text[0] as Text).value;
 
     return title;
+  }
+
+  onNoteClick(note: Note) {
+    this.noteSelected.emit(note);
   }
 }
