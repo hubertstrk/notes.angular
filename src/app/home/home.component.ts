@@ -7,12 +7,13 @@ import { ButtonComponent } from '../shared/button/button.component';
 
 import { SidebarComponent } from '../sidebar/sidebar.component';
 
+import { PreviewComponent } from '../preview/preview.component';
+
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, ButtonComponent, SidebarComponent],
+  imports: [CommonModule, ButtonComponent, SidebarComponent, PreviewComponent],
   templateUrl: './home.component.html',
-  styleUrl: './home.component.scss',
 })
 export class HomeComponent implements OnInit {
   editorChange: EditorChange;

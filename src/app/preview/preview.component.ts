@@ -1,11 +1,7 @@
-import {
-  AfterViewInit,
-  Component,
-  ElementRef,
-  Input,
-  ViewChild,
-} from '@angular/core';
-import { EditorChange } from '../../model/editor.model';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+
+import { Store } from '@ngrx/store';
+import { selectNotes } from '../../store/note.selectors';
 import { marked } from 'marked';
 
 @Component({
@@ -13,23 +9,22 @@ import { marked } from 'marked';
   standalone: true,
   imports: [],
   templateUrl: './preview.component.html',
-  styleUrl: './preview.component.scss',
 })
-export class PreviewComponent implements AfterViewInit {
-  _editorChange: EditorChange;
+export class PreviewComponent implements OnInit {
+  constructor(private store: Store) {}
+
+  notes$ = this.store.select(selectNotes);
 
   @ViewChild('preview') preview: ElementRef<HTMLElement>;
 
-  @Input() set editorChange(value: EditorChange) {
-    this._editorChange = value;
-    if (this.preview) {
-      this.preview.nativeElement.innerHTML = marked.parse(value.text) as string;
-    }
-  }
-
-  ngAfterViewInit(): void {
-    this.preview.nativeElement.innerHTML = marked.parse(
-      this._editorChange?.text ?? ''
-    ) as string;
+  ngOnInit(): void {
+    this.notes$.subscribe(notes => {
+      if (notes.length > 0) {
+        const note = notes[2];
+        this.preview.nativeElement.innerHTML = marked.parse(
+          note.markdown
+        ) as string;
+      }
+    });
   }
 }
