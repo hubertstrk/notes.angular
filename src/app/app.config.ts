@@ -10,6 +10,8 @@ import { provideEffects } from '@ngrx/effects';
 import { noteReducer } from '../store/note.reducers';
 import { NoteEffects } from '../store/note.effect';
 
+import { NGX_MONACO_EDITOR_CONFIG } from 'ngx-monaco-editor-v2';
+
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),
@@ -21,5 +23,9 @@ export const appConfig: ApplicationConfig = {
     },
     provideStore({ note: noteReducer }),
     provideEffects([NoteEffects]),
+    {
+      provide: NGX_MONACO_EDITOR_CONFIG,
+      useValue: {},
+    },
   ],
 };

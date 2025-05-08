@@ -7,11 +7,18 @@ import { Note } from '../../model/note.model';
 import { ButtonComponent } from '../shared/button/button.component';
 import { SidebarComponent } from '../sidebar/sidebar.component';
 import { PreviewComponent } from '../preview/preview.component';
+import { EditorComponent } from '../editor/editor.component';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, ButtonComponent, SidebarComponent, PreviewComponent],
+  imports: [
+    CommonModule,
+    ButtonComponent,
+    SidebarComponent,
+    PreviewComponent,
+    EditorComponent,
+  ],
   templateUrl: './home.component.html',
 })
 export class HomeComponent implements OnInit {
