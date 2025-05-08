@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { readDir, readTextFile } from '@tauri-apps/api/fs';
+import { readDir, readTextFile, writeTextFile } from '@tauri-apps/api/fs';
 import { join } from '@tauri-apps/api/path';
 import { Note } from '../model/note.model';
 
@@ -56,5 +56,9 @@ export class NotesService {
     const notes = await this.readMarkdownFiles(paths);
 
     return notes;
+  }
+
+  async saveMarkdownFile(path: string, content: string): Promise<void> {
+    return writeTextFile(path, content);
   }
 }
