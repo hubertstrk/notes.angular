@@ -1,0 +1,5 @@
+<footer
+  class="bg-gray-800 text-white text-sm p-2 fixed bottom-0 left-0 right-0 flex justify-between items-center">
+  <span>Path: {{ (activeNote$ | async)?.path || 'No active note' }}</span>
+  <span>Characters: {{ (activeNote$ | async)?.content?.length || 0 }}</span>
+</footer>

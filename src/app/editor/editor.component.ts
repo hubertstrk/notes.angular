@@ -14,7 +14,6 @@ import { filter, take, map } from 'rxjs/operators';
   standalone: true,
   imports: [FormsModule, CommonModule, MonacoEditorModule],
   templateUrl: './editor.component.html',
-  styleUrl: './editor.component.scss',
 })
 export class EditorComponent {
   @Input() text: string;
