@@ -38,7 +38,7 @@ export class NoteEffects {
   autoSave$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(updateContent),
-      debounceTime(100),
+      debounceTime(300),
       switchMap(action =>
         from(this.notesService.saveFile(action.notePath, action.content)).pipe(
           map(() => noteSaved({ notePath: action.notePath })),
