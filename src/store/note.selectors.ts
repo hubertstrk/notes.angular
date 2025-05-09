@@ -1,19 +1,33 @@
-import { createFeatureSelector, createSelector } from '@ngrx/store';
-
+import { createSelector, createFeatureSelector } from '@ngrx/store';
 import { State } from './note.reducers';
 
-const selectNoteState = createFeatureSelector<State>('note');
+export const selectNoteState = createFeatureSelector<State>('note');
 
 export const selectNotes = createSelector(
   selectNoteState,
   (state: State) => state.notes
 );
 
-export const selectNote = (path: string) =>
+export const selectNoteByPath = (path: string) =>
   createSelector(selectNotes, notes => {
     const note = notes.find(note => note.path === path);
     return note ? note : null;
   });
+
+export const selectActiveNote = createSelector(
+  selectNoteState,
+  (state: State) => {
+    if (!state.activeNotePath) {
+      return null;
+    }
+
+    const activeNote = state.notes.find(
+      note => note.path === state.activeNotePath
+    );
+
+    return activeNote || null;
+  }
+);
 
 export const selectError = createSelector(
   selectNoteState,

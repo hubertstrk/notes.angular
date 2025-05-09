@@ -1,4 +1,7 @@
 <div class="editor" #editor>
-  <ngx-monaco-editor [options]="editorOptions" [(ngModel)]="code">
+  <ngx-monaco-editor
+    [options]="editorOptions"
+    [ngModel]="(activeNote$ | async)?.content"
+    (ngModelChange)="onTextChange($event)">
   </ngx-monaco-editor>
 </div>

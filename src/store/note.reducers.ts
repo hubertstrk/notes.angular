@@ -2,22 +2,22 @@ import { createReducer, on } from '@ngrx/store';
 import {
   notesLoaded,
   loadNotesFailed,
-  selectNote,
-  updateNoteContent,
+  setActiveNote,
+  updateContent,
   saveNoteFailed,
 } from './note.actions';
 import { Note } from '../model/note.model';
 
 export interface State {
   notes: Note[];
-  selectedNotePath: string | null;
+  activeNotePath: string | null;
   isSaving: boolean;
   error: string | null;
 }
 
 export const initialState: State = {
   notes: [],
-  selectedNotePath: null,
+  activeNotePath: null,
   isSaving: false,
   error: null,
 };
@@ -39,13 +39,13 @@ export const noteReducer = createReducer(
     })
   ),
   on(
-    selectNote,
+    setActiveNote,
     (state, { notePath }): State => ({
       ...state,
-      selectedNotePath: notePath,
+      activeNotePath: notePath,
     })
   ),
-  on(updateNoteContent, (state, { notePath, content }): State => {
+  on(updateContent, (state, { notePath, content }): State => {
     const notes = state.notes.map(note =>
       note.path === notePath ? { ...note, content } : note
     );

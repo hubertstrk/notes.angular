@@ -12,9 +12,7 @@ import type { Root } from 'mdast';
   providedIn: 'root',
 })
 export class NotesService {
-  private async getMarkdownFilePathsRecursive(
-    directory: string
-  ): Promise<string[]> {
+  private async readFilePathsRecursive(directory: string): Promise<string[]> {
     const notePaths: string[] = [];
 
     async function walk(currentDir: string): Promise<void> {
@@ -34,15 +32,15 @@ export class NotesService {
     return notePaths;
   }
 
-  private async readMarkdownFiles(paths: string[]): Promise<Note[]> {
+  private async readFiles(paths: string[]): Promise<Note[]> {
     const results: Note[] = [];
 
     for (const path of paths) {
       try {
-        const markdown = await readTextFile(path);
-        const tree: Root = unified().use(remarkParse).parse(markdown);
+        const content = await readTextFile(path);
+        const tree: Root = unified().use(remarkParse).parse(content);
 
-        results.push({ markdown, tree, path });
+        results.push({ content: content, tree, path });
       } catch (error) {
         console.error(`Failed to read ${path}:`, error);
       }
@@ -51,14 +49,15 @@ export class NotesService {
     return results;
   }
 
-  async getMarkdownFiles(directory: string): Promise<Note[]> {
-    const paths = await this.getMarkdownFilePathsRecursive(directory);
-    const notes = await this.readMarkdownFiles(paths);
+  async importFiles(directory: string): Promise<Note[]> {
+    const paths = await this.readFilePathsRecursive(directory);
+    const notes = await this.readFiles(paths);
 
     return notes;
   }
 
-  async saveMarkdownFile(path: string, content: string): Promise<void> {
+  async saveFile(path: string, content: string): Promise<void> {
     return writeTextFile(path, content);
+    // return Promise.resolve(); // Mock implementation
   }
 }

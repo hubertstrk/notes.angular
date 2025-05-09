@@ -36,8 +36,4 @@ export class HomeComponent implements OnInit {
       console.log(settings);
     });
   }
-
-  noteSelected(note: Note) {
-    this.selectedNote = note;
-  }
 }

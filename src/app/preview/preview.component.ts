@@ -1,14 +1,7 @@
-import {
-  Component,
-  ElementRef,
-  Input,
-  OnChanges,
-  SimpleChanges,
-  ViewChild,
-} from '@angular/core';
-
+import { Component, ElementRef, ViewChild, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { marked } from 'marked';
+import { selectActiveNote } from '../../store/note.selectors';
 import { Note } from '../../model/note.model';
 
 @Component({
@@ -17,18 +10,17 @@ import { Note } from '../../model/note.model';
   imports: [],
   templateUrl: './preview.component.html',
 })
-export class PreviewComponent implements OnChanges {
-  @Input() note: Note | null = null;
+export class PreviewComponent implements OnInit {
+  @ViewChild('preview') preview: ElementRef<HTMLElement>;
 
   constructor(private store: Store) {}
 
-  @ViewChild('preview') preview: ElementRef<HTMLElement>;
-
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['note'] && this.note) {
-      this.preview.nativeElement.innerHTML = marked.parse(
-        this.note.markdown
-      ) as string;
-    }
+  ngOnInit(): void {
+    const selectedNote$ = this.store.select(selectActiveNote);
+    selectedNote$.subscribe((note: Note | null) => {
+      if (note) {
+        this.preview.nativeElement.innerHTML = marked(note.content) as string;
+      }
+    });
   }
 }

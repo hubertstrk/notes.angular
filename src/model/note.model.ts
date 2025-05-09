@@ -1,7 +1,7 @@
 import { Root } from 'mdast';
 
 export interface Note {
-  markdown: string;
+  content: string;
   path: string;
   tree: Root;
 }
