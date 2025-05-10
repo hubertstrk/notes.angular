@@ -1,8 +1,9 @@
-<div class="editor h-full w-full flex flex-col" #editor>
+<div #editorContainer class="editor h-full w-full flex flex-col" #editor>
   <ngx-monaco-editor
     class="flex-1 h-full w-full"
     [options]="editorOptions"
     [ngModel]="(activeNote$ | async)?.content"
-    (ngModelChange)="onTextChange($event)">
+    (ngModelChange)="onTextChange($event)"
+    (onInit)="onEditorInit($event)">
   </ngx-monaco-editor>
 </div>

@@ -8,9 +8,11 @@ import { CommonModule } from '@angular/common';
   templateUrl: './button.component.html',
 })
 export class ButtonComponent {
-  @Input() variant: 'primary' | 'secondary' | 'danger' = 'primary';
+  @Input() variant: 'primary' | 'secondary' | 'danger' | 'transparent' =
+    'primary';
   @Input() size: 'sm' | 'md' | 'lg' = 'md';
   @Input() disabled = false;
+  @Input() rounded = false;
 
   @Input() iconSvg?: string;
   @Input() iconPosition: 'left' | 'right' = 'left';
@@ -18,7 +20,10 @@ export class ButtonComponent {
   @Output() clicked = new EventEmitter<Event>();
 
   get computedClasses(): string {
-    const base = 'rounded px-4 py-2 font-medium focus:outline-none transition';
+    const base = `
+      ${this.rounded ? 'rounded-full' : 'rounded'}
+      px-4 py-2 font-medium focus:outline-none transition
+    `;
     const sizes = {
       sm: 'text-sm',
       md: 'text-base',
@@ -26,9 +31,10 @@ export class ButtonComponent {
     };
 
     const variants = {
-      primary: 'bg-blue-600 text-white hover:bg-blue-700',
-      secondary: 'bg-gray-200 text-gray-800 hover:bg-gray-300',
-      danger: 'bg-red-600 text-white hover:bg-red-700',
+      primary: 'bg-blue-500 text-white hover:bg-blue-600',
+      secondary: 'bg-green-500 text-white hover:bg-green-600',
+      danger: 'bg-red-500 text-white hover:bg-red-600',
+      transparent: 'bg-transparent text-gray-700 hover:bg-gray-100',
     };
 
     return `${base} ${sizes[this.size]} ${variants[this.variant]} ${

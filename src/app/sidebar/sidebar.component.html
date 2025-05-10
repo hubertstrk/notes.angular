@@ -1,15 +1,15 @@
 <div *ngFor="let note of notes" class="mb-2">
   <div
-    class="bg-gradient-to-r text-white p-2 rounded-lg cursor-pointer hover:from-gray-500 hover:to-gray-800 transition-all duration-300 shadow-md"
+    class="bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 text-white p-3 rounded-lg cursor-pointer hover:from-blue-500 hover:via-purple-600 hover:to-pink-600 transition-all duration-300 shadow-md"
     [ngClass]="{
-      'from-gray-500 to-gray-800': activeNote?.path === note.path,
-      'from-gray-700 to-gray-900': activeNote?.path !== note.path
+      'font-bold border-blue-500': activeNote?.path === note.path,
+      'font-normal': activeNote?.path !== note.path
     }"
     (click)="onNoteClick(note)">
-    <div class="text-lg font-semibold tracking-wide">
+    <div class="text-base font-medium">
       {{ extractHeading(note) }}
     </div>
-    <div class="text-sm text-gray-400">
+    <div class="text-xs text-gray-200">
       {{ note.path }}
     </div>
   </div>

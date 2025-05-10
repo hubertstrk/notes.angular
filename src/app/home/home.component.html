@@ -1,22 +1,15 @@
 <div class="h-screen w-screen grid grid-rows-[auto_1fr]">
   <header
-    class="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-4 flex items-center justify-between shadow-md">
-    <h1 class="text-2xl font-semibold tracking-wide">Notes</h1>
+    class="bg-white text-black p-4 flex items-center justify-between shadow-md">
+    <h1 class="text-2xl font-semibold tracking-wide text-black">Notes</h1>
     <div class="flex gap-3 items-center">
       <app-button
-        variant="primary"
+        variant="transparent"
         size="md"
-        class="bg-white text-blue-600 hover:bg-blue-100 transition-colors rounded-md shadow-md"
+        [rounded]="true"
+        class="hover:bg-gray-100 transition-colors"
         (clicked)="collapsed = !collapsed">
         {{ collapsed ? '>' : '<' }}
-      </app-button>
-      <app-button
-        variant="primary"
-        size="md"
-        [iconSvg]="checkIcon"
-        iconPosition="left"
-        class="bg-white text-blue-600 hover:bg-blue-100 transition-colors rounded-md shadow-md">
-        Settings
       </app-button>
     </div>
   </header>
@@ -24,19 +17,19 @@
   <div class="grid grid-cols-[auto_1fr] h-full overflow-hidden">
     <aside
       [ngClass]="{ 'w-80': !collapsed, 'w-0': collapsed }"
-      class="bg-gray-900 text-white transition-all duration-300 overflow-auto shadow-lg">
+      class="bg-white text-black transition-all duration-300 overflow-auto shadow-lg">
       <div *ngIf="!collapsed" class="p-4">
         <app-sidebar></app-sidebar>
       </div>
     </aside>
 
     <main class="flex flex-col md:flex-row h-full overflow-auto">
-      <div class="bg-gray-100 w-full md:w-1/2 px-4 py-6">
+      <div class="bg-gray-100 w-full md:w-1/2 h-full pb-4">
         <app-editor></app-editor>
       </div>
 
-      <div class="bg-gray-900 w-full md:w-1/2 overflow-auto p-6">
-        <app-preview class="h-full w-full block text-white"></app-preview>
+      <div class="bg-white w-full md:w-1/2 h-full overflow-auto">
+        <app-preview class="h-full w-full block text-black"></app-preview>
       </div>
     </main>
   </div>

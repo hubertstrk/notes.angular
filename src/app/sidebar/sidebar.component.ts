@@ -22,6 +22,8 @@ export class SidebarComponent implements OnInit {
   activeNote$ = this.store.select(selectActiveNote);
   activeNote: Note | null = null;
 
+  base = 'bg-white text-black border border-gray-200 rounded-lg shadow-sm';
+
   ngOnInit(): void {
     this.notes$.subscribe(notes => {
       this.notes = notes;

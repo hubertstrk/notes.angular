@@ -1,4 +1,11 @@
-import { Component, ElementRef, Input, ViewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  ViewChild,
+  HostListener,
+  Input,
+  AfterViewInit,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Store } from '@ngrx/store';
@@ -8,6 +15,7 @@ import { Note } from '../../model/note.model';
 import { MonacoEditorModule } from 'ngx-monaco-editor-v2';
 import { updateContent } from '../../store/note.actions';
 import { filter, take, map } from 'rxjs/operators';
+import * as monaco from 'monaco-editor';
 
 @Component({
   selector: 'app-editor',
@@ -15,22 +23,39 @@ import { filter, take, map } from 'rxjs/operators';
   imports: [FormsModule, CommonModule, MonacoEditorModule],
   templateUrl: './editor.component.html',
 })
-export class EditorComponent {
-  @Input() text: string;
-
+export class EditorComponent implements AfterViewInit {
+  @ViewChild('editorContainer') editorContainer!: ElementRef;
   @ViewChild('editor') editor: ElementRef<HTMLElement>;
 
+  resizeObserver!: ResizeObserver;
+
+  activeNote$: Observable<Note | null> = this.store.select(selectActiveNote);
+
   editorOptions = { theme: 'vs-light', language: 'markdown' };
-  code: string;
 
-  activeNote$: Observable<Note | null>;
+  private monacoInstance!: monaco.editor.IStandaloneCodeEditor;
 
-  constructor(private store: Store) {
-    this.activeNote$ = this.store.select(selectActiveNote);
+  constructor(private store: Store) {}
+
+  ngAfterViewInit() {
+    this.resizeObserver = new ResizeObserver(() => {
+      this.monacoInstance?.layout();
+    });
+    this.resizeObserver.observe(this.editorContainer.nativeElement);
+  }
+
+  onEditorInit(editor: monaco.editor.IStandaloneCodeEditor) {
+    this.monacoInstance = editor;
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onWindowResize() {
+    if (this.monacoInstance) {
+      this.monacoInstance.layout();
+    }
   }
 
   onTextChange(newText: string): void {
-    console.log('Text changed:', newText);
     this.activeNote$
       .pipe(
         filter(note => !!note),
