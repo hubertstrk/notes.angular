@@ -11,17 +11,19 @@ import { Note } from '../../model/note.model';
   templateUrl: './preview.component.html',
 })
 export class PreviewComponent implements OnInit {
-  @ViewChild('preview') preview: ElementRef<HTMLElement>;
+  @ViewChild('previewIframe', { static: true })
+  iframe!: ElementRef<HTMLIFrameElement>;
 
   constructor(private store: Store) {}
 
   ngOnInit(): void {
-    const base = `bg-white text-black`;
     const selectedNote$ = this.store.select(selectActiveNote);
     selectedNote$.subscribe((note: Note | null) => {
       if (note) {
-        this.preview.nativeElement.innerHTML = marked(note.content) as string;
-        this.preview.nativeElement.className = base;
+        const html = marked(note.content) as string;
+        const iframeWindow = this.iframe.nativeElement.contentWindow;
+
+        iframeWindow?.postMessage({ type: 'html', html }, '*');
       }
     });
   }
