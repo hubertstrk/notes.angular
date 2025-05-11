@@ -3,7 +3,6 @@ import {
   ElementRef,
   ViewChild,
   HostListener,
-  Input,
   AfterViewInit,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -16,6 +15,7 @@ import { MonacoEditorModule } from 'ngx-monaco-editor-v2';
 import { updateContent } from '../../store/note.actions';
 import { filter, take, map } from 'rxjs/operators';
 import * as monaco from 'monaco-editor';
+import { updateCursorPosition } from '../../store/editor.actions';
 
 @Component({
   selector: 'app-editor',
@@ -50,6 +50,16 @@ export class EditorComponent implements AfterViewInit {
 
   onEditorInit(editor: monaco.editor.IStandaloneCodeEditor) {
     this.monacoInstance = editor;
+
+    this.monacoInstance.onDidChangeCursorPosition(e => {
+      const position = e.position;
+      this.store.dispatch(
+        updateCursorPosition({
+          line: position.lineNumber,
+          column: position.column,
+        })
+      );
+    });
   }
 
   @HostListener('window:resize', ['$event'])

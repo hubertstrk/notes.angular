@@ -8,14 +8,14 @@ import {
 } from './note.actions';
 import { Note } from '../model/note.model';
 
-export interface State {
+export interface NoteState {
   notes: Note[];
   activeNotePath: string | null;
   isSaving: boolean;
   error: string | null;
 }
 
-export const initialState: State = {
+export const initialState: NoteState = {
   notes: [],
   activeNotePath: null,
   isSaving: false,
@@ -26,26 +26,26 @@ export const noteReducer = createReducer(
   initialState,
   on(
     notesLoaded,
-    (state, { notes }): State => ({
+    (state, { notes }): NoteState => ({
       ...state,
       notes,
     })
   ),
   on(
     loadNotesFailed,
-    (state, { error }): State => ({
+    (state, { error }): NoteState => ({
       ...state,
       error,
     })
   ),
   on(
     setActiveNote,
-    (state, { notePath }): State => ({
+    (state, { notePath }): NoteState => ({
       ...state,
       activeNotePath: notePath,
     })
   ),
-  on(updateContent, (state, { notePath, content }): State => {
+  on(updateContent, (state, { notePath, content }): NoteState => {
     const notes = state.notes.map(note =>
       note.path === notePath ? { ...note, content } : note
     );
@@ -56,7 +56,7 @@ export const noteReducer = createReducer(
   }),
   on(
     saveNoteFailed,
-    (state, { error }): State => ({
+    (state, { error }): NoteState => ({
       ...state,
       error,
     })

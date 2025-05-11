@@ -3,6 +3,7 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { Note } from '../../model/note.model';
 import { selectActiveNote } from '../../store/note.selectors';
+import { selectCursorPosition } from '../../store/editor.selectors';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -14,8 +15,10 @@ import { CommonModule } from '@angular/common';
 })
 export class FooterComponent {
   activeNote$: Observable<Note | null>;
+  cursorPosition$: Observable<{ line: number; column: number }>;
 
   constructor(private store: Store) {
     this.activeNote$ = this.store.select(selectActiveNote);
+    this.cursorPosition$ = this.store.select(selectCursorPosition);
   }
 }
