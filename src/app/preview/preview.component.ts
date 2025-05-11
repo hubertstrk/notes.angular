@@ -16,7 +16,7 @@ export class PreviewComponent implements OnInit {
   constructor(private store: Store) {}
 
   ngOnInit(): void {
-    const base = `bg-white text-black border border-gray-200 rounded-lg shadow-sm`;
+    const base = `bg-white text-black`;
     const selectedNote$ = this.store.select(selectActiveNote);
     selectedNote$.subscribe((note: Note | null) => {
       if (note) {
