@@ -12,13 +12,10 @@ import {
   updateContent,
 } from './note.actions';
 
-import { Store } from '@ngrx/store';
-
 @Injectable()
 export class NoteEffects {
   constructor(
     private actions$: Actions,
-    private store: Store,
     private notesService: NotesService
   ) {}
   loadNotes$ = createEffect(() => {

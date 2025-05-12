@@ -58,6 +58,5 @@ export class NotesService {
 
   async saveFile(path: string, content: string): Promise<void> {
     return writeTextFile(path, content);
-    // return Promise.resolve(); // Mock implementation
   }
 }
