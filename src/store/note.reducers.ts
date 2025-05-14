@@ -5,6 +5,7 @@ import {
   setActiveNote,
   updateContent,
   saveNoteFailed,
+  addNote,
 } from './note.actions';
 import { Note } from '../model/note.model';
 
@@ -60,5 +61,17 @@ export const noteReducer = createReducer(
       ...state,
       error,
     })
-  )
+  ),
+  on(addNote, (state, { heading, basePath }): NoteState => {
+    const newNote: Note = {
+      content: `# ${heading}`,
+      heading,
+      path: `${basePath}\\${heading}.md`,
+    };
+    return {
+      ...state,
+      notes: [...state.notes, newNote],
+      activeNotePath: newNote.path,
+    };
+  })
 );

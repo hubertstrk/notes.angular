@@ -6,7 +6,7 @@ import { Note } from '../model/note.model';
 import { unified } from 'unified';
 import remarkParse from 'remark-parse';
 
-import type { Heading, Root, Text } from 'mdast';
+import type { Heading, Text } from 'mdast';
 
 @Injectable({
   providedIn: 'root',
@@ -58,6 +58,13 @@ export class NotesService {
 
   async saveFile(path: string, content: string): Promise<void> {
     return writeTextFile(path, content);
+  }
+
+  async createFile(heading: string, basePath: string): Promise<void> {
+    const filePath = await join(basePath, `${heading}.md`);
+    const content = `# ${heading}`;
+
+    await writeTextFile(filePath, content);
   }
 
   extractHeading(content: string): string {

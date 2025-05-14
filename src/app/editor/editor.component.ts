@@ -16,9 +16,6 @@ import { updateContent } from '../../store/note.actions';
 import { filter, take, map } from 'rxjs/operators';
 import * as monaco from 'monaco-editor';
 import { updateCursorPosition } from '../../store/editor.actions';
-import { unified } from 'unified';
-import remarkParse from 'remark-parse';
-import type { Root } from 'mdast';
 import { NotesService } from '../../service/notes.services';
 
 @Component({

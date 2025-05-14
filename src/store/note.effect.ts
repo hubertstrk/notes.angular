@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { createEffect, Actions, ofType } from '@ngrx/effects';
 import { from, of } from 'rxjs';
+import { join } from '@tauri-apps/api/path';
 import { catchError, debounceTime, map, switchMap } from 'rxjs/operators';
 import { NotesService } from '../service/notes.services';
 import {
@@ -10,6 +11,7 @@ import {
   noteSaved,
   saveNoteFailed,
   updateContent,
+  addNote,
 } from './note.actions';
 
 @Injectable()
@@ -39,6 +41,29 @@ export class NoteEffects {
       switchMap(action =>
         from(this.notesService.saveFile(action.notePath, action.content)).pipe(
           map(() => noteSaved({ notePath: action.notePath })),
+          catchError(error =>
+            of(
+              saveNoteFailed({
+                error: error.message,
+              })
+            )
+          )
+        )
+      )
+    );
+  });
+
+  addNote$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(addNote),
+      switchMap(action =>
+        from(
+          this.notesService.createFile(action.heading, action.basePath)
+        ).pipe(
+          switchMap(async () => {
+            const notePath = await join(action.basePath, action.heading);
+            return noteSaved({ notePath });
+          }),
           catchError(error =>
             of(
               saveNoteFailed({
