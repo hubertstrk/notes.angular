@@ -62,16 +62,11 @@ export const noteReducer = createReducer(
       error,
     })
   ),
-  on(addNote, (state, { heading, basePath }): NoteState => {
-    const newNote: Note = {
-      content: `# ${heading}`,
-      heading,
-      path: `${basePath}\\${heading}.md`,
-    };
+  on(addNote, (state, { note }): NoteState => {
     return {
       ...state,
-      notes: [...state.notes, newNote],
-      activeNotePath: newNote.path,
+      notes: [...state.notes, note],
+      activeNotePath: note.path,
     };
   })
 );

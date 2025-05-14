@@ -60,13 +60,6 @@ export class NotesService {
     return writeTextFile(path, content);
   }
 
-  async createFile(heading: string, basePath: string): Promise<void> {
-    const filePath = await join(basePath, `${heading}.md`);
-    const content = `# ${heading}`;
-
-    await writeTextFile(filePath, content);
-  }
-
   extractHeading(content: string): string {
     const tree = unified().use(remarkParse).parse(content);
     const headings = tree.children.filter(x => x.type === 'heading');

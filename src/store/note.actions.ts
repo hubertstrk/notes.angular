@@ -38,5 +38,5 @@ export const saveNoteFailed = createAction(
 
 export const addNote = createAction(
   '[Note] Add new note',
-  props<{ heading: string; basePath: string }>()
+  props<{ note: Note }>()
 );
