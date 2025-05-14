@@ -1,14 +1,15 @@
 <button
   [ngClass]="computedClasses"
+  class="flex items-center justify-center"
   [disabled]="disabled"
   (click)="onClick($event)">
   <span
-    *ngIf="iconSvg && iconPosition === 'left'"
-    class="mr-2"
-    [innerHTML]="iconSvg"></span>
+    *ngIf="sanitizedIconSvg && iconPosition === 'left'"
+    class="flex"
+    [innerHTML]="sanitizedIconSvg"></span>
   <ng-content></ng-content>
   <span
-    *ngIf="iconSvg && iconPosition === 'right'"
-    class="ml-2"
-    [innerHTML]="iconSvg"></span>
+    *ngIf="sanitizedIconSvg && iconPosition === 'right'"
+    class="flex"
+    [innerHTML]="sanitizedIconSvg"></span>
 </button>

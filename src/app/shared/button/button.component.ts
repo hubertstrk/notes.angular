@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { SafeHtml } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-button',
@@ -14,7 +15,15 @@ export class ButtonComponent {
   @Input() disabled = false;
   @Input() rounded = false;
 
-  @Input() iconSvg?: string;
+  sanitizedIconSvg?: SafeHtml | undefined;
+
+  constructor() {}
+
+  @Input()
+  set iconSvg(value: SafeHtml | undefined) {
+    this.sanitizedIconSvg = value;
+  }
+
   @Input() iconPosition: 'left' | 'right' = 'left';
 
   @Output() clicked = new EventEmitter<Event>();
@@ -22,7 +31,7 @@ export class ButtonComponent {
   get computedClasses(): string {
     const base = `
       ${this.rounded ? 'rounded-full' : 'rounded'}
-      px-4 py-2 font-medium focus:outline-none transition
+      px-2 py-2 font-medium focus:outline-none transition
     `;
     const sizes = {
       sm: 'text-sm',
@@ -34,7 +43,9 @@ export class ButtonComponent {
       primary: 'bg-blue-500 text-white hover:bg-blue-600',
       secondary: 'bg-green-500 text-white hover:bg-green-600',
       danger: 'bg-red-500 text-white hover:bg-red-600',
-      transparent: 'bg-transparent text-gray-700 hover:bg-gray-100',
+      transparent: `bg-transparent text-gray-700${
+        this.rounded ? ' hover:bg-gray-100 rounded-full' : ' hover:bg-gray-100'
+      }`,
     };
 
     return `${base} ${sizes[this.size]} ${variants[this.variant]} ${

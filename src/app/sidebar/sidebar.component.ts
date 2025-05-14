@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Store } from '@ngrx/store';
 import { Note } from '../../model/note.model';
+import sortBy from 'lodash-es/sortBy';
 
 import { selectNotes, selectActiveNote } from '../../store/note.selectors';
 import { setActiveNote } from '../../store/note.actions';
@@ -21,11 +22,9 @@ export class SidebarComponent implements OnInit {
   activeNote$ = this.store.select(selectActiveNote);
   activeNote: Note | null = null;
 
-  base = 'bg-white text-black border border-gray-200 rounded-lg shadow-sm';
-
   ngOnInit(): void {
-    this.notes$.subscribe(notes => {
-      this.notes = notes;
+    this.notes$.subscribe((notes: Note[]) => {
+      this.notes = sortBy(notes, (n: Note) => n.heading?.toLowerCase() ?? '');
     });
 
     this.activeNote$.subscribe(note => {
