@@ -16,6 +16,10 @@ import { updateContent } from '../../store/note.actions';
 import { filter, take, map } from 'rxjs/operators';
 import * as monaco from 'monaco-editor';
 import { updateCursorPosition } from '../../store/editor.actions';
+import { unified } from 'unified';
+import remarkParse from 'remark-parse';
+import type { Root } from 'mdast';
+import { NotesService } from '../../service/notes.services';
 
 @Component({
   selector: 'app-editor',
@@ -39,7 +43,10 @@ export class EditorComponent implements AfterViewInit {
 
   private monacoInstance!: monaco.editor.IStandaloneCodeEditor;
 
-  constructor(private store: Store) {}
+  constructor(
+    private store: Store,
+    private noteService: NotesService
+  ) {}
 
   ngAfterViewInit() {
     this.resizeObserver = new ResizeObserver(() => {
@@ -69,15 +76,20 @@ export class EditorComponent implements AfterViewInit {
     }
   }
 
-  onTextChange(newText: string): void {
+  onTextChange(content: string): void {
     this.activeNote$
       .pipe(
         filter(note => !!note),
         take(1),
-        map(note => ({
-          notePath: note!.path,
-          content: newText,
-        }))
+        map(note => {
+          const heading = this.noteService.extractHeading(content);
+
+          return {
+            notePath: note!.path,
+            content,
+            heading,
+          };
+        })
       )
       .subscribe(payload => {
         this.store.dispatch(updateContent(payload));

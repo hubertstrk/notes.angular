@@ -45,9 +45,9 @@ export const noteReducer = createReducer(
       activeNotePath: notePath,
     })
   ),
-  on(updateContent, (state, { notePath, content }): NoteState => {
+  on(updateContent, (state, { notePath, content, heading }): NoteState => {
     const notes = state.notes.map(note =>
-      note.path === notePath ? { ...note, content } : note
+      note.path === notePath ? { ...note, content, heading } : note
     );
     return {
       ...state,

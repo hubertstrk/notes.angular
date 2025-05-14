@@ -6,7 +6,7 @@ import { Note } from '../model/note.model';
 import { unified } from 'unified';
 import remarkParse from 'remark-parse';
 
-import type { Root } from 'mdast';
+import type { Heading, Root, Text } from 'mdast';
 
 @Injectable({
   providedIn: 'root',
@@ -38,9 +38,9 @@ export class NotesService {
     for (const path of paths) {
       try {
         const content = await readTextFile(path);
-        const tree: Root = unified().use(remarkParse).parse(content);
+        const heading = this.extractHeading(content);
 
-        results.push({ content: content, tree, path });
+        results.push({ content, path, heading });
       } catch (error) {
         console.error(`Failed to read ${path}:`, error);
       }
@@ -58,5 +58,26 @@ export class NotesService {
 
   async saveFile(path: string, content: string): Promise<void> {
     return writeTextFile(path, content);
+  }
+
+  extractHeading(content: string): string {
+    const tree = unified().use(remarkParse).parse(content);
+    const headings = tree.children.filter(x => x.type === 'heading');
+
+    if (headings.length === 0) {
+      return 'No Title';
+    }
+
+    const text = (headings[0] as Heading).children.filter(
+      x => x.type === 'text'
+    );
+
+    if (text.length === 0) {
+      return 'No Title';
+    }
+
+    const title = (text[0] as Text).value;
+
+    return title;
   }
 }

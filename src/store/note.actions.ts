@@ -23,7 +23,7 @@ export const setActiveNote = createAction(
 
 export const updateContent = createAction(
   '[Note] Update note content',
-  props<{ notePath: string; content: string }>()
+  props<{ notePath: string; content: string; heading: string }>()
 );
 
 export const noteSaved = createAction(
