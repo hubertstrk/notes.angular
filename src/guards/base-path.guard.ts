@@ -3,7 +3,7 @@ import { CanActivateFn, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { selectBasePath } from '../store/settings.selectors';
 import { take, switchMap } from 'rxjs/operators';
-import { SettingsService } from '../../service/settings.service';
+import { SettingsService } from '../service/settings.service';
 
 export const basePathGuard: CanActivateFn = () => {
   const store = inject(Store);

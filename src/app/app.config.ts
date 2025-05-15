@@ -10,8 +10,8 @@ import { provideEffects } from '@ngrx/effects';
 import { noteReducer } from '../store/note.reducers';
 import { editorReducer } from '../store/editor.reducers';
 import { NoteEffects } from '../store/note.effect';
-import { settingsReducer } from './store/settings.reducers';
-import { SettingsEffects } from './store/settings.effect';
+import { settingsReducer } from '../store/settings.reducers';
+import { SettingsEffects } from '../store/settings.effect';
 
 import { NGX_MONACO_EDITOR_CONFIG } from 'ngx-monaco-editor-v2';
 

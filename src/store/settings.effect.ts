@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { Store } from '@ngrx/store';
 import {
   setBasePath,
   loadSettings,
@@ -8,10 +7,15 @@ import {
   loadSettingsFailure,
 } from './settings.actions';
 import { switchMap, tap } from 'rxjs/operators';
-import { SettingsService } from '../../service/settings.service';
+import { SettingsService } from '../service/settings.service';
 
 @Injectable()
 export class SettingsEffects {
+  constructor(
+    private actions$: Actions,
+    private settingsService: SettingsService
+  ) {}
+
   loadSettings$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(loadSettings),
@@ -37,10 +41,4 @@ export class SettingsEffects {
     },
     { dispatch: false }
   );
-
-  constructor(
-    private actions$: Actions,
-    private store: Store,
-    private settingsService: SettingsService
-  ) {}
 }

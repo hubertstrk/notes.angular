@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { selectBasePath } from '../store/settings.selectors';
-import { setBasePath } from '../store/settings.actions';
+import { selectBasePath } from '../../store/settings.selectors';
+import { setBasePath } from '../../store/settings.actions';
 import { Observable } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
