@@ -27,15 +27,21 @@
       window.addEventListener(
         'message',
         event => {
-          const content = document.getElementById('content');
-          content.innerHTML = event.data.html;
+          if (event.data.type === 'html') {
+            const content = document.getElementById('content');
+            content.innerHTML = event.data.html;
 
-          const tables = content.querySelectorAll('table');
-          tables.forEach(table => {
-            table.classList.add('table', 'table-bordered');
-          });
+            const tables = content.querySelectorAll('table');
+            tables.forEach(table => {
+              table.classList.add('table', 'table-bordered');
+            });
 
-          hljs.highlightAll();
+            hljs.highlightAll();
+          }
+
+          if (event.data.type === 'font-size') {
+            document.documentElement.style.fontSize = `${event.data.value}rem`;
+          }
         },
         false
       );
