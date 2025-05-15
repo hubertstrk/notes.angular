@@ -1,19 +1,32 @@
-<div class="settings-container">
-  <h2>Settings</h2>
-  <div *ngIf="reason$ | async as reason">
-    <div class="alert" *ngIf="reason === 'missing'">
-      Please select a base path to continue.
+<div>
+  <header
+    class="bg-white text-black p-2 flex items-center justify-between shadow-md">
+    <h1 class="ml-6 text-2xl text-black">Settings</h1>
+    <div class="flex items-center gap-1">
+      <app-button
+        variant="transparent"
+        [rounded]="true"
+        [iconSvg]="chevronLeft"
+        (clicked)="navigateToHome()">
+      </app-button>
     </div>
-    <div class="alert" *ngIf="reason === 'invalid'">
-      The selected base path does not exist. Please choose a valid folder.
+  </header>
+
+  <div class="m-6">
+    <div *ngIf="reason$ | async as reason">
+      <div class="alert" *ngIf="reason === 'missing'">
+        Please select a base path to continue.
+      </div>
+      <div class="alert" *ngIf="reason === 'invalid'">
+        The selected base path does not exist. Please choose a valid folder.
+      </div>
+    </div>
+    <div class="flex flex-col gap-2">
+      <div class="text-xl">Base Path</div>
+      <div class="text-sm italic" *ngIf="basePath$ | async as basePath">
+        {{ basePath || 'Not set' }}
+      </div>
+      <app-button (clicked)="selectFolder()">Select Folder </app-button>
     </div>
   </div>
-  <div>
-    <label>Base Path:</label>
-    <span class="base-path" *ngIf="basePath$ | async as basePath">
-      {{ basePath || 'Not set' }}
-    </span>
-  </div>
-  <button (click)="selectFolder()">Select Folder</button>
-  <div class="message" *ngIf="message">{{ message }}</div>
 </div>

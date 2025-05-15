@@ -2,7 +2,7 @@
   <header
     class="bg-white text-black p-2 flex items-center justify-between shadow-md">
     <h1 class="ml-6 text-2xl text-black">Notes</h1>
-    <div class="flex items-center gap-1">
+    <div class="flex items-center gap-2">
       <app-button
         variant="transparent"
         [rounded]="true"
@@ -16,6 +16,7 @@
         (clicked)="addNoteClicked()">
       </app-button>
       <app-button
+        variant="transparent"
         [rounded]="true"
         [iconSvg]="settingsIcon"
         (clicked)="goToSettings()">
