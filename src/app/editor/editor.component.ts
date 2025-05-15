@@ -33,9 +33,18 @@ export class EditorComponent implements AfterViewInit {
   activeNote$: Observable<Note | null> = this.store.select(selectActiveNote);
 
   editorOptions = {
-    theme: 'vs-light',
+    theme: 'github-dark',
     language: 'markdown',
     mouseWheelZoom: true,
+    wordWrap: 'on',
+    automaticLayout: true,
+    renderWhitespace: 'boundary',
+    tabSize: 2,
+    insertSpaces: true,
+    wrappingIndent: 'same',
+    smoothScrolling: true,
+    lineDecorationsWidth: 0,
+    cursorSmoothCaretAnimation: true,
   };
 
   private monacoInstance!: monaco.editor.IStandaloneCodeEditor;

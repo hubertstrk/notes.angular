@@ -5,11 +5,15 @@
   (click)="onClick($event)">
   <span
     *ngIf="sanitizedIconSvg && iconPosition === 'left'"
-    class="flex mr-2"
-    [innerHTML]="sanitizedIconSvg"></span>
-  <ng-content></ng-content>
+    class="flex"
+    [ngClass]="{ 'mr-2': hasProjectedContent }"
+    [innerHTML]="sanitizedIconSvg">
+  </span>
+  <ng-content #projectedContent></ng-content>
   <span
     *ngIf="sanitizedIconSvg && iconPosition === 'right'"
     class="flex"
-    [innerHTML]="sanitizedIconSvg"></span>
+    [ngClass]="{ 'ml-2': hasProjectedContent }"
+    [innerHTML]="sanitizedIconSvg">
+  </span>
 </button>

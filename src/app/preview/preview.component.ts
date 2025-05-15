@@ -22,7 +22,7 @@ export class PreviewComponent implements OnInit {
     private sanitizer: DomSanitizer
   ) {}
 
-  currentFontSize = 1;
+  currentFontSize = 1.2;
   minFontSize = 0.4;
   maxFontSize = 4;
 

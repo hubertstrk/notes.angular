@@ -1,1 +1,19 @@
-<p>settings works!</p>
+<div class="settings-container">
+  <h2>Settings</h2>
+  <div *ngIf="reason$ | async as reason">
+    <div class="alert" *ngIf="reason === 'missing'">
+      Please select a base path to continue.
+    </div>
+    <div class="alert" *ngIf="reason === 'invalid'">
+      The selected base path does not exist. Please choose a valid folder.
+    </div>
+  </div>
+  <div>
+    <label>Base Path:</label>
+    <span class="base-path" *ngIf="basePath$ | async as basePath">
+      {{ basePath || 'Not set' }}
+    </span>
+  </div>
+  <button (click)="selectFolder()">Select Folder</button>
+  <div class="message" *ngIf="message">{{ message }}</div>
+</div>

@@ -8,7 +8,7 @@
   },
   "package": {
     "productName": "notes.angular",
-    "version": "0.1.0"
+    "version": "1.0.0"
   },
   "tauri": {
     "allowlist": {
@@ -16,14 +16,19 @@
       "path": {
         "all": true
       },
-      "fs": {
+      "dialog": {
         "all": true,
+        "open": true,
+        "save": true
+      },
+      "fs": {
+        "all": false,
         "readFile": true,
         "writeFile": true,
         "readDir": true,
-        "copyFile": true,
+        "copyFile": false,
         "createDir": true,
-        "removeDir": true,
+        "removeDir": false,
         "removeFile": true,
         "renameFile": true,
         "exists": true,

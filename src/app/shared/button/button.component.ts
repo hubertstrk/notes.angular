@@ -1,4 +1,13 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  ContentChildren,
+  QueryList,
+  AfterContentInit,
+  ElementRef,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SafeHtml } from '@angular/platform-browser';
 
@@ -8,7 +17,7 @@ import { SafeHtml } from '@angular/platform-browser';
   imports: [CommonModule],
   templateUrl: './button.component.html',
 })
-export class ButtonComponent {
+export class ButtonComponent implements AfterContentInit {
   @Input() variant: 'primary' | 'secondary' | 'danger' | 'transparent' =
     'primary';
   @Input() size: 'sm' | 'md' | 'lg' = 'md';
@@ -16,6 +25,10 @@ export class ButtonComponent {
   @Input() rounded = false;
 
   sanitizedIconSvg?: SafeHtml | undefined;
+
+  @ContentChildren('projectedContent', { descendants: true, read: ElementRef })
+  projectedContent!: QueryList<ElementRef>;
+  hasProjectedContent = false;
 
   constructor() {}
 
@@ -51,6 +64,11 @@ export class ButtonComponent {
     return `${base} ${sizes[this.size]} ${variants[this.variant]} ${
       this.disabled ? 'opacity-50 cursor-not-allowed' : ''
     }`;
+  }
+
+  ngAfterContentInit() {
+    this.hasProjectedContent =
+      this.projectedContent && this.projectedContent.length > 0;
   }
 
   onClick(event: Event) {
