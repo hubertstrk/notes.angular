@@ -1,11 +1,19 @@
-import { Component, ElementRef, ViewChild, OnInit } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { Store } from '@ngrx/store';
 import { marked } from 'marked';
 import { selectActiveNote } from '../../store/note.selectors';
 import { ButtonComponent } from '../shared/button/button.component';
 import { clamp } from 'lodash';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
-import { Subject, combineLatest } from 'rxjs';
+import { BehaviorSubject, combineLatest, Subject } from 'rxjs';
+import { deleteNote } from '../../store/note.actions';
+import { Note } from '../../model/note.model';
 
 @Component({
   selector: 'app-preview',
@@ -13,12 +21,15 @@ import { Subject, combineLatest } from 'rxjs';
   imports: [ButtonComponent],
   templateUrl: './preview.component.html',
 })
-export class PreviewComponent implements OnInit {
+export class PreviewComponent implements OnInit, OnDestroy {
   @ViewChild('previewIframe', { static: true })
   iframe!: ElementRef<HTMLIFrameElement>;
 
   private latestHtml: string | null = null;
   private iframeLoaded$ = new Subject<void>();
+
+  private destroyed$ = new BehaviorSubject(false);
+  private currentNote$ = new BehaviorSubject<Note | null>(null);
 
   constructor(
     private store: Store,
@@ -54,17 +65,23 @@ export class PreviewComponent implements OnInit {
       this.iframeLoaded$.next();
     });
 
-    combineLatest([
-      this.iframeLoaded$,
-      this.store.select(selectActiveNote),
-    ]).subscribe(([, note]) => {
-      this.sendFontSizeToIframe();
-      if (note) {
-        const html = marked(note.content) as string;
-        this.latestHtml = html;
-        this.sendHtmlToIframe(html);
+    this.store
+      .select(selectActiveNote)
+      // .pipe(takeUntil(this.destroyed$))
+      .subscribe(note => {
+        this.currentNote$.next(note);
+      });
+
+    combineLatest([this.iframeLoaded$, this.currentNote$]).subscribe(
+      ([, note]) => {
+        this.sendFontSizeToIframe();
+        if (note) {
+          const html = marked(note.content) as string;
+          this.latestHtml = html;
+          this.sendHtmlToIframe(html);
+        }
       }
-    });
+    );
   }
 
   private sendHtmlToIframe(html: string) {
@@ -96,5 +113,17 @@ export class PreviewComponent implements OnInit {
       this.maxFontSize
     );
     this.sendFontSizeToIframe();
+  }
+
+  deleteNote() {
+    const note = this.currentNote$.getValue();
+    if (note) {
+      this.store.dispatch(deleteNote({ notePath: note.path }));
+    }
+  }
+
+  ngOnDestroy() {
+    this.destroyed$.next(true);
+    this.destroyed$.complete();
   }
 }

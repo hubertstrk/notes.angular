@@ -6,6 +6,7 @@ import {
   updateContent,
   saveNoteFailed,
   addNote,
+  deleteNote
 } from './note.actions';
 import { Note } from '../model/note.model';
 
@@ -67,6 +68,14 @@ export const noteReducer = createReducer(
       ...state,
       notes: [...state.notes, note],
       activeNotePath: note.path,
+    };
+  }),
+  on(deleteNote, (state, { notePath }): NoteState => {
+    const notes = state.notes.filter(note => note.path !== notePath);
+    return {
+      ...state,
+      notes,
+      activeNotePath: notes.length > 0 ? notes[0].path : null,
     };
   })
 );

@@ -40,3 +40,18 @@ export const addNote = createAction(
   '[Note] Add new note',
   props<{ note: Note }>()
 );
+
+export const deleteNote = createAction(
+  '[Note] Delete note',
+  props<{ notePath: string }>()
+);
+
+export const deleteNoteSuccess = createAction(
+  '[Note] Note deleted',
+  props<{ notePath: string }>()
+);
+
+export const deleteNoteFailed = createAction(
+  '[Note] Deleting note failed',
+  props<{ error: string }>()
+);

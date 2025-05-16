@@ -11,6 +11,9 @@ import {
   saveNoteFailed,
   updateContent,
   addNote,
+  deleteNote,
+  deleteNoteSuccess,
+  deleteNoteFailed,
 } from './note.actions';
 
 @Injectable()
@@ -63,6 +66,24 @@ export class NoteEffects {
           catchError(error =>
             of(
               saveNoteFailed({
+                error: error.message,
+              })
+            )
+          )
+        )
+      )
+    );
+  });
+
+  deleteNote$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(deleteNote),
+      switchMap(action =>
+        from(this.notesService.deleteFile(action.notePath)).pipe(
+          map(() => deleteNoteSuccess({ notePath: action.notePath })),
+          catchError(error =>
+            of(
+              deleteNoteFailed({
                 error: error.message,
               })
             )

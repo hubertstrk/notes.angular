@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { readDir, readTextFile, writeTextFile } from '@tauri-apps/api/fs';
+import { readDir, readTextFile, removeFile, writeTextFile } from '@tauri-apps/api/fs';
 import { join } from '@tauri-apps/api/path';
 import { Note } from '../model/note.model';
 
@@ -51,9 +51,7 @@ export class NotesService {
 
   async importFiles(directory: string): Promise<Note[]> {
     const paths = await this.readFilePathsRecursive(directory);
-    const notes = await this.readFiles(paths);
-
-    return notes;
+    return await this.readFiles(paths);
   }
 
   async saveFile(path: string, content: string): Promise<void> {
@@ -65,7 +63,7 @@ export class NotesService {
     const headings = tree.children.filter(x => x.type === 'heading');
 
     if (headings.length === 0) {
-      return 'No Title';
+      return 'heading';
     }
 
     const text = (headings[0] as Heading).children.filter(
@@ -73,11 +71,13 @@ export class NotesService {
     );
 
     if (text.length === 0) {
-      return 'No Title';
+      return 'heading';
     }
 
-    const title = (text[0] as Text).value;
+    return (text[0] as Text).value;
+  }
 
-    return title;
+  async deleteFile(path: string): Promise<void> {
+    await removeFile(path);
   }
 }
