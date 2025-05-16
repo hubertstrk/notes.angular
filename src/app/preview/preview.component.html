@@ -5,13 +5,13 @@
         variant="transparent"
         [rounded]="true"
         [iconSvg]="zoomInIcon"
-        (clicked)="increaseFontSize()">
+        (clicked)="updateFontSize(0.2)">
       </app-button>
       <app-button
         variant="transparent"
         [rounded]="true"
         [iconSvg]="zoomOutIcon"
-        (clicked)="decreaseFontSize()">
+        (clicked)="updateFontSize(-0.2)">
       </app-button>
     </div>
     <div class="flex">

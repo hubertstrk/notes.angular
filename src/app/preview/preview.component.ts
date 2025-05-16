@@ -11,9 +11,10 @@ import { selectActiveNote } from '../../store/note.selectors';
 import { ButtonComponent } from '../shared/button/button.component';
 import { clamp } from 'lodash';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
-import { BehaviorSubject, combineLatest, Subject } from 'rxjs';
+import { BehaviorSubject, combineLatest, Subject, Subscription } from 'rxjs';
 import { deleteNote } from '../../store/note.actions';
 import { Note } from '../../model/note.model';
+import { iFrameMessage } from '../../model/preview.model';
 
 @Component({
   selector: 'app-preview',
@@ -25,10 +26,10 @@ export class PreviewComponent implements OnInit, OnDestroy {
   @ViewChild('previewIframe', { static: true })
   iframe!: ElementRef<HTMLIFrameElement>;
 
+  currentNoteSubscription: Subscription | null = null;
+
   private latestHtml: string | null = null;
   private iframeLoaded$ = new Subject<void>();
-
-  private destroyed$ = new BehaviorSubject(false);
   private currentNote$ = new BehaviorSubject<Note | null>(null);
 
   constructor(
@@ -65,65 +66,46 @@ export class PreviewComponent implements OnInit, OnDestroy {
       this.iframeLoaded$.next();
     });
 
-    this.store
+    this.currentNoteSubscription = this.store
       .select(selectActiveNote)
-      // .pipe(takeUntil(this.destroyed$))
       .subscribe(note => {
         this.currentNote$.next(note);
       });
 
     combineLatest([this.iframeLoaded$, this.currentNote$]).subscribe(
       ([, note]) => {
-        this.sendFontSizeToIframe();
+        this.updateFontSize(0);
         if (note) {
           const html = marked(note.content) as string;
           this.latestHtml = html;
-          this.sendHtmlToIframe(html);
+          this.sendToIFrame({ type: 'html', content: html });
         }
       }
     );
   }
 
-  private sendHtmlToIframe(html: string) {
-    const iframeWindow = this.iframe.nativeElement.contentWindow;
-    iframeWindow?.postMessage({ type: 'html', html }, '*');
-  }
-
-  private sendFontSizeToIframe() {
-    const iframeWindow = this.iframe.nativeElement.contentWindow;
-    iframeWindow?.postMessage(
-      { type: 'font-size', value: this.currentFontSize },
-      '*'
-    );
-  }
-
-  increaseFontSize() {
+  updateFontSize(increment: number) {
     this.currentFontSize = clamp(
-      this.currentFontSize + 0.2,
+      this.currentFontSize + increment,
       this.minFontSize,
       this.maxFontSize
     );
-    this.sendFontSizeToIframe();
-  }
 
-  decreaseFontSize() {
-    this.currentFontSize = clamp(
-      this.currentFontSize - 0.2,
-      this.minFontSize,
-      this.maxFontSize
-    );
-    this.sendFontSizeToIframe();
+    this.sendToIFrame({ type: 'font-size', content: this.currentFontSize });
   }
 
   deleteNote() {
     const note = this.currentNote$.getValue();
-    if (note) {
-      this.store.dispatch(deleteNote({ notePath: note.path }));
-    }
+    if (note) this.store.dispatch(deleteNote({ notePath: note.path }));
   }
 
   ngOnDestroy() {
-    this.destroyed$.next(true);
-    this.destroyed$.complete();
+    if (this.currentNoteSubscription) {
+      this.currentNoteSubscription.unsubscribe();
+    }
+  }
+
+  sendToIFrame(message: iFrameMessage<string | number>) {
+    this.iframe.nativeElement?.contentWindow?.postMessage(message, '*');
   }
 }

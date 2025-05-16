@@ -29,7 +29,7 @@
         event => {
           if (event.data.type === 'html') {
             const content = document.getElementById('content');
-            content.innerHTML = event.data.html;
+            content.innerHTML = event.data.content;
 
             const tables = content.querySelectorAll('table');
             tables.forEach(table => {
@@ -40,7 +40,7 @@
           }
 
           if (event.data.type === 'font-size') {
-            document.documentElement.style.fontSize = `${event.data.value}rem`;
+            document.documentElement.style.fontSize = `${event.data.content}rem`;
           }
         },
         false
