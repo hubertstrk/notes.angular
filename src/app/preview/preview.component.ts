@@ -31,6 +31,7 @@ export class PreviewComponent implements OnInit, OnDestroy {
   private latestHtml: string | null = null;
   private iframeLoaded$ = new Subject<void>();
   private currentNote$ = new BehaviorSubject<Note | null>(null);
+  activeNoteObservable$ = this.store.select(selectActiveNote);
 
   constructor(
     private store: Store,
@@ -66,11 +67,11 @@ export class PreviewComponent implements OnInit, OnDestroy {
       this.iframeLoaded$.next();
     });
 
-    this.currentNoteSubscription = this.store
-      .select(selectActiveNote)
-      .subscribe(note => {
+    this.activeNoteObservable$.subscribe(note => {
+      if (note) {
         this.currentNote$.next(note);
-      });
+      }
+    });
 
     combineLatest([this.iframeLoaded$, this.currentNote$]).subscribe(
       ([, note]) => {

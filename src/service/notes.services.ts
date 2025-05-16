@@ -1,5 +1,10 @@
 import { Injectable } from '@angular/core';
-import { readDir, readTextFile, removeFile, writeTextFile } from '@tauri-apps/api/fs';
+import {
+  readDir,
+  readTextFile,
+  removeFile,
+  writeTextFile,
+} from '@tauri-apps/api/fs';
 import { join } from '@tauri-apps/api/path';
 import { Note } from '../model/note.model';
 
@@ -63,7 +68,7 @@ export class NotesService {
     const headings = tree.children.filter(x => x.type === 'heading');
 
     if (headings.length === 0) {
-      return 'heading';
+      return 'no title';
     }
 
     const text = (headings[0] as Heading).children.filter(
@@ -71,7 +76,7 @@ export class NotesService {
     );
 
     if (text.length === 0) {
-      return 'heading';
+      return 'no title';
     }
 
     return (text[0] as Text).value;
