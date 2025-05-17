@@ -11,6 +11,7 @@ export enum Icon {
   DeleteNoteIcon = 'deleteNoteIcon',
   Print = 'print',
   Search = 'search',
+  Cancel = 'cancel',
 }
 
 @Injectable({
@@ -66,6 +67,12 @@ export class IconService {
       search: this.sanitizer.bypassSecurityTrustHtml(
         `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
           <path fill="currentColor" d="M12.535 13.596a6.5 6.5 0 1 1 1.06-1.06l3.435 3.434a.75.75 0 0 1-.976 1.133l-.084-.073zM13.5 8.5a5 5 0 1 0-10 0a5 5 0 0 0 10 0" />
+        </svg>`
+      ),
+
+      cancel: this.sanitizer.bypassSecurityTrustHtml(
+        `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
+	        <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6.758 17.243L12.001 12m5.243-5.243L12 12m0 0L6.758 6.757M12.001 12l5.243 5.243" />
         </svg>`
       ),
     };
