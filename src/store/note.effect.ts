@@ -1,19 +1,19 @@
 import { Injectable } from '@angular/core';
-import { createEffect, Actions, ofType } from '@ngrx/effects';
+import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { from, of } from 'rxjs';
 import { catchError, debounceTime, map, switchMap } from 'rxjs/operators';
 import { NotesService } from '../service/notes.services';
 import {
-  loadNotes,
-  notesLoaded,
-  loadNotesFailed,
-  noteSaved,
-  saveNoteFailed,
-  updateContent,
   addNote,
   deleteNote,
-  deleteNoteSuccess,
   deleteNoteFailed,
+  deleteNoteSuccess,
+  loadNotes,
+  loadNotesFailed,
+  noteSaved,
+  notesLoaded,
+  saveNoteFailed,
+  updateContent,
 } from './note.actions';
 
 @Injectable()
@@ -28,7 +28,7 @@ export class NoteEffects {
       switchMap(action =>
         from(this.notesService.importFiles(action.directory)).pipe(
           map(notes => {
-            return notesLoaded({ notes });
+            return notesLoaded({ notes, basePath: action.directory });
           }),
           catchError(error => of(loadNotesFailed({ error })))
         )

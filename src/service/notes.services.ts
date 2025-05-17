@@ -6,7 +6,7 @@ import {
   writeTextFile,
 } from '@tauri-apps/api/fs';
 import { join } from '@tauri-apps/api/path';
-import { Note } from '../model/note.model';
+import { NO_TITLE, Note } from '../model/note.model';
 
 import { unified } from 'unified';
 import remarkParse from 'remark-parse';
@@ -68,7 +68,7 @@ export class NotesService {
     const headings = tree.children.filter(x => x.type === 'heading');
 
     if (headings.length === 0) {
-      return 'no title';
+      return NO_TITLE;
     }
 
     const text = (headings[0] as Heading).children.filter(
@@ -76,7 +76,7 @@ export class NotesService {
     );
 
     if (text.length === 0) {
-      return 'no title';
+      return NO_TITLE;
     }
 
     return (text[0] as Text).value;

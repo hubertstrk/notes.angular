@@ -1,12 +1,12 @@
 import { createReducer, on } from '@ngrx/store';
 import {
-  notesLoaded,
+  addNote,
+  deleteNote,
   loadNotesFailed,
+  notesLoaded,
+  saveNoteFailed,
   setActiveNote,
   updateContent,
-  saveNoteFailed,
-  addNote,
-  deleteNote
 } from './note.actions';
 import { Note } from '../model/note.model';
 

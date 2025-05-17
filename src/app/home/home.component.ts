@@ -12,6 +12,7 @@ import { addNote } from '../../store/note.actions';
 import { v4 as uuidv4 } from 'uuid';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { Router } from '@angular/router';
+import { NEW_NOTE_TITLE } from '../../model/note.model';
 
 @Component({
   selector: 'app-home',
@@ -63,8 +64,8 @@ export class HomeComponent implements OnInit {
     this.store.dispatch(
       addNote({
         note: {
-          content: '# new note',
-          heading: 'new note',
+          content: `# ${NEW_NOTE_TITLE}`,
+          heading: NEW_NOTE_TITLE,
           path: `C:\\Users\\nz3k4\\Downloads\\notes\\${uuidv4()}.md`,
         },
       })

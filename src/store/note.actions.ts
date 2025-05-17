@@ -8,7 +8,7 @@ export const loadNotes = createAction(
 
 export const notesLoaded = createAction(
   '[Note] Notes loaded',
-  props<{ notes: Note[] }>()
+  props<{ notes: Note[]; basePath: string }>()
 );
 
 export const loadNotesFailed = createAction(

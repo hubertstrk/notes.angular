@@ -1,3 +1,6 @@
+export const NEW_NOTE_TITLE = 'New Note';
+export const NO_TITLE = 'No Title';
+
 export interface Note {
   content: string;
   path: string;

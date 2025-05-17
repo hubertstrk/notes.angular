@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
-import { Settings } from '../app/model/settings.model';
+import { Settings } from '../model/settings.model';
 import {
-  writeTextFile,
-  readTextFile,
   BaseDirectory,
   createDir,
   readDir,
+  readTextFile,
+  writeTextFile,
 } from '@tauri-apps/api/fs';
 
 const SETTINGS_DIR = 'notes-app';
@@ -21,7 +21,6 @@ export class SettingsService {
     const path = `${SETTINGS_DIR}/${SETTINGS_FILE}`;
     let content = '';
     try {
-      console.info('Reading settings from', BaseDirectory.AppData);
       content = await readTextFile(path, { dir: BaseDirectory.AppData });
     } catch {
       content = JSON.stringify({ basePath: '' });
@@ -36,7 +35,6 @@ export class SettingsService {
       recursive: true,
     });
     const path = `${SETTINGS_DIR}/${SETTINGS_FILE}`;
-    console.info('Saving settings in', BaseDirectory.AppData);
     const content = JSON.stringify(settings);
     await writeTextFile(path, content, { dir: BaseDirectory.AppData });
   }
