@@ -10,7 +10,7 @@ import { PreviewComponent } from '../preview/preview.component';
 import { EditorComponent } from '../editor/editor.component';
 import { FooterComponent } from '../footer/footer.component';
 
-import { IconService } from '../../service/icon.service';
+import { Icon, IconService } from '../../service/icon.service';
 
 import { v4 as uuidv4 } from 'uuid';
 import { Store } from '@ngrx/store';
@@ -49,10 +49,10 @@ export class HomeComponent implements OnInit {
   settings: SafeHtml;
 
   ngOnInit() {
-    this.chevronLeft = this.icons.getIcon('chevronLeft');
-    this.chevronRight = this.icons.getIcon('chevronRight');
-    this.plus = this.icons.getIcon('plus');
-    this.settings = this.icons.getIcon('settings');
+    this.chevronLeft = this.icons.getIcon(Icon.ChevronLeft);
+    this.chevronRight = this.icons.getIcon(Icon.ChevronRight);
+    this.plus = this.icons.getIcon(Icon.Plus);
+    this.settings = this.icons.getIcon(Icon.Settings);
   }
 
   addNoteClicked() {
