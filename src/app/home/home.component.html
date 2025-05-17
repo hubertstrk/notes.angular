@@ -1,4 +1,4 @@
-<div class="h-screen w-screen grid grid-rows-[auto_1fr_auto]">
+<div class="relative h-screen w-screen grid grid-rows-[auto_1fr_auto]">
   <header class="bg-white text-black p-2 flex items-center justify-between">
     <h1 class="ml-4 text-2xl text-black">Notes</h1>
     <div class="flex items-center gap-2">
@@ -7,6 +7,12 @@
         [rounded]="true"
         [iconSvg]="collapsed ? chevronRight : chevronLeft"
         (clicked)="collapsed = !collapsed">
+      </app-button>
+      <app-button
+        variant="transparent"
+        [rounded]="true"
+        [iconSvg]="search"
+        (clicked)="showSearch = !showSearch">
       </app-button>
       <app-button
         variant="transparent"
@@ -45,5 +51,11 @@
 
   <div class="flex w-full">
     <app-footer class="w-full"></app-footer>
+  </div>
+
+  <div
+    *ngIf="showSearch"
+    class="fixed top-8 bg-white/30 backdrop-blur-sm left-1/2 -translate-x-1/2 w-1/2 flex justify-center z-[9999] shadow-lg rounded-lg">
+    <app-search (noteClicked)="onNoteClicked($event)"></app-search>
   </div>
 </div>

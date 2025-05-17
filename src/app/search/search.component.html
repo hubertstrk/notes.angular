@@ -1,0 +1,24 @@
+<div class="w-full p-4 flex justify-center items-center bg-white">
+  <input
+    type="text"
+    placeholder="Search notes..."
+    class="w-full md:w-96 px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400 shadow-sm text-lg transition-all duration-200 bg-white"
+    (input)="onSearchInput($event)"
+    autofocus />
+</div>
+<div class="w-full p-4 flex justify-center items-center bg-white">
+  <div *ngIf="searchResults.length === 0" class="text-gray-500">
+    No results found
+  </div>
+  <div *ngIf="searchResults.length > 0" class="w-full">
+    <ul class="list-disc pl-5">
+      <li *ngFor="let note of searchResults" class="py-2">
+        <a
+          (click)="openNote(note)"
+          class="text-blue-500 hover:underline cursor-pointer">
+          {{ note.heading }}
+        </a>
+      </li>
+    </ul>
+  </div>
+</div>
