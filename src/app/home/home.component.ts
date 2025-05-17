@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
+
+import { SafeHtml } from '@angular/platform-browser';
 
 import { ButtonComponent } from '../shared/button/button.component';
 import { SidebarComponent } from '../sidebar/sidebar.component';
@@ -7,14 +10,13 @@ import { PreviewComponent } from '../preview/preview.component';
 import { EditorComponent } from '../editor/editor.component';
 import { FooterComponent } from '../footer/footer.component';
 
+import { IconService } from '../../service/icon.service';
+
+import { v4 as uuidv4 } from 'uuid';
 import { Store } from '@ngrx/store';
 import { addNote } from '../../store/note.actions';
-import { v4 as uuidv4 } from 'uuid';
-import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
-import { Router } from '@angular/router';
-import { NEW_NOTE_TITLE } from '../../model/note.model';
-
 import { selectBasePath } from '../../store/settings.selectors';
+import { NEW_NOTE_TITLE } from '../../model/note.model';
 
 @Component({
   selector: 'app-home',
@@ -27,41 +29,30 @@ import { selectBasePath } from '../../store/settings.selectors';
     EditorComponent,
     FooterComponent,
   ],
+  providers: [IconService],
   templateUrl: './home.component.html',
 })
 export class HomeComponent implements OnInit {
   constructor(
     private store: Store,
-    private sanitizer: DomSanitizer,
-    private router: Router
+    private router: Router,
+    private icons: IconService
   ) {}
 
   collapsed = false;
 
   currentBasePath$ = this.store.select(selectBasePath);
 
-  chevronLeft: SafeHtml | undefined;
-  chevronRight: SafeHtml | undefined;
-  plus: SafeHtml | undefined;
-  settingsIcon: SafeHtml | undefined;
+  chevronLeft: SafeHtml;
+  chevronRight: SafeHtml;
+  plus: SafeHtml;
+  settings: SafeHtml;
 
-  ngOnInit(): void {
-    this.chevronLeft = this.sanitizer
-      .bypassSecurityTrustHtml(`<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 16 16">
-	<path fill="currentColor" d="M10.354 3.146a.5.5 0 0 1 0 .708L6.207 8l4.147 4.146a.5.5 0 0 1-.708.708l-4.5-4.5a.5.5 0 0 1 0-.708l4.5-4.5a.5.5 0 0 1 .708 0" />
-</svg>`);
-    this.chevronRight = this.sanitizer
-      .bypassSecurityTrustHtml(`<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 16 16">
-	<path fill="currentColor" d="M5.646 3.146a.5.5 0 0 0 0 .708L9.793 8l-4.147 4.146a.5.5 0 0 0 .708.708l4.5-4.5a.5.5 0 0 0 0-.708l-4.5-4.5a.5.5 0 0 0-.708 0" />
-</svg>`);
-    this.plus = this.sanitizer
-      .bypassSecurityTrustHtml(`<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 12 12">
-	<path fill="currentColor" d="M6 2a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 6 2" />
-</svg>`);
-    this.settingsIcon = this.sanitizer
-      .bypassSecurityTrustHtml(`<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 16 16">
-	<path fill="currentColor" d="M8 6a2 2 0 1 0 0 4a2 2 0 0 0 0-4M7 8a1 1 0 1 1 2 0a1 1 0 0 1-2 0m3.618-3.602a.71.71 0 0 1-.824-.567l-.26-1.416a.35.35 0 0 0-.275-.282a6.1 6.1 0 0 0-2.519 0a.35.35 0 0 0-.275.282l-.259 1.416a.71.71 0 0 1-.936.538l-1.359-.484a.36.36 0 0 0-.382.095a6 6 0 0 0-1.262 2.173a.35.35 0 0 0 .108.378l1.102.931q.045.037.081.081a.704.704 0 0 1-.081.995l-1.102.931a.35.35 0 0 0-.108.378A6 6 0 0 0 3.53 12.02a.36.36 0 0 0 .382.095l1.36-.484a.708.708 0 0 1 .936.538l.258 1.416c.026.14.135.252.275.281a6.1 6.1 0 0 0 2.52 0a.35.35 0 0 0 .274-.281l.26-1.416a.71.71 0 0 1 .936-.538l1.359.484c.135.048.286.01.382-.095a6 6 0 0 0 1.262-2.173a.35.35 0 0 0-.108-.378l-1.102-.931a.703.703 0 0 1 0-1.076l1.102-.931a.35.35 0 0 0 .108-.378A6 6 0 0 0 12.47 3.98a.36.36 0 0 0-.382-.095l-1.36.484a1 1 0 0 1-.111.03m-6.62.58l.937.333a1.71 1.71 0 0 0 2.255-1.3l.177-.97a5 5 0 0 1 1.265 0l.178.97a1.708 1.708 0 0 0 2.255 1.3L12 4.977q.384.503.63 1.084l-.754.637a1.704 1.704 0 0 0 0 2.604l.755.637a5 5 0 0 1-.63 1.084l-.937-.334a1.71 1.71 0 0 0-2.255 1.3l-.178.97a5 5 0 0 1-1.265 0l-.177-.97a1.708 1.708 0 0 0-2.255-1.3L4 11.023a5 5 0 0 1-.63-1.084l.754-.638a1.704 1.704 0 0 0 0-2.603l-.755-.637q.248-.581.63-1.084" />
-</svg>`);
+  ngOnInit() {
+    this.chevronLeft = this.icons.getIcon('chevronLeft');
+    this.chevronRight = this.icons.getIcon('chevronRight');
+    this.plus = this.icons.getIcon('plus');
+    this.settings = this.icons.getIcon('settings');
   }
 
   addNoteClicked() {
