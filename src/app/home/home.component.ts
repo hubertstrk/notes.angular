@@ -14,6 +14,8 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { NEW_NOTE_TITLE } from '../../model/note.model';
 
+import { selectBasePath } from '../../store/settings.selectors';
+
 @Component({
   selector: 'app-home',
   standalone: true,
@@ -35,6 +37,8 @@ export class HomeComponent implements OnInit {
   ) {}
 
   collapsed = false;
+
+  currentBasePath$ = this.store.select(selectBasePath);
 
   chevronLeft: SafeHtml | undefined;
   chevronRight: SafeHtml | undefined;
@@ -61,15 +65,19 @@ export class HomeComponent implements OnInit {
   }
 
   addNoteClicked() {
-    this.store.dispatch(
-      addNote({
-        note: {
-          content: `# ${NEW_NOTE_TITLE}`,
-          heading: NEW_NOTE_TITLE,
-          path: `C:\\Users\\nz3k4\\Downloads\\notes\\${uuidv4()}.md`,
-        },
-      })
-    );
+    this.currentBasePath$.subscribe(basePath => {
+      if (basePath) {
+        this.store.dispatch(
+          addNote({
+            note: {
+              content: `# ${NEW_NOTE_TITLE}`,
+              heading: NEW_NOTE_TITLE,
+              path: `${basePath}\\${uuidv4()}.md`,
+            },
+          })
+        );
+      }
+    });
   }
 
   goToSettings() {
