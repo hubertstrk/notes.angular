@@ -1,18 +1,15 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Icon, IconService } from '../../service/icon.service';
-import Fuse, { FuseResult, FuseResultMatch } from 'fuse.js';
 import { Note } from '../../model/note.model';
 import { ButtonComponent } from '../shared/button/button.component';
 import { Store } from '@ngrx/store';
 import { selectNotes } from '../../store/note.selectors';
 import { SafeHtml } from '@angular/platform-browser';
-import { marked } from 'marked';
 
 type SearchResult = {
   item: Note;
-  matches: readonly FuseResultMatch[] | undefined;
-  previewText: string;
+  preview: string;
 };
 
 @Component({
@@ -28,7 +25,6 @@ export class AppSearchComponent implements OnInit {
 
   notes$ = this.store.select(selectNotes);
   notes: Note[] = [];
-  fuse: Fuse<Note> | null = null;
   searchResults: SearchResult[] = [];
 
   cancelIcon: SafeHtml;
@@ -46,50 +42,46 @@ export class AppSearchComponent implements OnInit {
     this.cancelIcon = this.iconService.getIcon(Icon.Cancel);
   }
 
-  preview(content: string, searchValue: string): string {
-    if (!searchValue) return '';
-    // Escape regex special characters in searchValue
-    const escaped = searchValue.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-    const regex = new RegExp(escaped, 'i');
-    const match = regex.exec(content);
-    if (!match) return '';
-    const start = match.index;
-    const end = start + match[0].length - 1;
-    const context = 30;
-    const previewStart = Math.max(0, start - context);
-    const previewEnd = Math.min(content.length, end + 1 + context);
-    const before = content.slice(previewStart, start);
-    const matched = content.slice(start, end + 1);
-    const after = content.slice(end + 1, previewEnd);
-    const prefix = previewStart > 0 ? '...' : '';
-    const suffix = previewEnd < content.length ? '...' : '';
-    return `${prefix}${before}<mark>${matched}</mark>${after}${suffix}`;
-  }
-
   onSearchInput(event: Event) {
     const value = (event.target as HTMLInputElement).value;
     const searchValue: string = value.trim();
 
     if (searchValue.length === 0) return;
 
-    this.fuse = new Fuse(this.notes, {
-      keys: ['content'],
-      threshold: 1,
-      minMatchCharLength: 3,
-      includeMatches: true,
-    });
+    const regex = new RegExp(`${searchValue}`, 'i');
 
-    const result = this.fuse.search(searchValue);
+    this.searchResults = this.notes
+      .filter(note => regex.test(note.content))
+      .map(note => {
+        const match = regex.exec(note.content);
 
-    this.searchResults = result.map((res: FuseResult<Note>) => {
-      const content = res.item.content;
-      const previewText = this.preview(content, searchValue);
-      return {
-        item: res.item,
-        matches: res.matches,
-        previewText,
-      };
-    });
+        if (!match) return { item: note, preview: '' };
+
+        const matchIndex = match.index;
+
+        // highlight the matched text
+        const highlighted = match.input.substring(
+          matchIndex,
+          matchIndex + searchValue.length
+        );
+
+        // text before match
+        const front = match.input.substring(
+          Math.max(0, matchIndex - 40),
+          matchIndex
+        );
+
+        // text after match
+        const tail = match.input.substring(
+          matchIndex + searchValue.length,
+          Math.min(note.content.length, matchIndex + searchValue.length + 40)
+        );
+
+        return {
+          item: note,
+          preview: `${front}<mark>${highlighted}</mark>${tail}`,
+        };
+      });
   }
 
   openNote(note: Note) {
