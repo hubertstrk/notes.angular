@@ -1,5 +1,4 @@
 import {
-  AfterContentInit,
   AfterViewInit,
   Component,
   ElementRef,
@@ -82,14 +81,14 @@ export class AppSearchComponent implements OnInit, AfterViewInit {
 
         // text before match
         const front = match.input.substring(
-          Math.max(0, matchIndex - 40),
+          Math.max(0, matchIndex - 60),
           matchIndex
         );
 
         // text after match
         const tail = match.input.substring(
           matchIndex + searchValue.length,
-          Math.min(note.content.length, matchIndex + searchValue.length + 40)
+          Math.min(note.content.length, matchIndex + searchValue.length + 60)
         );
 
         return {

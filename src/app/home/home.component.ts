@@ -43,6 +43,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     private icons: IconService
   ) {}
 
+  isDarkMode = false;
   collapsed = false;
   showSearch = false;
   currentBasePath$ = this.store.select(selectBasePath);
@@ -52,6 +53,8 @@ export class HomeComponent implements OnInit, OnDestroy {
   plus: SafeHtml;
   settings: SafeHtml;
   search: SafeHtml;
+  sunIcon: SafeHtml;
+  moonIcon: SafeHtml;
 
   ngOnInit() {
     this.chevronLeft = this.icons.getIcon(Icon.ChevronLeft);
@@ -59,6 +62,9 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.plus = this.icons.getIcon(Icon.Plus);
     this.settings = this.icons.getIcon(Icon.Settings);
     this.search = this.icons.getIcon(Icon.Search);
+    this.sunIcon = this.icons.getIcon(Icon.Sun);
+    this.moonIcon = this.icons.getIcon(Icon.Moon);
+
     window.addEventListener('keydown', this.handleEsc, true);
   }
 
@@ -95,5 +101,9 @@ export class HomeComponent implements OnInit, OnDestroy {
   onNoteClicked(note: Note) {
     this.showSearch = false;
     this.store.dispatch(setActiveNote({ notePath: note.path }));
+  }
+
+  toggleDarkMode() {
+    document.body.classList.toggle('dark');
   }
 }

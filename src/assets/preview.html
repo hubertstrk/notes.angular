@@ -36,6 +36,11 @@
               table.classList.add('table', 'table-bordered');
             });
 
+            const blockquotes = content.querySelectorAll('blockquote');
+            blockquotes.forEach(bq => {
+              bq.classList.add('blockquote');
+            });
+
             hljs.highlightAll();
           }
 
