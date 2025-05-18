@@ -1,4 +1,13 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import {
+  AfterContentInit,
+  AfterViewInit,
+  Component,
+  ElementRef,
+  EventEmitter,
+  OnInit,
+  Output,
+  ViewChild,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Icon, IconService } from '../../service/icon.service';
 import { Note } from '../../model/note.model';
@@ -19,9 +28,11 @@ type SearchResult = {
   templateUrl: './search.component.html',
   providers: [IconService],
 })
-export class AppSearchComponent implements OnInit {
+export class AppSearchComponent implements OnInit, AfterViewInit {
   @Output() noteClicked = new EventEmitter<Note>();
   @Output() closeClicked = new EventEmitter<void>();
+
+  @ViewChild('searchInput') searchInput!: ElementRef<HTMLInputElement>;
 
   notes$ = this.store.select(selectNotes);
   notes: Note[] = [];
@@ -36,6 +47,10 @@ export class AppSearchComponent implements OnInit {
     this.notes$.subscribe(notes => {
       this.notes = notes;
     });
+  }
+
+  ngAfterViewInit(): void {
+    this.searchInput.nativeElement.focus();
   }
 
   ngOnInit(): void {
