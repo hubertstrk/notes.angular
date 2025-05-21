@@ -8,15 +8,70 @@
       integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT"
       crossorigin="anonymous" />
     <link
+      id="hljs-light-theme"
       rel="stylesheet"
-      href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.3.2/build/styles/a11y-dark.min.css" />
+      href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.3.2/build/styles/github.min.css" />
+    <link
+      id="hljs-dark-theme"
+      rel="stylesheet"
+      href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.3.2/build/styles/a11y-dark.min.css"
+      disabled />
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
     <title>Markdown Preview</title>
     <style>
+      :root {
+        --bg-color: #ffffff;
+        --text-color: #333333;
+        --link-color: #0066cc;
+        --code-bg: #ffffff;
+        --code-text: #333333;
+        --blockquote-bg: #f9f9f9;
+        --blockquote-border: #e5e5e5;
+      }
+
+      :root.dark {
+        --bg-color: #27272a;
+        --text-color: #ffffff;
+        --link-color: #4da3ff;
+        --code-bg: #475569;
+        --code-text: #f9a8d4;
+        --blockquote-bg: #2a2a2a;
+        --blockquote-border: #444444;
+      }
+
       body {
         font-family: sans-serif;
         padding: 1em;
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        transition:
+          background-color 0.3s,
+          color 0.3s;
+      }
+
+      a {
+        color: var(--link-color);
+      }
+
+      code {
+        background-color: var(--code-bg);
+        color: var(--code-text);
+        padding: 0.2em 0.4em;
+        border-radius: 3px;
+      }
+
+      pre {
+        background-color: var(--bg-color);
+        padding: 1em;
+        border-radius: 5px;
+        overflow-x: auto;
+      }
+
+      blockquote {
+        background-color: var(--blockquote-bg);
+        border-left: 4px solid var(--blockquote-border);
+        padding: 0.5em 1em;
       }
     </style>
   </head>
@@ -24,6 +79,36 @@
     <div id="content"></div>
 
     <script>
+      function setDarkMode(isDark) {
+        if (isDark) {
+          document.documentElement.classList.add('dark');
+          document.getElementById('hljs-light-theme').disabled = true;
+          document.getElementById('hljs-dark-theme').disabled = false;
+        } else {
+          document.documentElement.classList.remove('dark');
+          document.getElementById('hljs-light-theme').disabled = false;
+          document.getElementById('hljs-dark-theme').disabled = true;
+        }
+
+        hljs.highlightAll();
+
+        // add data-bs-theme="dark" when dark mode to html tag
+        if (isDark) {
+          document.documentElement.setAttribute('data-bs-theme', 'dark');
+        } else {
+          document.documentElement.removeAttribute('data-bs-theme');
+        }
+      }
+
+      // Check if parent has dark mode enabled on load
+      try {
+        if (window.parent.document.body.classList.contains('dark')) {
+          setDarkMode(true);
+        }
+      } catch (e) {
+        // Ignore cross-origin errors
+      }
+
       window.addEventListener(
         'message',
         event => {
@@ -46,6 +131,11 @@
 
           if (event.data.type === 'font-size') {
             document.documentElement.style.fontSize = `${event.data.content}rem`;
+          }
+
+          if (event.data.type === 'dark-mode') {
+            console.info(`Dark mode: ${event.data.content}`);
+            setDarkMode(event.data.content);
           }
         },
         false

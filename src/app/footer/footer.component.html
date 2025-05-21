@@ -1,5 +1,5 @@
 <footer
-  class="bg-gray-800 text-white text-sm w-full p-2 flex justify-between items-center">
+  class="bg-zinc-800 text-white text-sm w-full p-2 flex justify-between items-center">
   <span>Path: {{ (activeNote$ | async)?.path || 'No active note' }}</span>
   <div class="flex items-center gap-4">
     <span>Characters: {{ (activeNote$ | async)?.content?.length || 0 }}</span>

@@ -1,12 +1,12 @@
 import {
+  AfterContentInit,
   Component,
+  ContentChildren,
+  ElementRef,
   EventEmitter,
   Input,
   Output,
-  ContentChildren,
   QueryList,
-  AfterContentInit,
-  ElementRef,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SafeHtml } from '@angular/platform-browser';
@@ -56,8 +56,10 @@ export class ButtonComponent implements AfterContentInit {
       primary: 'bg-blue-500 text-white hover:bg-blue-600',
       secondary: 'bg-green-500 text-white hover:bg-green-600',
       danger: 'bg-red-500 text-white hover:bg-red-600',
-      transparent: `bg-transparent text-gray-700${
-        this.rounded ? ' hover:bg-gray-100 rounded-full' : ' hover:bg-gray-100'
+      transparent: `bg-transparent text-gray-700 dark:text-gray-200${
+        this.rounded
+          ? ' hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full'
+          : ' hover:bg-gray-100 dark:hover:bg-gray-700'
       }`,
     };
 

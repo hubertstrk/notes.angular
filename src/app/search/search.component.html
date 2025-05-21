@@ -12,23 +12,25 @@
     #searchInput
     type="text"
     placeholder="Search notes..."
-    class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400 shadow-sm text-lg transition-all duration-200 bg-white"
+    class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-400 dark:focus:ring-blue-500 shadow-sm text-lg transition-all duration-200 bg-white dark:bg-zinc-800 dark:text-white"
     (input)="onSearchInput($event)"
     autofocus />
 </div>
 <div class="w-full p-4 flex justify-center items-center">
-  <div *ngIf="searchResults.length === 0" class="text-gray-500">
+  <div
+    *ngIf="searchResults.length === 0"
+    class="text-zinc-500 dark:text-zinc-400">
     No results found
   </div>
   <div *ngIf="searchResults.length > 0" class="w-full">
     <div
       *ngFor="let result of searchResults"
-      class="p-2 cursor-pointer hover:bg-gray-100 transition duration-200"
+      class="p-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-zinc-600 transition duration-200"
       (click)="openNote(result.item)">
-      <h2 class="text-lg font-semibold text-gray-800">
+      <h2 class="text-lg font-semibold text-zinc-800 dark:text-zinc-200">
         {{ result.item.heading }}
       </h2>
-      <p class="text-gray-600 text-sm">
+      <p class="text-gray-800 dark:text-zinc-200 text-sm">
         <span [innerHTML]="result.preview"></span>
       </p>
     </div>

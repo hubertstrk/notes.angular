@@ -33,6 +33,7 @@ export class PreviewComponent implements OnInit, OnDestroy {
   private iframeLoaded$ = new Subject<void>();
   private currentNote$ = new BehaviorSubject<Note | null>(null);
   activeNoteObservable$ = this.store.select(selectActiveNote);
+  private darkModeObserver!: MutationObserver;
 
   constructor(
     private store: Store,
@@ -56,6 +57,27 @@ export class PreviewComponent implements OnInit, OnDestroy {
 
     this.iframe.nativeElement.addEventListener('load', () => {
       this.iframeLoaded$.next();
+      // Send initial dark mode state to iframe
+      const isDark = document.body.classList.contains('dark');
+      this.sendToIFrame({ type: 'dark-mode', content: isDark });
+    });
+
+    // Set up observer for dark mode changes
+    this.darkModeObserver = new MutationObserver(mutations => {
+      mutations.forEach(mutation => {
+        if (
+          mutation.type === 'attributes' &&
+          mutation.attributeName === 'class'
+        ) {
+          const isDark = document.body.classList.contains('dark');
+          this.sendToIFrame({ type: 'dark-mode', content: isDark });
+        }
+      });
+    });
+
+    this.darkModeObserver.observe(document.body, {
+      attributes: true,
+      attributeFilter: ['class'],
     });
 
     this.activeNoteObservable$.subscribe(note => {
@@ -95,9 +117,12 @@ export class PreviewComponent implements OnInit, OnDestroy {
     if (this.currentNoteSubscription) {
       this.currentNoteSubscription.unsubscribe();
     }
+    if (this.darkModeObserver) {
+      this.darkModeObserver.disconnect();
+    }
   }
 
-  sendToIFrame(message: iFrameMessage<string | number>) {
+  sendToIFrame(message: iFrameMessage<string | number | boolean>) {
     this.iframe.nativeElement?.contentWindow?.postMessage(message, '*');
   }
 

@@ -105,5 +105,6 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   toggleDarkMode() {
     document.body.classList.toggle('dark');
+    this.isDarkMode = document.body.classList.contains('dark');
   }
 }

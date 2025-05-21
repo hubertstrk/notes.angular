@@ -4,6 +4,7 @@ import {
   ViewChild,
   HostListener,
   AfterViewInit,
+  OnDestroy,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -24,16 +25,17 @@ import { NotesService } from '../../service/notes.services';
   imports: [FormsModule, CommonModule, MonacoEditorModule],
   templateUrl: './editor.component.html',
 })
-export class EditorComponent implements AfterViewInit {
+export class EditorComponent implements AfterViewInit, OnDestroy {
   @ViewChild('editorContainer') editorContainer!: ElementRef;
   @ViewChild('editor') editor: ElementRef<HTMLElement>;
 
   resizeObserver!: ResizeObserver;
+  private darkModeObserver!: MutationObserver;
 
   activeNote$: Observable<Note | null> = this.store.select(selectActiveNote);
 
   editorOptions = {
-    theme: 'github-dark',
+    theme: document.body.classList.contains('dark') ? 'github-dark' : 'github-light',
     language: 'markdown',
     mouseWheelZoom: true,
     wordWrap: 'on',
@@ -59,6 +61,35 @@ export class EditorComponent implements AfterViewInit {
       this.monacoInstance?.layout();
     });
     this.resizeObserver.observe(this.editorContainer.nativeElement);
+
+    // Set up observer for dark mode changes
+    this.darkModeObserver = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (
+          mutation.type === 'attributes' &&
+          mutation.attributeName === 'class'
+        ) {
+          const isDark = document.body.classList.contains('dark');
+          if (this.monacoInstance) {
+            monaco.editor.setTheme(isDark ? 'github-dark' : 'github-light');
+          }
+        }
+      });
+    });
+
+    this.darkModeObserver.observe(document.body, {
+      attributes: true,
+      attributeFilter: ['class'],
+    });
+  }
+
+  ngOnDestroy() {
+    if (this.resizeObserver) {
+      this.resizeObserver.disconnect();
+    }
+    if (this.darkModeObserver) {
+      this.darkModeObserver.disconnect();
+    }
   }
 
   onEditorInit(editor: monaco.editor.IStandaloneCodeEditor) {
