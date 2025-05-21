@@ -1,10 +1,10 @@
 import {
+  AfterViewInit,
   Component,
   ElementRef,
-  ViewChild,
   HostListener,
-  AfterViewInit,
   OnDestroy,
+  ViewChild,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -14,7 +14,7 @@ import { Observable } from 'rxjs';
 import { Note } from '../../model/note.model';
 import { MonacoEditorModule } from 'ngx-monaco-editor-v2';
 import { updateContent } from '../../store/note.actions';
-import { filter, take, map } from 'rxjs/operators';
+import { filter, map, take } from 'rxjs/operators';
 import * as monaco from 'monaco-editor';
 import { updateCursorPosition } from '../../store/editor.actions';
 import { NotesService } from '../../service/notes.services';
@@ -27,7 +27,6 @@ import { NotesService } from '../../service/notes.services';
 })
 export class EditorComponent implements AfterViewInit, OnDestroy {
   @ViewChild('editorContainer') editorContainer!: ElementRef;
-  @ViewChild('editor') editor: ElementRef<HTMLElement>;
 
   resizeObserver!: ResizeObserver;
   private darkModeObserver!: MutationObserver;
@@ -35,7 +34,7 @@ export class EditorComponent implements AfterViewInit, OnDestroy {
   activeNote$: Observable<Note | null> = this.store.select(selectActiveNote);
 
   editorOptions = {
-    theme: document.body.classList.contains('dark') ? 'github-dark' : 'github-light',
+    theme: document.body.classList.contains('dark') ? 'vs-dark' : 'vs-light',
     language: 'markdown',
     mouseWheelZoom: true,
     wordWrap: 'on',
@@ -63,15 +62,18 @@ export class EditorComponent implements AfterViewInit, OnDestroy {
     this.resizeObserver.observe(this.editorContainer.nativeElement);
 
     // Set up observer for dark mode changes
-    this.darkModeObserver = new MutationObserver((mutations) => {
-      mutations.forEach((mutation) => {
+    this.darkModeObserver = new MutationObserver(mutations => {
+      mutations.forEach(mutation => {
         if (
           mutation.type === 'attributes' &&
           mutation.attributeName === 'class'
         ) {
           const isDark = document.body.classList.contains('dark');
           if (this.monacoInstance) {
-            monaco.editor.setTheme(isDark ? 'github-dark' : 'github-light');
+            this.editorOptions = {
+              ...this.editorOptions,
+              theme: isDark ? 'vs-dark' : 'vs-light',
+            };
           }
         }
       });
