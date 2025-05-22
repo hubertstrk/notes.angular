@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 
@@ -15,11 +15,9 @@ import { Icon, IconService } from '../../service/icon.service';
 
 import { v4 as uuidv4 } from 'uuid';
 import { Store } from '@ngrx/store';
-import { addNote } from '../../store/note.actions';
+import { addNote, setActiveNote } from '../../store/note.actions';
 import { selectBasePath } from '../../store/settings.selectors';
 import { NEW_NOTE_TITLE, Note } from '../../model/note.model';
-
-import { setActiveNote } from '../../store/note.actions';
 
 @Component({
   selector: 'app-home',
@@ -35,6 +33,7 @@ import { setActiveNote } from '../../store/note.actions';
   ],
   providers: [IconService],
   templateUrl: './home.component.html',
+  styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent implements OnInit, OnDestroy {
   constructor(
