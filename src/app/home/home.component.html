@@ -90,4 +90,13 @@
       (noteClicked)="onNoteClicked($event)"
       (closeClicked)="showSearch = false"></app-search>
   </div>
+
+  <div
+    *ngIf="showTemplatePopup"
+    class="fixed inset-0 z-[10000] flex items-center justify-center">
+    <app-note-template-popup
+      (templateSelected)="onTemplateSelected($event)"
+      (closed)="onTemplatePopupClosed()">
+    </app-note-template-popup>
+  </div>
 </div>

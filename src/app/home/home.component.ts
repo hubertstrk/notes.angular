@@ -10,6 +10,7 @@ import { PreviewComponent } from '../preview/preview.component';
 import { EditorComponent } from '../editor/editor.component';
 import { FooterComponent } from '../footer/footer.component';
 import { AppSearchComponent } from '../search/search.component';
+import { NoteTemplatePopupComponent } from './note-template-popup.component';
 
 import { Icon, IconService } from '../../service/icon.service';
 
@@ -17,7 +18,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { Store } from '@ngrx/store';
 import { addNote, setActiveNote } from '../../store/note.actions';
 import { selectBasePath } from '../../store/settings.selectors';
-import { NEW_NOTE_TITLE, Note } from '../../model/note.model';
+import { Note } from '../../model/note.model';
 import { appWindow } from '@tauri-apps/api/window';
 
 @Component({
@@ -31,6 +32,7 @@ import { appWindow } from '@tauri-apps/api/window';
     EditorComponent,
     FooterComponent,
     AppSearchComponent,
+    NoteTemplatePopupComponent,
   ],
   providers: [IconService],
   templateUrl: './home.component.html',
@@ -46,6 +48,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   isDarkMode = false;
   collapsed = false;
   showSearch = false;
+  showTemplatePopup = false;
   currentBasePath$ = this.store.select(selectBasePath);
 
   chevronLeft: SafeHtml;
@@ -83,25 +86,38 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   handleEsc = (event: KeyboardEvent) => {
-    if (event.key === 'Escape' && this.showSearch) {
-      this.showSearch = false;
+    if (event.key === 'Escape') {
+      if (this.showTemplatePopup) {
+        this.showTemplatePopup = false;
+      } else if (this.showSearch) {
+        this.showSearch = false;
+      }
     }
   };
 
   addNoteClicked() {
+    this.showTemplatePopup = true;
+  }
+
+  onTemplateSelected(template: { title: string; content: string }) {
     this.currentBasePath$.subscribe(basePath => {
       if (basePath) {
         this.store.dispatch(
           addNote({
             note: {
-              content: `# ${NEW_NOTE_TITLE}`,
-              heading: NEW_NOTE_TITLE,
+              content: template.content,
+              heading: template.title,
               path: `${basePath}\\${uuidv4()}.md`,
             },
           })
         );
+        this.showTemplatePopup = false;
       }
     });
+  }
+
+  onTemplatePopupClosed() {
+    this.showTemplatePopup = false;
   }
 
   goToSettings() {
