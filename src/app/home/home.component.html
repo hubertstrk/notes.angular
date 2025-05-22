@@ -35,6 +35,26 @@
         (clicked)="goToSettings()">
       </app-button>
     </div>
+    <div class="flex items-center gap-2">
+      <app-button
+        variant="transparent"
+        [rounded]="true"
+        [iconSvg]="minimizeIcon"
+        (clicked)="minimizeWindow()">
+      </app-button>
+      <app-button
+        variant="transparent"
+        [rounded]="true"
+        [iconSvg]="maximizeIcon"
+        (clicked)="maximizeWindow()">
+      </app-button>
+      <app-button
+        variant="transparent"
+        [rounded]="true"
+        [iconSvg]="closeIcon"
+        (clicked)="closeWindow()">
+      </app-button>
+    </div>
   </header>
 
   <div
@@ -42,7 +62,7 @@
     <aside
       [ngClass]="{ 'w-80': !collapsed, 'w-0': collapsed }"
       class="transition-all duration-300 overflow-auto">
-      <div *ngIf="!collapsed" class="ml-4 mr-2">
+      <div *ngIf="!collapsed" class="ml-4 mr-4">
         <app-sidebar></app-sidebar>
       </div>
     </aside>

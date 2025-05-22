@@ -12,6 +12,7 @@ import { unified } from 'unified';
 import remarkParse from 'remark-parse';
 
 import type { Heading, Text } from 'mdast';
+import { sortBy } from 'lodash';
 
 @Injectable({
   providedIn: 'root',
@@ -51,7 +52,7 @@ export class NotesService {
       }
     }
 
-    return results;
+    return sortBy(results, 'heading');
   }
 
   async importFiles(directory: string): Promise<Note[]> {

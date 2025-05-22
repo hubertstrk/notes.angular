@@ -24,7 +24,6 @@
     "@ngrx/store": "^17.2.0",
     "@tailwindcss/typography": "^0.5.16",
     "@tauri-apps/api": "^1.5.3",
-    "fuse.js": "^7.1.0",
     "lodash": "^4.17.21",
     "lodash-es": "^4.17.21",
     "marked": "^11.1.0",

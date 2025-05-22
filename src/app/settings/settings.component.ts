@@ -8,7 +8,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { map } from 'rxjs/operators';
 import { open } from '@tauri-apps/api/dialog';
 import { ButtonComponent } from '../shared/button/button.component';
-import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { SafeHtml } from '@angular/platform-browser';
+import { Icon, IconService } from '../../service/icon.service';
+import { appWindow } from '@tauri-apps/api/window';
 
 @Component({
   selector: 'app-settings',
@@ -22,13 +24,16 @@ export class SettingsComponent implements OnInit {
   reason$: Observable<string | null>;
   message: string = '';
 
-  chevronLeft: SafeHtml | undefined;
+  chevronLeft: SafeHtml;
+  minimizeIcon: SafeHtml;
+  maximizeIcon: SafeHtml;
+  closeIcon: SafeHtml;
 
   constructor(
     private store: Store,
     private route: ActivatedRoute,
     private router: Router,
-    private sanitizer: DomSanitizer
+    private icons: IconService
   ) {
     this.reason$ = this.route.queryParamMap.pipe(
       map(params => params.get('reason'))
@@ -48,13 +53,25 @@ export class SettingsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.chevronLeft = this.sanitizer
-      .bypassSecurityTrustHtml(`<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 16 16">
-	<path fill="currentColor" d="M10.354 3.146a.5.5 0 0 1 0 .708L6.207 8l4.147 4.146a.5.5 0 0 1-.708.708l-4.5-4.5a.5.5 0 0 1 0-.708l4.5-4.5a.5.5 0 0 1 .708 0" />
-</svg>`);
+    this.chevronLeft = this.icons.getIcon(Icon.ChevronLeft);
+    this.minimizeIcon = this.icons.getIcon(Icon.Minimize);
+    this.maximizeIcon = this.icons.getIcon(Icon.Maximize);
+    this.closeIcon = this.icons.getIcon(Icon.Close);
   }
 
   navigateToHome() {
     this.router.navigate(['/home']);
+  }
+
+  minimizeWindow() {
+    appWindow.minimize();
+  }
+
+  maximizeWindow() {
+    appWindow.toggleMaximize();
+  }
+
+  closeWindow() {
+    appWindow.close();
   }
 }

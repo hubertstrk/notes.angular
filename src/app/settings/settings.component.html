@@ -1,20 +1,41 @@
 <div
-  class="titlebar flex flex-col bg-white text-black dark:bg-zinc-800 dark:text-white h-full w-full">
+  class="titlebar grid bg-white text-black dark:bg-zinc-800 dark:text-white h-full w-full"
+  style="
+    grid-template-rows: auto 1fr;
+    min-height: 100vh;
+    min-width: 100vw;
+    overflow: hidden;
+  ">
   <header
     data-tauri-drag-region
-    class="action-buttons py-4 px-2 flex items-center justify-between">
+    class="action-buttons py-4 px-2 flex items-center justify-between"
+    style="grid-row: 1">
     <div class="uppercase ml-4 text-2xl">Settings</div>
-    <div class="flex items-center gap-1">
+    <div class="flex items-center gap-2">
       <app-button
         variant="transparent"
         [rounded]="true"
-        [iconSvg]="chevronLeft"
-        (clicked)="navigateToHome()">
+        [iconSvg]="minimizeIcon"
+        (clicked)="minimizeWindow()">
+      </app-button>
+      <app-button
+        variant="transparent"
+        [rounded]="true"
+        [iconSvg]="maximizeIcon"
+        (clicked)="maximizeWindow()">
+      </app-button>
+      <app-button
+        variant="transparent"
+        [rounded]="true"
+        [iconSvg]="closeIcon"
+        (clicked)="closeWindow()">
       </app-button>
     </div>
   </header>
 
-  <div class="px-6 py-2 h-full w-full">
+  <div
+    class="px-6 py-2 h-full w-full flex flex-col gap-2"
+    style="grid-row: 2; min-height: 0; min-width: 0; overflow: hidden">
     <div *ngIf="reason$ | async as reason">
       <div class="alert p-3 rounded-md mb-4" *ngIf="reason === 'missing'">
         Please select a base path to continue.

@@ -18,6 +18,7 @@ import { Store } from '@ngrx/store';
 import { addNote, setActiveNote } from '../../store/note.actions';
 import { selectBasePath } from '../../store/settings.selectors';
 import { NEW_NOTE_TITLE, Note } from '../../model/note.model';
+import { appWindow } from '@tauri-apps/api/window';
 
 @Component({
   selector: 'app-home',
@@ -54,6 +55,11 @@ export class HomeComponent implements OnInit, OnDestroy {
   search: SafeHtml;
   sunIcon: SafeHtml;
   moonIcon: SafeHtml;
+  readerIcon: SafeHtml;
+
+  minimizeIcon: SafeHtml;
+  maximizeIcon: SafeHtml;
+  closeIcon: SafeHtml;
 
   ngOnInit() {
     this.chevronLeft = this.icons.getIcon(Icon.ChevronLeft);
@@ -63,6 +69,11 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.search = this.icons.getIcon(Icon.Search);
     this.sunIcon = this.icons.getIcon(Icon.Sun);
     this.moonIcon = this.icons.getIcon(Icon.Moon);
+    this.readerIcon = this.icons.getIcon(Icon.Reader);
+
+    this.minimizeIcon = this.icons.getIcon(Icon.Minimize);
+    this.maximizeIcon = this.icons.getIcon(Icon.Maximize);
+    this.closeIcon = this.icons.getIcon(Icon.Close);
 
     window.addEventListener('keydown', this.handleEsc, true);
   }
@@ -105,5 +116,17 @@ export class HomeComponent implements OnInit, OnDestroy {
   toggleDarkMode() {
     document.body.classList.toggle('dark');
     this.isDarkMode = document.body.classList.contains('dark');
+  }
+
+  minimizeWindow() {
+    appWindow.minimize();
+  }
+
+  maximizeWindow() {
+    appWindow.toggleMaximize();
+  }
+
+  closeWindow() {
+    appWindow.close();
   }
 }
