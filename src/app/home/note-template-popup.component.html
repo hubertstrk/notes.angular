@@ -1,10 +1,12 @@
 <div
-  class="fixed inset-0 flex items-center justify-center z-[10000] bg-black/30"
+  class="fixed inset-0 flex items-center justify-center z-[10000] bg-white/50 dark:bg-zinc-800/50 backdrop-blur-sm"
   (click)="close()">
   <div
     class="bg-white dark:bg-zinc-800 rounded-lg shadow-xl w-full max-w-md p-6 relative"
     (click)="$event.stopPropagation()">
-    <h2 class="text-xl font-bold mb-4 text-center">Choose a Note Template</h2>
+    <h2 class="text-xl font-bold mb-4 text-center text-black">
+      Choose a Note Template
+    </h2>
     <div class="space-y-3">
       <button
         *ngFor="let template of templates"
@@ -13,25 +15,14 @@
         <div class="font-semibold">{{ template.title }}</div>
         <div class="text-xs text-zinc-500">{{ template.description }}</div>
       </button>
-      <div class="mt-4">
-        <input
-          type="text"
-          [(ngModel)]="customTitle"
-          placeholder="Custom note title..."
-          class="w-full p-2 border rounded mb-2"
-          (keydown.enter)="createBlankNote()" />
-        <button
-          class="w-full p-2 rounded bg-blue-600 text-white hover:bg-blue-700 transition"
-          (click)="createBlankNote()">
-          Create Blank Note
-        </button>
-      </div>
     </div>
-    <button
-      class="absolute top-2 right-2 text-zinc-400 hover:text-zinc-700 dark:hover:text-white"
-      (click)="close()"
+    <app-button
+      class="absolute top-2 right-2"
+      variant="transparent"
+      [rounded]="true"
+      [iconSvg]="'✕'"
+      (clicked)="close()"
       aria-label="Close">
-      &#10005;
-    </button>
+    </app-button>
   </div>
 </div>

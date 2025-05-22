@@ -102,6 +102,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   onTemplateSelected(template: { title: string; content: string }) {
     this.currentBasePath$.subscribe(basePath => {
       if (basePath) {
+        console.log(template.content);
         this.store.dispatch(
           addNote({
             note: {
