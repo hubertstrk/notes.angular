@@ -50,9 +50,9 @@ export class PreviewComponent implements OnInit, OnDestroy {
   printIcon: SafeHtml;
 
   ngOnInit(): void {
-    this.zoomInIcon = this.icons.getIcon(Icon.ZoomInIcon);
-    this.zoomOutIcon = this.icons.getIcon(Icon.ZoomOutIcon);
-    this.deleteNoteIcon = this.icons.getIcon(Icon.DeleteNoteIcon);
+    this.zoomInIcon = this.icons.getIcon(Icon.ZoomIn);
+    this.zoomOutIcon = this.icons.getIcon(Icon.ZoomOut);
+    this.deleteNoteIcon = this.icons.getIcon(Icon.Delete);
     this.printIcon = this.icons.getIcon(Icon.Print);
 
     this.iframe.nativeElement.addEventListener('load', () => {
