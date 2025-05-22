@@ -93,7 +93,7 @@
 
   <div
     *ngIf="showTemplatePopup"
-    class="fixed inset-0 z-[10000] flex items-center justify-center">
+    class="w-4/5 md:w-1/2 lg:w-1/3 fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white/50 dark:bg-zinc-800/50 backdrop-blur-sm flex justify-center z-[9999] shadow-xl rounded-lg">
     <app-note-template-popup
       (templateSelected)="onTemplateSelected($event)"
       (closed)="onTemplatePopupClosed()">

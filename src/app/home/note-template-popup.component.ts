@@ -2,6 +2,7 @@ import { Component, EventEmitter, Output, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ButtonComponent } from '../shared/button/button.component';
+import { Icon, IconService } from '../../service/icon.service';
 
 @Component({
   selector: 'app-note-template-popup',
@@ -9,6 +10,7 @@ import { ButtonComponent } from '../shared/button/button.component';
   styleUrls: ['./note-template-popup.component.scss'],
   standalone: true,
   imports: [FormsModule, CommonModule, ButtonComponent],
+  providers: [IconService],
 })
 export class NoteTemplatePopupComponent implements AfterViewInit {
   @Output() templateSelected = new EventEmitter<{
@@ -17,36 +19,49 @@ export class NoteTemplatePopupComponent implements AfterViewInit {
   }>();
   @Output() closed = new EventEmitter<void>();
 
+  constructor(private icons: IconService) {}
+
+  closeIcon = this.icons.getIcon(Icon.Close);
+
   customTitle = '';
 
-  templates: Array<{ title: string; description: string; content: string }> =
-    [];
+  templates: Array<{
+    icon: string;
+    title: string;
+    description: string;
+    content: string;
+  }> = [];
 
   private templateFiles = [
     {
+      icon: '📝',
       file: 'template-blank.md',
       title: 'Blank Note',
       description:
         'Simple blank note template for freeform writing or note-taking.',
     },
     {
+      icon: '📈',
       file: 'template-meeting-notes.md',
       title: 'Meeting Notes',
       description:
         'Structure for capturing meeting details, attendees, agenda, and action items.',
     },
     {
+      icon: '📅',
       file: 'template-daily-journal.md',
       title: 'Daily Journal Telate',
       description: 'A daily log for thoughts, tasks, and reflections.',
     },
     {
+      icon: '💡',
       file: 'template-brainstorming.md',
       title: 'Brainstorming / Idea Dump',
       description:
         'A freeform space for capturing ideas and brainstorming sessions.',
     },
     {
+      icon: '🚀',
       file: 'template-project-planning.md',
       title: 'Project Planning',
       description: 'Outline project goals, milestones, and tasks.',
@@ -62,6 +77,7 @@ export class NoteTemplatePopupComponent implements AfterViewInit {
           r.text()
         );
         this.templates.push({
+          icon: t.icon,
           title: t.title,
           description: t.description,
           content,

@@ -1,28 +1,35 @@
+<div class="flex flex-end justify-end p-2">
+  <app-button
+    variant="transparent"
+    [size]="'sm'"
+    [rounded]="true"
+    [iconSvg]="closeIcon"
+    (clicked)="close()">
+  </app-button>
+</div>
+
 <div
-  class="fixed inset-0 flex items-center justify-center z-[10000] bg-white/50 dark:bg-zinc-800/50 backdrop-blur-sm"
-  (click)="close()">
-  <div
-    class="bg-white dark:bg-zinc-800 rounded-lg shadow-xl w-full max-w-md p-6 relative"
-    (click)="$event.stopPropagation()">
-    <h2 class="text-xl font-bold mb-4 text-center text-black">
-      Choose a Note Template
-    </h2>
-    <div class="space-y-3">
-      <button
-        *ngFor="let template of templates"
-        class="w-full text-left p-3 rounded border border-zinc-200 dark:border-zinc-700 hover:bg-zinc-100 dark:hover:bg-zinc-700 transition"
-        (click)="selectTemplate(template)">
-        <div class="font-semibold">{{ template.title }}</div>
-        <div class="text-xs text-zinc-500">{{ template.description }}</div>
-      </button>
-    </div>
-    <app-button
-      class="absolute top-2 right-2"
-      variant="transparent"
-      [rounded]="true"
-      [iconSvg]="'✕'"
-      (clicked)="close()"
-      aria-label="Close">
-    </app-button>
+  class="flex flex-col w-full px-4 justify-center items-center mb-4"
+  (click)="$event.stopPropagation()">
+  <h2 class="text-xl font-bold mb-4 text-black dark:text-white">
+    Choose a Template
+  </h2>
+  <div class="flex flex-col gap-2 w-full">
+    <button
+      *ngFor="let template of templates"
+      class="w-full text-left p-3 rounded border border-zinc-200 dark:border-zinc-700 hover:bg-zinc-100 dark:hover:bg-zinc-700 transition"
+      (click)="selectTemplate(template)">
+      <div class="flex items-center gap-2">
+        <div>
+          {{ template.icon }}
+        </div>
+        <div class="font-semibold text-black dark:text-white">
+          {{ template.title }}
+        </div>
+      </div>
+      <div class="text-md text-zinc-500">
+        {{ template.description }}
+      </div>
+    </button>
   </div>
 </div>
