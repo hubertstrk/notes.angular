@@ -1,9 +1,9 @@
-<div>
+<div
+  class="titlebar flex flex-col bg-white text-black dark:bg-zinc-800 dark:text-white h-full w-full">
   <header
-    class="bg-white dark:bg-gray-800 text-black dark:text-white py-4 px-2 flex items-center justify-between">
-    <div class="uppercase ml-4 text-2xl text-black dark:text-white">
-      Settings
-    </div>
+    data-tauri-drag-region
+    class="action-buttons py-4 px-2 flex items-center justify-between">
+    <div class="uppercase ml-4 text-2xl">Settings</div>
     <div class="flex items-center gap-1">
       <app-button
         variant="transparent"
@@ -14,24 +14,18 @@
     </div>
   </header>
 
-  <div class="m-6 dark:text-white">
+  <div class="px-6 py-2 h-full w-full">
     <div *ngIf="reason$ | async as reason">
-      <div
-        class="alert bg-yellow-100 dark:bg-yellow-800 text-yellow-800 dark:text-yellow-100 p-3 rounded-md mb-4"
-        *ngIf="reason === 'missing'">
+      <div class="alert p-3 rounded-md mb-4" *ngIf="reason === 'missing'">
         Please select a base path to continue.
       </div>
-      <div
-        class="alert bg-red-100 dark:bg-red-800 text-red-800 dark:text-red-100 p-3 rounded-md mb-4"
-        *ngIf="reason === 'invalid'">
+      <div class="alert p-3 rounded-md mb-4" *ngIf="reason === 'invalid'">
         The selected base path does not exist. Please choose a valid folder.
       </div>
     </div>
     <div class="flex flex-col gap-2">
-      <div class="text-xl dark:text-white">Base Path</div>
-      <div
-        class="text-sm italic dark:text-gray-300"
-        *ngIf="basePath$ | async as basePath">
+      <div class="text-xl">Base Path</div>
+      <div class="text-sm italic" *ngIf="basePath$ | async as basePath">
         {{ basePath || 'Not set' }}
       </div>
       <app-button (clicked)="selectFolder()">Select Folder </app-button>

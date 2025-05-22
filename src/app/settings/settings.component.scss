@@ -1,0 +1,8 @@
+.titlebar {
+  -webkit-app-region: drag;
+  user-select: none;
+}
+
+.action-buttons appButton {
+  -webkit-app-region: no-drag;
+}
