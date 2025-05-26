@@ -3,11 +3,11 @@
   "build": {
     "beforeBuildCommand": "npm run build",
     "beforeDevCommand": "npm run start",
-    "devPath": "http://localhost:4200",
+    "devPath": "http://localhost:5200",
     "distDir": "../dist"
   },
   "package": {
-    "productName": "notes.angular",
+    "productName": "notes",
     "version": "1.0.0"
   },
   "tauri": {
