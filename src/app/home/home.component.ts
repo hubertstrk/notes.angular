@@ -4,21 +4,21 @@ import { Router } from '@angular/router';
 
 import { SafeHtml } from '@angular/platform-browser';
 
-import { ButtonComponent } from '../shared/button/button.component';
-import { SidebarComponent } from '../sidebar/sidebar.component';
-import { PreviewComponent } from '../preview/preview.component';
-import { EditorComponent } from '../editor/editor.component';
-import { FooterComponent } from '../footer/footer.component';
-import { AppSearchComponent } from '../search/search.component';
+import { ButtonComponent } from '@app/shared/button/button.component';
+import { SidebarComponent } from '@app/sidebar/sidebar.component';
+import { PreviewComponent } from '@app/preview/preview.component';
+import { EditorComponent } from '@app/editor/editor.component';
+import { FooterComponent } from '@app/footer/footer.component';
+import { AppSearchComponent } from '@app/search/search.component';
 import { NoteTemplatePopupComponent } from './note-template-popup.component';
 
-import { Icon, IconService } from '../../service/icon.service';
+import { Icon, IconService } from '@services/icon.service';
 
 import { v4 as uuidv4 } from 'uuid';
 import { Store } from '@ngrx/store';
-import { addNote, setActiveNote } from '../../store/note.actions';
-import { selectBasePath } from '../../store/settings.selectors';
-import { Note } from '../../model/note.model';
+import { addNote, setActiveNote } from '@store/note/note.actions';
+import { selectBasePath } from '@store/settings/settings.selectors';
+import { Note } from '@models/note.model';
 import { appWindow } from '@tauri-apps/api/window';
 
 @Component({

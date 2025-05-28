@@ -1,5 +1,5 @@
 import { createAction, props } from '@ngrx/store';
-import { Note } from '../model/note.model';
+import { Note } from '../../model/note.model';
 
 export const loadNotes = createAction(
   '[Note] Load all notes',

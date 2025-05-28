@@ -24,6 +24,12 @@
       "dom"
     ],
     "strictPropertyInitialization": false,
+    "paths": {
+      "@store/*": ["./src/store/*"],
+      "@models/*": ["./src/model/*"],
+      "@services/*": ["./src/service/*"],
+      "@app/*": ["./src/app/*"]
+    }
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,

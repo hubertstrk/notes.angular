@@ -8,11 +8,11 @@ import {
   ViewChild,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Icon, IconService } from '../../service/icon.service';
-import { Note } from '../../model/note.model';
+import { Icon, IconService } from '@services/icon.service';
+import { Note } from '@models/note.model';
 import { ButtonComponent } from '../shared/button/button.component';
 import { Store } from '@ngrx/store';
-import { selectNotes } from '../../store/note.selectors';
+import { selectNotes } from '@store/note/note.selectors';
 import { SafeHtml } from '@angular/platform-browser';
 
 type SearchResult = {

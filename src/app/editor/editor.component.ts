@@ -9,15 +9,15 @@ import {
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Store } from '@ngrx/store';
-import { selectActiveNote } from '../../store/note.selectors';
+import { selectActiveNote } from '@store/note/note.selectors';
 import { Observable } from 'rxjs';
-import { Note } from '../../model/note.model';
+import { Note } from '@models/note.model';
 import { MonacoEditorModule } from 'ngx-monaco-editor-v2';
-import { updateContent } from '../../store/note.actions';
+import { updateContent } from '@store/note/note.actions';
 import { filter, map, take } from 'rxjs/operators';
 import * as monaco from 'monaco-editor';
-import { updateCursorPosition } from '../../store/editor.actions';
-import { NotesService } from '../../service/notes.services';
+import { updateCursorPosition } from '@store/editor/editor.actions';
+import { NotesService } from '@services/notes.services';
 
 @Component({
   selector: 'app-editor',

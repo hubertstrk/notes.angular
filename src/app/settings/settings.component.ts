@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { selectBasePath } from '../../store/settings.selectors';
-import { setBasePath } from '../../store/settings.actions';
+import { selectBasePath } from '@store/settings/settings.selectors';
+import { setBasePath } from '@store/settings/settings.actions';
 import { Observable } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -9,7 +9,7 @@ import { map } from 'rxjs/operators';
 import { open } from '@tauri-apps/api/dialog';
 import { ButtonComponent } from '../shared/button/button.component';
 import { SafeHtml } from '@angular/platform-browser';
-import { Icon, IconService } from '../../service/icon.service';
+import { Icon, IconService } from '@services/icon.service';
 import { appWindow } from '@tauri-apps/api/window';
 
 @Component({

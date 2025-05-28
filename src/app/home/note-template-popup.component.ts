@@ -1,8 +1,8 @@
-import { Component, EventEmitter, Output, AfterViewInit } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ButtonComponent } from '../shared/button/button.component';
-import { Icon, IconService } from '../../service/icon.service';
+import { ButtonComponent } from '@app/shared/button/button.component';
+import { Icon, IconService } from '@services/icon.service';
 
 @Component({
   selector: 'app-note-template-popup',

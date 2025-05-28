@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { from, of } from 'rxjs';
 import { catchError, debounceTime, map, switchMap } from 'rxjs/operators';
-import { NotesService } from '../service/notes.services';
+import { NotesService } from '../../service/notes.services';
 import {
   addNote,
   deleteNote,

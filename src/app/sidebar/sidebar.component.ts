@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Store } from '@ngrx/store';
-import { Note } from '../../model/note.model';
+import { Note } from '@models/note.model';
 
-import { selectNotes, selectActiveNote } from '../../store/note.selectors';
-import { setActiveNote } from '../../store/note.actions';
+import { selectActiveNote, selectNotes } from '@store/note/note.selectors';
+import { setActiveNote } from '@store/note/note.actions';
 
 @Component({
   selector: 'app-sidebar',

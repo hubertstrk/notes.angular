@@ -1,20 +1,20 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterOutlet } from '@angular/router';
-import { NotesService } from '../service/notes.services';
+import { NotesService } from '@services/notes.services';
 import { Store } from '@ngrx/store';
 import {
   addNote,
   loadNotes,
   notesLoaded,
   setActiveNote,
-} from '../store/note.actions';
+} from '@store/note/note.actions';
 import { Actions, ofType } from '@ngrx/effects';
 import { filter } from 'rxjs';
-import { selectBasePath } from '../store/settings.selectors';
-import { loadSettings } from '../store/settings.actions';
+import { selectBasePath } from '@store/settings/settings.selectors';
+import { loadSettings } from '@store/settings/settings.actions';
 import { v4 as uuidv4 } from 'uuid';
-import { NEW_NOTE_TITLE } from '../model/note.model';
+import { NEW_NOTE_TITLE } from '@models/note.model';
 
 @Component({
   selector: 'app-root',

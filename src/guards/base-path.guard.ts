@@ -1,7 +1,7 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { selectBasePath } from '../store/settings.selectors';
+import { selectBasePath } from '../store/settings/settings.selectors';
 import { switchMap, take } from 'rxjs/operators';
 import { SettingsService } from '../service/settings.service';
 

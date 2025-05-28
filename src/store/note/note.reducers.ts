@@ -8,7 +8,7 @@ import {
   setActiveNote,
   updateContent,
 } from './note.actions';
-import { Note } from '../model/note.model';
+import { Note } from '../../model/note.model';
 
 export interface NoteState {
   notes: Note[];

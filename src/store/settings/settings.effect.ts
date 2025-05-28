@@ -7,7 +7,7 @@ import {
   loadSettingsFailure,
 } from './settings.actions';
 import { switchMap, tap } from 'rxjs/operators';
-import { SettingsService } from '../service/settings.service';
+import { SettingsService } from '../../service/settings.service';
 
 @Injectable()
 export class SettingsEffects {

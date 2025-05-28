@@ -7,15 +7,15 @@ import {
 } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { marked } from 'marked';
-import { selectActiveNote } from '../../store/note.selectors';
+import { selectActiveNote } from '@store/note/note.selectors';
 import { ButtonComponent } from '../shared/button/button.component';
 import { clamp } from 'lodash';
 import { SafeHtml } from '@angular/platform-browser';
 import { BehaviorSubject, combineLatest, Subject, Subscription } from 'rxjs';
-import { deleteNote } from '../../store/note.actions';
-import { Note } from '../../model/note.model';
-import { iFrameMessage } from '../../model/preview.model';
-import { Icon, IconService } from '../../service/icon.service';
+import { deleteNote } from '@store/note/note.actions';
+import { Note } from '@models/note.model';
+import { iFrameMessage } from '@models/preview.model';
+import { Icon, IconService } from '@services/icon.service';
 
 @Component({
   selector: 'app-preview',

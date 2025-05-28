@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { Note } from '../../model/note.model';
-import { selectActiveNote } from '../../store/note.selectors';
-import { selectCursorPosition } from '../../store/editor.selectors';
+import { Note } from '@models/note.model';
+import { selectActiveNote } from '@store/note/note.selectors';
+import { selectCursorPosition } from '@store/editor/editor.selectors';
 import { CommonModule } from '@angular/common';
 
 @Component({
