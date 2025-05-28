@@ -18,7 +18,6 @@
       disabled />
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
-    <title>Markdown Preview</title>
     <style>
       :root {
         --bg-color: #ffffff;
@@ -72,6 +71,33 @@
         background-color: var(--blockquote-bg);
         border-left: 4px solid var(--blockquote-border);
         padding: 0.5em 1em;
+      }
+
+      /* Scrollbar styling for light mode */
+      ::-webkit-scrollbar {
+        width: 16px;
+        height: 10px;
+      }
+
+      ::-webkit-scrollbar-track {
+        background: #f1f1f1;
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background: #c1c1c1;
+      }
+
+      ::-webkit-scrollbar-thumb:hover {
+        background: #a8a8a8;
+      }
+
+      /* Dark mode scrollbar styling */
+      html.dark ::-webkit-scrollbar-track {
+        background: #27272a;
+      }
+
+      html.dark ::-webkit-scrollbar-thumb {
+        background: #3f3f46;
       }
     </style>
   </head>
