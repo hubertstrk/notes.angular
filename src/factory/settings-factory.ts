@@ -6,6 +6,8 @@ import {
   BaseDirectory,
 } from '@tauri-apps/api/fs';
 
+import { SettingsFileName } from '@models/settings.model';
+
 export async function initSettingsFactory() {
   // ensure app directory
   const appDataPath = await appDataDir();
@@ -18,13 +20,16 @@ export async function initSettingsFactory() {
     console.info('app initialize: created app data directory');
   }
 
-  // ensure user settings
-  const doSettingsExist = await exists('notes-settings.json', {
+  // ensure user settings file
+  const doSettingsExist = await exists(SettingsFileName, {
     dir: BaseDirectory.AppConfig,
   });
   if (!doSettingsExist) {
     await writeTextFile(
-      { path: 'notes-settings.json', contents: '{}' },
+      {
+        path: SettingsFileName,
+        contents: JSON.stringify({ basePath: null, dark: true, id: null }),
+      },
       { dir: BaseDirectory.AppConfig }
     );
     console.info('app initialize: created user settings');

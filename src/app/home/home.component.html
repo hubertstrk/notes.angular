@@ -26,13 +26,13 @@
         variant="transparent"
         [rounded]="true"
         [iconSvg]="plus"
-        (clicked)="addNoteClicked()">
+        (clicked)="showTemplatePopup = true">
       </app-button>
       <app-button
         variant="transparent"
         [rounded]="true"
         [iconSvg]="settings"
-        (clicked)="goToSettings()">
+        (clicked)="routeToSettings()">
       </app-button>
     </div>
     <div class="flex items-center gap-2">
@@ -97,7 +97,7 @@
     <app-note-template-popup
       class="w-full"
       (templateSelected)="onTemplateSelected($event)"
-      (closed)="onTemplatePopupClosed()">
+      (closed)="showTemplatePopup = false">
     </app-note-template-popup>
   </div>
 </div>

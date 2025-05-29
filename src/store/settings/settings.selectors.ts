@@ -8,6 +8,12 @@ export const selectBasePath = createSelector(
   selectSettingsState,
   state => state.basePath
 );
+
+export const selectDarkMode = createSelector(
+  selectSettingsState,
+  state => state.dark
+);
+
 export const selectSettingsError = createSelector(
   selectSettingsState,
   state => state.error

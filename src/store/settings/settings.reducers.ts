@@ -1,38 +1,51 @@
 import { createReducer, on } from '@ngrx/store';
 import {
-  setBasePath,
   loadSettingsSuccess,
   loadSettingsFailure,
+  saveSettingsSuccess,
+  saveSettingsFailure,
 } from './settings.actions';
 
 export interface SettingsState {
   basePath: string | null;
+  dark: boolean;
+  id: string | null;
   error: string | null;
 }
 
 export const initialState: SettingsState = {
   basePath: null,
+  dark: true,
+  id: null,
   error: null,
 };
 
 export const settingsReducer = createReducer(
   initialState,
   on(
-    setBasePath,
-    (state, { basePath }): SettingsState => ({
-      ...state,
-      basePath,
-    })
-  ),
-  on(
     loadSettingsSuccess,
-    (state, { basePath }): SettingsState => ({
+    (state, { settings }): SettingsState => ({
       ...state,
-      basePath,
+      ...settings,
+      error: null,
     })
   ),
   on(
     loadSettingsFailure,
+    (state, { error }): SettingsState => ({
+      ...state,
+      error,
+    })
+  ),
+  on(
+    saveSettingsSuccess,
+    (state, { settings }): SettingsState => ({
+      ...state,
+      ...settings,
+    })
+  ),
+  on(
+    saveSettingsFailure,
     (state, { error }): SettingsState => ({
       ...state,
       error,

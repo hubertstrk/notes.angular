@@ -1,20 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterOutlet } from '@angular/router';
 import { NotesService } from '@services/notes.services';
 import { Store } from '@ngrx/store';
-import {
-  addNote,
-  loadNotes,
-  notesLoaded,
-  setActiveNote,
-} from '@store/note/note.actions';
+import { loadNotes, notesLoaded } from '@store/note/note.actions';
 import { Actions, ofType } from '@ngrx/effects';
-import { filter } from 'rxjs';
-import { selectBasePath } from '@store/settings/settings.selectors';
+import {
+  selectBasePath,
+  selectDarkMode,
+} from '@store/settings/settings.selectors';
 import { loadSettings } from '@store/settings/settings.actions';
-import { v4 as uuidv4 } from 'uuid';
-import { NEW_NOTE_TITLE } from '@models/note.model';
+
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -24,41 +21,42 @@ import { NEW_NOTE_TITLE } from '@models/note.model';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, OnDestroy {
   constructor(
     private store: Store,
     private actions$: Actions,
     private router: Router
   ) {}
 
+  isDarkMode$ = this.store.select(selectDarkMode);
+  selectBasePath$ = this.store.select(selectBasePath);
+
+  darkModeSubscription: Subscription;
+  basePathSubscription: Subscription;
+  notesSubscription: Subscription;
+
   ngOnInit(): void {
     this.store.dispatch(loadSettings());
 
-    this.store
-      .select(selectBasePath)
-      .pipe(filter(basePath => !!basePath))
-      .subscribe(basePath => {
-        if (basePath) this.store.dispatch(loadNotes({ directory: basePath }));
-      });
-
-    this.actions$.pipe(ofType(notesLoaded)).subscribe(({ notes, basePath }) => {
-      void this.router.navigate(['/home']);
-
-      notes.length > 0
-        ? this.store.dispatch(setActiveNote({ notePath: notes[0].path }))
-        : this.addNote(basePath);
+    this.darkModeSubscription = this.isDarkMode$.subscribe(darkMode => {
+      document.body.classList.toggle('dark', darkMode);
     });
+
+    this.basePathSubscription = this.selectBasePath$.subscribe(basePath => {
+      if (basePath) this.store.dispatch(loadNotes({ directory: basePath }));
+      else void this.router.navigate(['/settings']);
+    });
+
+    this.notesSubscription = this.actions$
+      .pipe(ofType(notesLoaded))
+      .subscribe(() => {
+        void this.router.navigate(['/home']);
+      });
   }
 
-  addNote(basePath: string) {
-    this.store.dispatch(
-      addNote({
-        note: {
-          content: `# ${NEW_NOTE_TITLE}`,
-          heading: NEW_NOTE_TITLE,
-          path: `${basePath}\\${uuidv4()}.md`,
-        },
-      })
-    );
+  ngOnDestroy(): void {
+    this.darkModeSubscription.unsubscribe();
+    this.basePathSubscription.unsubscribe();
+    this.notesSubscription.unsubscribe();
   }
 }

@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { selectBasePath } from '@store/settings/settings.selectors';
-import { setBasePath } from '@store/settings/settings.actions';
 import { Observable } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -11,6 +10,7 @@ import { ButtonComponent } from '../shared/button/button.component';
 import { SafeHtml } from '@angular/platform-browser';
 import { Icon, IconService } from '@services/icon.service';
 import { appWindow } from '@tauri-apps/api/window';
+import { saveSettings } from '@store/settings/settings.actions';
 
 @Component({
   selector: 'app-settings',
@@ -22,7 +22,6 @@ export class SettingsComponent implements OnInit {
   basePath$: Observable<string | null | undefined> =
     this.store.select(selectBasePath);
   reason$: Observable<string | null>;
-  message: string = '';
 
   chevronLeft: SafeHtml;
   minimizeIcon: SafeHtml;
@@ -41,14 +40,11 @@ export class SettingsComponent implements OnInit {
   }
 
   async selectFolder() {
-    try {
-      const selected = await open({ directory: true });
-      if (selected) {
-        this.store.dispatch(setBasePath({ basePath: selected as string }));
-        this.message = 'Base path updated!';
-      }
-    } catch (e) {
-      this.message = 'Failed to select folder.';
+    const selection = await open({ directory: true });
+    if (selection) {
+      this.store.dispatch(
+        saveSettings({ settings: { basePath: selection as string } })
+      );
     }
   }
 
@@ -59,19 +55,15 @@ export class SettingsComponent implements OnInit {
     this.closeIcon = this.icons.getIcon(Icon.Close);
   }
 
-  navigateToHome() {
-    this.router.navigate(['/home']);
-  }
-
   minimizeWindow() {
-    appWindow.minimize();
+    void appWindow.minimize();
   }
 
   maximizeWindow() {
-    appWindow.toggleMaximize();
+    void appWindow.toggleMaximize();
   }
 
   closeWindow() {
-    appWindow.close();
+    void appWindow.close();
   }
 }

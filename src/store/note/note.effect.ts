@@ -1,8 +1,14 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { from, of } from 'rxjs';
-import { catchError, debounceTime, map, switchMap } from 'rxjs/operators';
-import { NotesService } from '../../service/notes.services';
+import {
+  catchError,
+  debounceTime,
+  map,
+  switchMap,
+  withLatestFrom,
+} from 'rxjs/operators';
+import { NotesService } from '@services/notes.services';
 import {
   addNote,
   deleteNote,
@@ -14,7 +20,15 @@ import {
   notesLoaded,
   saveNoteFailed,
   updateContent,
+  setActiveNote,
 } from './note.actions';
+import {
+  saveSettings,
+  saveSettingsFailure,
+  saveSettingsSuccess,
+} from '@store/settings/settings.actions';
+import { selectSettingsState } from '@store/settings/settings.selectors';
+import { Settings } from '@models/settings.model';
 
 @Injectable()
 export class NoteEffects {
@@ -22,6 +36,7 @@ export class NoteEffects {
     private actions$: Actions,
     private notesService: NotesService
   ) {}
+
   loadNotes$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(loadNotes),

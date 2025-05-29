@@ -14,12 +14,17 @@ import { NoteTemplatePopupComponent } from './note-template-popup.component';
 
 import { Icon, IconService } from '@services/icon.service';
 
-import { v4 as uuidv4 } from 'uuid';
+import { v4 } from 'uuid';
 import { Store } from '@ngrx/store';
 import { addNote, setActiveNote } from '@store/note/note.actions';
-import { selectBasePath } from '@store/settings/settings.selectors';
+import {
+  selectBasePath,
+  selectDarkMode,
+} from '@store/settings/settings.selectors';
 import { Note } from '@models/note.model';
 import { appWindow } from '@tauri-apps/api/window';
+
+import { saveSettings } from '@store/settings/settings.actions';
 
 @Component({
   selector: 'app-home',
@@ -39,18 +44,11 @@ import { appWindow } from '@tauri-apps/api/window';
   styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent implements OnInit, OnDestroy {
-  constructor(
-    private store: Store,
-    private router: Router,
-    private icons: IconService
-  ) {}
-
   isDarkMode = false;
   collapsed = false;
   showSearch = false;
   showTemplatePopup = false;
   currentBasePath$ = this.store.select(selectBasePath);
-
   chevronLeft: SafeHtml;
   chevronRight: SafeHtml;
   plus: SafeHtml;
@@ -59,10 +57,16 @@ export class HomeComponent implements OnInit, OnDestroy {
   sunIcon: SafeHtml;
   moonIcon: SafeHtml;
   readerIcon: SafeHtml;
-
   minimizeIcon: SafeHtml;
   maximizeIcon: SafeHtml;
   closeIcon: SafeHtml;
+  isDarkMode$ = this.store.select(selectDarkMode);
+
+  constructor(
+    private store: Store,
+    private router: Router,
+    private icons: IconService
+  ) {}
 
   ngOnInit() {
     this.chevronLeft = this.icons.getIcon(Icon.ChevronLeft);
@@ -79,6 +83,10 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.closeIcon = this.icons.getIcon(Icon.Close);
 
     window.addEventListener('keydown', this.handleEsc, true);
+
+    this.isDarkMode$.subscribe(darkMode => {
+      this.isDarkMode = darkMode;
+    });
   }
 
   ngOnDestroy() {
@@ -95,20 +103,15 @@ export class HomeComponent implements OnInit, OnDestroy {
     }
   };
 
-  addNoteClicked() {
-    this.showTemplatePopup = true;
-  }
-
   onTemplateSelected(template: { title: string; content: string }) {
     this.currentBasePath$.subscribe(basePath => {
       if (basePath) {
-        console.log(template.content);
         this.store.dispatch(
           addNote({
             note: {
               content: template.content,
               heading: template.title,
-              path: `${basePath}\\${uuidv4()}.md`,
+              path: `${basePath}\\${v4()}.md`,
             },
           })
         );
@@ -117,33 +120,28 @@ export class HomeComponent implements OnInit, OnDestroy {
     });
   }
 
-  onTemplatePopupClosed() {
-    this.showTemplatePopup = false;
-  }
-
-  goToSettings() {
-    this.router.navigate(['/settings']);
-  }
-
   onNoteClicked(note: Note) {
     this.showSearch = false;
     this.store.dispatch(setActiveNote({ notePath: note.path }));
   }
 
   toggleDarkMode() {
-    document.body.classList.toggle('dark');
-    this.isDarkMode = document.body.classList.contains('dark');
+    this.store.dispatch(saveSettings({ settings: { dark: !this.isDarkMode } }));
   }
 
   minimizeWindow() {
-    appWindow.minimize();
+    void appWindow.minimize();
   }
 
   maximizeWindow() {
-    appWindow.toggleMaximize();
+    void appWindow.toggleMaximize();
   }
 
   closeWindow() {
-    appWindow.close();
+    void appWindow.close();
+  }
+
+  routeToSettings() {
+    void this.router.navigate(['/settings']);
   }
 }
