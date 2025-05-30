@@ -1,8 +1,10 @@
 <footer
   class="bg-zinc-600 text-white text-sm w-full p-2 flex justify-between items-center">
-  <span>{{ activeNote?.path || '' }}</span>
-  <span>{{ activeNote?.createdAt | date: 'medium' || '' }}</span>
-  <span>{{ activeNote?.updatedAt | date: 'medium' || '' }}</span>
+  <div class="flex items-center gap-4">
+    <span>{{ activeNote?.path || '' }}</span>
+    <span>Created: {{ activeNote?.createdAt | date: 'medium' || '' }}</span>
+    <span>Modified: {{ activeNote?.updatedAt | date: 'medium' || '' }}</span>
+  </div>
   <div class="flex items-center gap-4">
     <span>Characters {{ activeNote?.content?.length || 0 }}</span>
     <span>Line {{ cursorPosition.line || 0 }}</span>
