@@ -23,8 +23,6 @@ export class NoteTemplatePopupComponent implements AfterViewInit {
 
   closeIcon = this.icons.getIcon(Icon.Close);
 
-  customTitle = '';
-
   templates: Array<{
     icon: string;
     title: string;

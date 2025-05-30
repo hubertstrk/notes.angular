@@ -88,14 +88,11 @@ export class NotesService {
   }
 
   async saveFile(path: string, content: string): Promise<void> {
-    this.loadingService.show();
     try {
       return await writeTextFile(path, content);
     } catch (error) {
       console.error(`Failed to save ${path}:`, error);
       return Promise.reject(error);
-    } finally {
-      this.loadingService.hide();
     }
   }
 
