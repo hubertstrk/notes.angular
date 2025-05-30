@@ -43,7 +43,7 @@
   "productName": "notes",
   "mainBinaryName": "notes",
   "version": "1.0.0",
-  "identifier": "com.tauri.dev",
+  "identifier": "com.notes.dev",
   "plugins": {},
   "app": {
     "windows": [

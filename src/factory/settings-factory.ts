@@ -3,6 +3,7 @@ import {
   exists,
   create,
   writeTextFile,
+  mkdir,
   BaseDirectory,
 } from '@tauri-apps/plugin-fs';
 
@@ -10,14 +11,12 @@ import { SettingsFileName } from '@models/settings.model';
 
 export async function initSettingsFactory() {
   // ensure app directory
-  const appDataPath = await appDataDir();
-  const appDataExists = await exists(appDataPath, {
+  const appDataFolderExists = await exists('', {
     baseDir: BaseDirectory.AppData,
   });
-
-  if (!appDataExists) {
-    await create(appDataPath);
-    console.info('app initialize: created app data directory');
+  if (!appDataFolderExists) {
+    await mkdir('', { baseDir: BaseDirectory.AppData, recursive: true });
+    console.info('AppData directory created');
   }
 
   // ensure user settings file
@@ -32,7 +31,7 @@ export async function initSettingsFactory() {
         dark: true,
         id: null,
       }),
-      { baseDir: BaseDirectory.AppConfig }
+      { baseDir: BaseDirectory.AppConfig },
     );
     console.info('app initialize: created user settings');
   }

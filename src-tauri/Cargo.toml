@@ -7,20 +7,20 @@ license = ""
 repository = ""
 default-run = "app"
 edition = "2021"
-rust-version = "1.60"
+rust-version = "1.77"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [build-dependencies]
-tauri-build = { version = "2", features = [] }
+tauri-build = { version = "2.0.4", features = [] }
 
 [dependencies]
 serde_json = "1.0"
 serde = { version = "1.0", features = ["derive"] }
-tauri = { version = "2", features = [] }
-tauri-plugin-dialog = "2"
-tauri-plugin-fs = "2"
-tauri-runtime-wry = "2.4.0"
+tauri = { version = "2.0.4", features = [] }
+tauri-plugin-dialog = "2.0.4"
+tauri-plugin-fs = "2.0.4"
+tauri-runtime-wry = "2.0.4"
 
 [features]
 custom-protocol = [ "tauri/custom-protocol" ]
