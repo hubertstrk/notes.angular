@@ -22,9 +22,10 @@ import {
   selectDarkMode,
 } from '@store/settings/settings.selectors';
 import { Note } from '@models/note.model';
-import { appWindow } from '@tauri-apps/api/window';
+import { getCurrentWebviewWindow } from '@tauri-apps/api/webviewWindow';
 
 import { saveSettings } from '@store/settings/settings.actions';
+const appWindow = getCurrentWebviewWindow()
 
 @Component({
   selector: 'app-home',

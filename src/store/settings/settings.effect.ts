@@ -48,10 +48,11 @@ export class SettingsEffects {
           ...action.settings,
         } as Settings;
 
-        return from(this.settingsService.saveSettings(mergedSettings)).pipe(
-          map(() => saveSettingsSuccess({ settings: mergedSettings })),
-          catchError(error => of(saveSettingsFailure({ error: String(error) })))
-        );
+        // Use tap to handle the side effect and then immediately emit the success action
+        return this.settingsService
+          .saveSettings(mergedSettings)
+          .then(() => saveSettingsSuccess({ settings: mergedSettings }))
+          .catch(error => saveSettingsFailure({ error: String(error) }));
       })
     );
   });

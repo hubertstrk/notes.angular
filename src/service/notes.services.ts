@@ -2,11 +2,11 @@ import { Injectable } from '@angular/core';
 import {
   readDir,
   readTextFile,
-  removeFile,
+  remove,
   writeTextFile,
-} from '@tauri-apps/api/fs';
+} from '@tauri-apps/plugin-fs';
 import { join } from '@tauri-apps/api/path';
-import { NO_TITLE, Note } from '../model/note.model';
+import { NO_TITLE, Note } from '@models/note.model';
 
 import { unified } from 'unified';
 import remarkParse from 'remark-parse';
@@ -22,13 +22,13 @@ export class NotesService {
     const notePaths: string[] = [];
 
     async function walk(currentDir: string): Promise<void> {
-      const entries = await readDir(currentDir, { recursive: false });
+      const entries = await readDir(currentDir);
 
       for (const entry of entries) {
-        if (entry.children && entry.name) {
-          await walk(await join(currentDir, entry.name));
-        } else if (entry.name && entry.name.endsWith('.md')) {
+        if (entry.name && entry.name.endsWith('.md')) {
           notePaths.push(await join(currentDir, entry.name));
+        } else if (entry.isDirectory) {
+          await walk(await join(currentDir, entry.name));
         }
       }
     }
@@ -61,7 +61,12 @@ export class NotesService {
   }
 
   async saveFile(path: string, content: string): Promise<void> {
-    return writeTextFile(path, content);
+    try {
+      return writeTextFile(path, content);
+    } catch (error) {
+      console.error(`Failed to save ${path}:`, error);
+      return Promise.reject(error);
+    }
   }
 
   extractHeading(content: string): string {
@@ -84,6 +89,6 @@ export class NotesService {
   }
 
   async deleteFile(path: string): Promise<void> {
-    await removeFile(path);
+    await remove(path);
   }
 }

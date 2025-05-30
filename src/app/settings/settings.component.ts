@@ -5,12 +5,13 @@ import { Observable } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { map } from 'rxjs/operators';
-import { open } from '@tauri-apps/api/dialog';
+import { open } from '@tauri-apps/plugin-dialog';
 import { ButtonComponent } from '../shared/button/button.component';
 import { SafeHtml } from '@angular/platform-browser';
 import { Icon, IconService } from '@services/icon.service';
-import { appWindow } from '@tauri-apps/api/window';
+import { getCurrentWebviewWindow } from '@tauri-apps/api/webviewWindow';
 import { saveSettings } from '@store/settings/settings.actions';
+const appWindow = getCurrentWebviewWindow()
 
 @Component({
   selector: 'app-settings',

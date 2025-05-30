@@ -116,6 +116,7 @@ export class EditorComponent implements AfterViewInit, OnDestroy {
   }
 
   onTextChange(content: string): void {
+    if (!content || content.length === 0) return;
     this.activeNote$
       .pipe(
         filter(note => !!note),
