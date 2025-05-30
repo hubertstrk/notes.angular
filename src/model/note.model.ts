@@ -5,4 +5,6 @@ export interface Note {
   content: string;
   path: string;
   heading: string;
+  createdAt: Date | null;
+  updatedAt: Date | null;
 }

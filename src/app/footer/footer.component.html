@@ -1,9 +1,11 @@
 <footer
-  class="bg-zinc-800 text-white text-sm w-full p-2 flex justify-between items-center">
-  <span>{{ (activeNote$ | async)?.path || 'No active note' }}</span>
+  class="bg-zinc-600 text-white text-sm w-full p-2 flex justify-between items-center">
+  <span>{{ activeNote?.path || '' }}</span>
+  <span>{{ activeNote?.createdAt | date: 'medium' || '' }}</span>
+  <span>{{ activeNote?.updatedAt | date: 'medium' || '' }}</span>
   <div class="flex items-center gap-4">
-    <span>Characters {{ (activeNote$ | async)?.content?.length || 0 }}</span>
-    <span>Line {{ (cursorPosition$ | async)?.line || 0 }}</span>
-    <span>Column {{ (cursorPosition$ | async)?.column || 0 }}</span>
+    <span>Characters {{ activeNote?.content?.length || 0 }}</span>
+    <span>Line {{ cursorPosition.line || 0 }}</span>
+    <span>Column {{ cursorPosition.column || 0 }}</span>
   </div>
 </footer>

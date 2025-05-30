@@ -25,7 +25,8 @@ import { Note } from '@models/note.model';
 import { getCurrentWebviewWindow } from '@tauri-apps/api/webviewWindow';
 
 import { saveSettings } from '@store/settings/settings.actions';
-const appWindow = getCurrentWebviewWindow()
+
+const appWindow = getCurrentWebviewWindow();
 
 @Component({
   selector: 'app-home',
@@ -113,6 +114,8 @@ export class HomeComponent implements OnInit, OnDestroy {
               content: template.content,
               heading: template.title,
               path: `${basePath}\\${v4()}.md`,
+              createdAt: new Date(),
+              updatedAt: new Date(),
             },
           })
         );

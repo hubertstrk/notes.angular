@@ -1,10 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
-import { Note } from '@models/note.model';
 import { selectActiveNote } from '@store/note/note.selectors';
 import { selectCursorPosition } from '@store/editor/editor.selectors';
 import { CommonModule } from '@angular/common';
+import { Note } from '@models/note.model';
 
 @Component({
   selector: 'app-footer',
@@ -12,12 +11,21 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [CommonModule],
 })
-export class FooterComponent {
-  activeNote$: Observable<Note | null>;
-  cursorPosition$: Observable<{ line: number; column: number }>;
+export class FooterComponent implements OnInit {
+  constructor(private store: Store) {}
 
-  constructor(private store: Store) {
-    this.activeNote$ = this.store.select(selectActiveNote);
-    this.cursorPosition$ = this.store.select(selectCursorPosition);
+  activeNote$ = this.store.select(selectActiveNote);
+  cursorPosition$ = this.store.select(selectCursorPosition);
+
+  activeNote: Note | null = null;
+  cursorPosition: { line: number; column: number } = { line: 0, column: 0 };
+
+  ngOnInit(): void {
+    this.activeNote$.subscribe(note => {
+      this.activeNote = note;
+    });
+    this.cursorPosition$.subscribe(position => {
+      this.cursorPosition = position;
+    });
   }
 }

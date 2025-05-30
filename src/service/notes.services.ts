@@ -4,6 +4,7 @@ import {
   readTextFile,
   remove,
   writeTextFile,
+  stat,
 } from '@tauri-apps/plugin-fs';
 import { join } from '@tauri-apps/api/path';
 import { NO_TITLE, Note } from '@models/note.model';
@@ -44,9 +45,17 @@ export class NotesService {
     for (const path of paths) {
       try {
         const content = await readTextFile(path);
+        const info = await stat(path);
+
         const heading = this.extractHeading(content);
 
-        results.push({ content, path, heading });
+        results.push({
+          content,
+          path,
+          heading,
+          createdAt: info.birthtime,
+          updatedAt: info.mtime,
+        });
       } catch (error) {
         console.error(`Failed to read ${path}:`, error);
       }
