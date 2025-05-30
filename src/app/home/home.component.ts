@@ -116,6 +116,7 @@ export class HomeComponent implements OnInit, OnDestroy {
               path: `${basePath}\\${v4()}.md`,
               createdAt: new Date(),
               updatedAt: new Date(),
+              size: 0,
             },
           })
         );

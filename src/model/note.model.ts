@@ -7,4 +7,5 @@ export interface Note {
   heading: string;
   createdAt: Date | null;
   updatedAt: Date | null;
+  size: number;
 }

@@ -10,6 +10,8 @@ import {
   selectDarkMode,
 } from '@store/settings/settings.selectors';
 import { loadSettings } from '@store/settings/settings.actions';
+import { LoadingIndicatorComponent } from './shared/loading-indicator/loading-indicator.component';
+import { ProgressIndicatorComponent } from './shared/progress-indicator/progress-indicator.component';
 
 import { Subscription } from 'rxjs';
 
@@ -17,7 +19,7 @@ import { Subscription } from 'rxjs';
   selector: 'app-root',
   standalone: true,
   providers: [NotesService, Store],
-  imports: [CommonModule, RouterOutlet],
+  imports: [CommonModule, RouterOutlet, LoadingIndicatorComponent, ProgressIndicatorComponent],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })
