@@ -6,13 +6,13 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [CommonModule],
   template: `
-    <div class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
+    <div class="w-full bg-gray-300 rounded-full h-2.5 dark:bg-zinc-600">
       <div
-        class="bg-blue-200 h-2.5 rounded-full transition-all duration-300 ease-in-out"
+        class="bg-gradient-to-r from-fuchsia-400 to-yellow-300 h-2.5 rounded-full transition-all duration-300 ease-in-out"
         [style.width.%]="progress"></div>
     </div>
     <div
-      class="text-xs text-right mt-1 text-black dark:text-white"
+      class="text-xs text-right mt-2 text-black dark:text-white"
       *ngIf="showPercentage">
       {{ progress | number: '1.0-0' }}%
     </div>

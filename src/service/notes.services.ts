@@ -53,7 +53,6 @@ export class NotesService {
       try {
         const content = await readTextFile(paths[index]);
         const info = await stat(paths[index]);
-
         const heading = this.extractHeading(content);
 
         results.push({
@@ -66,7 +65,6 @@ export class NotesService {
         });
         const percentage = ((index + 1) / paths.length) * 100;
 
-        console.info(percentage);
         this.progressLoadingService.updateProgress(
           percentage,
           'Loading notes...'
