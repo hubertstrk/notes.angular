@@ -14,6 +14,11 @@ export const selectDarkMode = createSelector(
   state => state.dark
 );
 
+export const selectArchived = createSelector(
+  selectSettingsState,
+  state => state.archived
+);
+
 export const selectSettingsError = createSelector(
   selectSettingsState,
   state => state.error

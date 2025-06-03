@@ -10,6 +10,7 @@ export interface SettingsState {
   basePath: string | null;
   dark: boolean;
   id: string | null;
+  archived: string[];
   error: string | null;
 }
 
@@ -17,6 +18,7 @@ export const initialState: SettingsState = {
   basePath: null,
   dark: true,
   id: null,
+  archived: [],
   error: null,
 };
 

@@ -30,6 +30,7 @@ export async function initSettingsFactory() {
         basePath: null,
         dark: true,
         id: null,
+        archived: [],
       }),
       { baseDir: BaseDirectory.AppConfig },
     );

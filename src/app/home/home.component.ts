@@ -11,11 +11,16 @@ import { EditorComponent } from '@app/editor/editor.component';
 import { FooterComponent } from '@app/footer/footer.component';
 import { AppSearchComponent } from '@app/search/search.component';
 import { NoteTemplatePopupComponent } from './note-template-popup.component';
+import { selectArchived } from '@store/settings/settings.selectors';
+import { selectNotes } from '@store/note/note.selectors';
 
 import { Icon, IconService } from '@services/icon.service';
 
 import { v4 } from 'uuid';
 import { Store } from '@ngrx/store';
+import { combineLatest } from 'rxjs';
+import { differenceBy } from 'lodash';
+
 import { addNote, setActiveNote } from '@store/note/note.actions';
 import {
   selectBasePath,
@@ -46,11 +51,6 @@ const appWindow = getCurrentWebviewWindow();
   styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent implements OnInit, OnDestroy {
-  isDarkMode = false;
-  collapsed = false;
-  showSearch = false;
-  showTemplatePopup = false;
-  currentBasePath$ = this.store.select(selectBasePath);
   chevronLeft: SafeHtml;
   chevronRight: SafeHtml;
   plus: SafeHtml;
@@ -62,7 +62,23 @@ export class HomeComponent implements OnInit, OnDestroy {
   minimizeIcon: SafeHtml;
   maximizeIcon: SafeHtml;
   closeIcon: SafeHtml;
+  notesIcon: SafeHtml;
+  archivedIcon: SafeHtml;
+
+  // Mode can be 'notes' or 'archived'
+  currentMode: 'notes' | 'archived' = 'notes';
+
+  isDarkMode = false;
+  collapsed = false;
+  showSearch = false;
+  showTemplatePopup = false;
+  accessibleNotes: Note[] | null = null;
+  archivedNotes: string[] | null = null;
+
+  currentBasePath$ = this.store.select(selectBasePath);
   isDarkMode$ = this.store.select(selectDarkMode);
+  notes$ = this.store.select(selectNotes);
+  archivedNotes$ = this.store.select(selectArchived);
 
   constructor(
     private store: Store,
@@ -71,6 +87,9 @@ export class HomeComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
+    this.notesIcon = this.icons.getIcon(Icon.Notes);
+    this.archivedIcon = this.icons.getIcon(Icon.Archived);
+
     this.chevronLeft = this.icons.getIcon(Icon.ChevronLeft);
     this.chevronRight = this.icons.getIcon(Icon.ChevronRight);
     this.plus = this.icons.getIcon(Icon.Plus);
@@ -89,6 +108,18 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.isDarkMode$.subscribe(darkMode => {
       this.isDarkMode = darkMode;
     });
+
+    combineLatest([this.notes$, this.archivedNotes$]).subscribe(
+      ([notes, archivedNotes]) => {
+        this.archivedNotes = archivedNotes;
+
+        this.accessibleNotes = differenceBy(
+          notes,
+          archivedNotes.map(x => ({ path: x, archived: true })),
+          'path'
+        );
+      }
+    );
   }
 
   ngOnDestroy() {
@@ -148,5 +179,9 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   routeToSettings() {
     void this.router.navigate(['/settings']);
+  }
+
+  setMode(mode: 'notes' | 'archived') {
+    this.currentMode = mode;
   }
 }

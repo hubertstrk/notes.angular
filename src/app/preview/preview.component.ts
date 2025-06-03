@@ -12,7 +12,7 @@ import { ButtonComponent } from '../shared/button/button.component';
 import { clamp } from 'lodash';
 import { SafeHtml } from '@angular/platform-browser';
 import { BehaviorSubject, combineLatest, Subject, Subscription } from 'rxjs';
-import { deleteNote } from '@store/note/note.actions';
+import { saveSettings } from '@store/settings/settings.actions';
 import { Note } from '@models/note.model';
 import { iFrameMessage } from '@models/preview.model';
 import { Icon, IconService } from '@services/icon.service';
@@ -26,10 +26,10 @@ import { Icon, IconService } from '@services/icon.service';
 export class PreviewComponent implements OnInit, OnDestroy {
   @ViewChild('previewIframe', { static: true })
   iframe!: ElementRef<HTMLIFrameElement>;
+  latestHtml: string = '';
 
   currentNoteSubscription: Subscription | null = null;
 
-  private latestHtml: string | null = null;
   private iframeLoaded$ = new Subject<void>();
   private currentNote$ = new BehaviorSubject<Note | null>(null);
   activeNoteObservable$ = this.store.select(selectActiveNote);
@@ -62,7 +62,7 @@ export class PreviewComponent implements OnInit, OnDestroy {
       this.sendToIFrame({ type: 'dark-mode', content: isDark });
     });
 
-    // Set up observer for dark mode changes
+    // Set up an observer for dark mode changes
     this.darkModeObserver = new MutationObserver(mutations => {
       mutations.forEach(mutation => {
         if (
@@ -110,7 +110,11 @@ export class PreviewComponent implements OnInit, OnDestroy {
 
   deleteNote() {
     const note = this.currentNote$.getValue();
-    if (note) this.store.dispatch(deleteNote({ notePath: note.path }));
+    if (note) {
+      this.store.dispatch(
+        saveSettings({ settings: { archived: [note.path] } })
+      );
+    }
   }
 
   ngOnDestroy() {

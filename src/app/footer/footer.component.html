@@ -1,10 +1,9 @@
 <footer
-  class="bg-zinc-800 text-zinc-200 text-sm w-full p-2 flex justify-between items-center min-h-8">
-  <div *ngIf="activeNote" class="flex items-center gap-4">
-    <div>{{ activeNote.path }}</div>
-    <div>Created {{ activeNote.createdAt | date: 'medium' }}</div>
-    <div>Updated {{ activeNote.updatedAt | date: 'medium' }}</div>
-    <div>{{ activeNote.size / 1024 | number: '1.1-1' }} KB</div>
+  class="text-sm w-full p-2 flex justify-between items-center text-neutral-300">
+  <div class="flex items-center gap-4">
+    <span>{{ activeNote?.path || '' }}</span>
+    <span>Created: {{ activeNote?.createdAt | date: 'medium' || '' }}</span>
+    <span>Modified: {{ activeNote?.updatedAt | date: 'medium' || '' }}</span>
   </div>
   <div
     *ngIf="activeNote && cursorPosition"

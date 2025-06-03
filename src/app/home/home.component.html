@@ -1,8 +1,10 @@
 <div class="relative h-screen w-screen grid grid-rows-[auto_1fr_auto]">
   <header
     data-tauri-drag-region
-    class="titlebar bg-white dark:bg-zinc-800 text-black dark:text-white py-4 px-2 flex items-center justify-between">
-    <div class="uppercase ml-4 text-2xl text-black dark:text-white">Notes</div>
+    class="title-bar bg-white dark:bg-zinc-800 py-4 px-2 flex items-center justify-between">
+    <div class="uppercase ml-4 text-2xl text-black dark:text-neutral-100">
+      Notes
+    </div>
     <div class="action-buttons flex items-center gap-2">
       <app-button
         variant="transparent"
@@ -28,12 +30,6 @@
         [iconSvg]="plus"
         (clicked)="showTemplatePopup = true">
       </app-button>
-      <app-button
-        variant="transparent"
-        [rounded]="true"
-        [iconSvg]="settings"
-        (clicked)="routeToSettings()">
-      </app-button>
     </div>
     <div class="flex items-center gap-2">
       <app-button
@@ -58,33 +54,72 @@
   </header>
 
   <div
-    class="grid grid-cols-[auto_1fr] h-full overflow-hidden bg-white dark:bg-zinc-800">
+    [ngClass]="{
+      'grid-cols-[60px_auto_1fr]': !collapsed,
+      'grid-cols-[0_auto_1fr]': collapsed
+    }"
+    class="grid h-full overflow-hidden bg-white dark:bg-zinc-800">
+    <!-- tools -->
     <aside
-      [ngClass]="{ 'w-80': !collapsed, 'w-0': collapsed }"
-      class="transition-all duration-300 overflow-auto">
-      <div *ngIf="!collapsed" class="ml-4 mr-4">
-        <app-sidebar></app-sidebar>
+      class="flex flex-col items-center justify-between transition-all duration-300 overflow-hidden py-4"
+      [ngClass]="{ 'w-auto': !collapsed, 'w-0': collapsed }">
+      <div class="flex flex-col items-center gap-2">
+        <app-button
+          title="Notes"
+          variant="transparent"
+          [rounded]="true"
+          [iconSvg]="notesIcon"
+          [badgeCount]="accessibleNotes?.length ?? null"
+          (clicked)="setMode('notes')">
+        </app-button>
+        <app-button
+          title="Archived"
+          variant="transparent"
+          [rounded]="true"
+          [iconSvg]="archivedIcon"
+          [badgeCount]="archivedNotes?.length ?? null"
+          [badgeColor]="'bg-red-500'"
+          (clicked)="setMode('archived')">
+        </app-button>
+      </div>
+      <div class="flex flex-col items-center gap-2">
+        <app-button
+          variant="transparent"
+          [rounded]="true"
+          [iconSvg]="settings"
+          (clicked)="routeToSettings()">
+        </app-button>
       </div>
     </aside>
 
+    <!-- notes-->
+    <aside
+      [ngClass]="{ 'w-80': !collapsed, 'w-0': collapsed }"
+      class="dark:bg-zinc-800 transition-all duration-300 overflow-auto py-4">
+      <div *ngIf="!collapsed" class="ml-4 mr-4">
+        <app-sidebar [mode]="currentMode"></app-sidebar>
+      </div>
+    </aside>
+
+    <!-- editor and preview -->
     <main class="flex flex-col md:flex-row h-full">
       <div class="w-full md:w-1/2 h-full">
         <app-editor></app-editor>
       </div>
 
-      <div class="bg-white dark:bg-zinc-800 w-full md:w-1/2 h-full">
+      <div class="w-full md:w-1/2 h-full">
         <app-preview class="flex w-full h-full"></app-preview>
       </div>
     </main>
   </div>
 
-  <div class="flex w-full ">
+  <div class="bg-zinc-800 text-white flex w-full">
     <app-footer class="w-full"></app-footer>
   </div>
 
   <div
     *ngIf="showSearch"
-    class="w-4/5 md:w-1/2 lg:w-1/3 fixed top-6 bg-white/50 dark:bg-zinc-800/50 backdrop-blur-sm left-1/2 -translate-x-1/2 flex justify-center z-[9999] shadow-xl rounded-lg">
+    class="w-4/5 md:w-1/2 lg:w-1/3 fixed top-6 bg-white/50 dark:bg-neutral-800/50 backdrop-blur-sm left-1/2 -translate-x-1/2 flex justify-center z-[9999] shadow-xl rounded-lg">
     <app-search
       class="w-full"
       (noteClicked)="onNoteClicked($event)"

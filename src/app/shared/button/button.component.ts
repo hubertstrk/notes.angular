@@ -23,6 +23,8 @@ export class ButtonComponent implements AfterContentInit {
   @Input() size: 'sm' | 'md' | 'lg' = 'md';
   @Input() disabled = false;
   @Input() rounded = false;
+  @Input() badgeCount: number | null;
+  @Input() badgeColor: string = 'bg-sky-600';
 
   sanitizedIconSvg?: SafeHtml | undefined;
 

@@ -1,6 +1,6 @@
 <button
   [ngClass]="computedClasses"
-  class="flex items-center justify-center text-gray-700 dark:text-gray-200"
+  class="flex items-center justify-center relative"
   [disabled]="disabled"
   (click)="onClick($event)">
   <span
@@ -15,5 +15,11 @@
     class="flex"
     [ngClass]="{ 'ml-2': hasProjectedContent }"
     [innerHTML]="sanitizedIconSvg">
+  </span>
+  <span
+    *ngIf="badgeCount"
+    class="absolute -top-1 -right-1 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center"
+    [ngClass]="badgeColor">
+    {{ badgeCount }}
   </span>
 </button>
