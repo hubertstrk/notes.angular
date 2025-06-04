@@ -49,10 +49,10 @@
     "windows": [
       {
         "fullscreen": false,
-        "height": 800,
+        "height": 1000,
         "resizable": true,
         "title": "Notes",
-        "width": 1200,
+        "width": 1600,
         "decorations": false,
         "transparent": true,
         "useHttpsScheme": true
