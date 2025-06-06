@@ -15,7 +15,7 @@ import { BehaviorSubject, combineLatest, Subject, Subscription } from 'rxjs';
 import { saveSettings } from '@store/settings/settings.actions';
 import { Note } from '@models/note.model';
 import { iFrameMessage } from '@models/preview.model';
-import { Icon, IconService } from '@services/icon.service';
+import { SvgIconService } from '@services/svg-icon.service';
 
 @Component({
   selector: 'app-preview',
@@ -27,33 +27,34 @@ export class PreviewComponent implements OnInit, OnDestroy {
   @ViewChild('previewIframe', { static: true })
   iframe!: ElementRef<HTMLIFrameElement>;
   latestHtml: string = '';
-
   currentNoteSubscription: Subscription | null = null;
+  icons: { [key: string]: SafeHtml } = {};
 
   private iframeLoaded$ = new Subject<void>();
   private currentNote$ = new BehaviorSubject<Note | null>(null);
-  activeNoteObservable$ = this.store.select(selectActiveNote);
+  private activeNoteObservable$ = this.store.select(selectActiveNote);
   private darkModeObserver!: MutationObserver;
 
   constructor(
     private store: Store,
-    private icons: IconService
+    private iconService: SvgIconService
   ) {}
 
   currentFontSize = 1.2;
   minFontSize = 0.4;
   maxFontSize = 4;
 
-  zoomInIcon: SafeHtml;
-  zoomOutIcon: SafeHtml;
-  deleteNoteIcon: SafeHtml;
-  printIcon: SafeHtml;
-
   ngOnInit(): void {
-    this.zoomInIcon = this.icons.getIcon(Icon.ZoomIn);
-    this.zoomOutIcon = this.icons.getIcon(Icon.ZoomOut);
-    this.deleteNoteIcon = this.icons.getIcon(Icon.Delete);
-    this.printIcon = this.icons.getIcon(Icon.Print);
+    this.iconService
+      .getIcons([
+        'fluent--zoom-in-24-regular',
+        'fluent--zoom-out-24-regular',
+        'fluent--print-24-regular',
+        'fluent--delete-24-regular',
+      ])
+      .subscribe(icons => {
+        this.icons = icons;
+      });
 
     this.iframe.nativeElement.addEventListener('load', () => {
       this.iframeLoaded$.next();

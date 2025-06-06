@@ -3,22 +3,11 @@
   class="flex items-center justify-center relative"
   [disabled]="disabled"
   (click)="onClick($event)">
-  <span
-    *ngIf="sanitizedIconSvg && iconPosition === 'left'"
-    class="flex"
-    [ngClass]="{ 'mr-2': hasProjectedContent }"
-    [innerHTML]="sanitizedIconSvg">
-  </span>
-  <ng-content #projectedContent></ng-content>
-  <span
-    *ngIf="sanitizedIconSvg && iconPosition === 'right'"
-    class="flex"
-    [ngClass]="{ 'ml-2': hasProjectedContent }"
-    [innerHTML]="sanitizedIconSvg">
-  </span>
+  <div *ngIf="icon" [innerHtml]="icon"></div>
+  <ng-content></ng-content>
   <span
     *ngIf="badgeCount"
-    class="absolute -top-1 -right-1 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center"
+    class="absolute -top-1 -right-1 text-xs rounded-full h-5 w-5 flex items-center justify-center"
     [ngClass]="badgeColor">
     {{ badgeCount }}
   </span>

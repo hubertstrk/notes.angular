@@ -13,23 +13,16 @@
     <div class="uppercase ml-4 text-2xl">Settings</div>
     <div class="flex items-center gap-2">
       <app-button
-        variant="transparent"
-        [rounded]="true"
-        [iconSvg]="minimizeIcon"
+        [icon]="icons['fluent--minimize-24-filled']"
         (clicked)="minimizeWindow()">
       </app-button>
       <app-button
-        variant="transparent"
-        [rounded]="true"
-        [iconSvg]="maximizeIcon"
+        [icon]="icons['fluent--maximize-24-regular']"
         (clicked)="maximizeWindow()">
       </app-button>
       <app-button
-        variant="transparent"
-        [rounded]="true"
-        [iconSvg]="closeIcon"
-        (clicked)="closeWindow()">
-      </app-button>
+        [icon]="icons['material-symbols--close-small-outline-rounded']"
+        (clicked)="closeWindow()"></app-button>
     </div>
   </header>
 
@@ -49,7 +42,12 @@
       <div class="text-sm italic" *ngIf="basePath$ | async as basePath">
         {{ basePath || 'Not set' }}
       </div>
-      <app-button (clicked)="selectFolder()">Select Folder </app-button>
+      <app-button
+        [variant]="'primary'"
+        [rounded]="false"
+        (clicked)="selectFolder()">
+        Select Folder
+      </app-button>
     </div>
   </div>
 </div>

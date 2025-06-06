@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterOutlet } from '@angular/router';
 import { NotesService } from '@services/notes.services';
@@ -10,7 +10,6 @@ import {
   selectDarkMode,
 } from '@store/settings/settings.selectors';
 import { loadSettings } from '@store/settings/settings.actions';
-import { LoadingIndicatorComponent } from './shared/loading-indicator/loading-indicator.component';
 import { ProgressIndicatorComponent } from './shared/progress-indicator/progress-indicator.component';
 
 import { Subscription } from 'rxjs';
@@ -19,7 +18,7 @@ import { Subscription } from 'rxjs';
   selector: 'app-root',
   standalone: true,
   providers: [NotesService, Store],
-  imports: [CommonModule, RouterOutlet, LoadingIndicatorComponent, ProgressIndicatorComponent],
+  imports: [CommonModule, RouterOutlet, ProgressIndicatorComponent],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })

@@ -8,12 +8,12 @@ import {
   ViewChild,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Icon, IconService } from '@services/icon.service';
 import { Note } from '@models/note.model';
-import { ButtonComponent } from '../shared/button/button.component';
 import { Store } from '@ngrx/store';
 import { selectNotes } from '@store/note/note.selectors';
+import { SvgIconService } from '@services/svg-icon.service';
 import { SafeHtml } from '@angular/platform-browser';
+import { ButtonComponent } from '@app/shared/button/button.component';
 
 type SearchResult = {
   item: Note;
@@ -25,7 +25,7 @@ type SearchResult = {
   standalone: true,
   imports: [CommonModule, ButtonComponent],
   templateUrl: './search.component.html',
-  providers: [IconService],
+  providers: [SvgIconService],
 })
 export class AppSearchComponent implements OnInit, AfterViewInit {
   @Output() noteClicked = new EventEmitter<Note>();
@@ -36,24 +36,28 @@ export class AppSearchComponent implements OnInit, AfterViewInit {
   notes$ = this.store.select(selectNotes);
   notes: Note[] = [];
   searchResults: SearchResult[] = [];
-
+  icons: { [key: string]: SafeHtml } = {};
   cancelIcon: SafeHtml;
 
   constructor(
-    private iconService: IconService,
+    private iconService: SvgIconService,
     private store: Store
-  ) {
-    this.notes$.subscribe(notes => {
-      this.notes = notes;
-    });
-  }
+  ) {}
 
   ngAfterViewInit(): void {
     this.searchInput.nativeElement.focus();
   }
 
   ngOnInit(): void {
-    this.cancelIcon = this.iconService.getIcon(Icon.Cancel);
+    this.iconService
+      .getIcons(['material-symbols--close-small-outline-rounded'])
+      .subscribe(icons => {
+        this.icons = icons;
+      });
+
+    this.notes$.subscribe(notes => {
+      this.notes = notes;
+    });
   }
 
   onSearchInput(event: Event) {

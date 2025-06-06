@@ -3,6 +3,8 @@ import { provideRouter } from '@angular/router';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { routes } from './app.routes';
 
+import { provideHttpClient } from '@angular/common/http';
+
 import { initSettingsFactory } from '../factory/settings-factory';
 import { provideStore } from '@ngrx/store';
 import { provideEffects } from '@ngrx/effects';
@@ -24,6 +26,7 @@ export const appConfig: ApplicationConfig = {
       useFactory: () => initSettingsFactory,
       multi: true,
     },
+    provideHttpClient(),
     provideStore({
       note: noteReducer,
       editor: editorReducer,

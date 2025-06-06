@@ -65,10 +65,7 @@ export class NotesService {
         });
         const percentage = ((index + 1) / paths.length) * 100;
 
-        this.progressLoadingService.updateProgress(
-          percentage,
-          'Loading notes...'
-        );
+        this.progressLoadingService.updateProgress(percentage, 'Loading...');
       } catch (error) {
         console.error(`Failed to read ${paths[index]}:`, error);
       }
@@ -79,7 +76,7 @@ export class NotesService {
 
   async importFiles(directory: string): Promise<Note[]> {
     try {
-      this.progressLoadingService.show('Loading notes...');
+      this.progressLoadingService.show('Loading...');
       const paths = await this.readFilePathsRecursive(directory);
       return await this.readFiles(paths);
     } finally {

@@ -1,5 +1,4 @@
 import {
-  AfterContentInit,
   Component,
   ContentChildren,
   ElementRef,
@@ -17,29 +16,18 @@ import { SafeHtml } from '@angular/platform-browser';
   imports: [CommonModule],
   templateUrl: './button.component.html',
 })
-export class ButtonComponent implements AfterContentInit {
+export class ButtonComponent {
   @Input() variant: 'primary' | 'secondary' | 'danger' | 'transparent' =
-    'primary';
+    'transparent';
   @Input() size: 'sm' | 'md' | 'lg' = 'md';
   @Input() disabled = false;
-  @Input() rounded = false;
+  @Input() rounded = true;
   @Input() badgeCount: number | null;
   @Input() badgeColor: string = 'bg-sky-600';
-
-  sanitizedIconSvg?: SafeHtml | undefined;
+  @Input() icon: SafeHtml | null = null;
 
   @ContentChildren('projectedContent', { descendants: true, read: ElementRef })
   projectedContent!: QueryList<ElementRef>;
-  hasProjectedContent = false;
-
-  constructor() {}
-
-  @Input()
-  set iconSvg(value: SafeHtml | undefined) {
-    this.sanitizedIconSvg = value;
-  }
-
-  @Input() iconPosition: 'left' | 'right' = 'left';
 
   @Output() clicked = new EventEmitter<Event>();
 
@@ -68,11 +56,6 @@ export class ButtonComponent implements AfterContentInit {
     return `${base} ${sizes[this.size]} ${variants[this.variant]} ${
       this.disabled ? 'opacity-50 cursor-not-allowed' : ''
     }`;
-  }
-
-  ngAfterContentInit() {
-    this.hasProjectedContent =
-      this.projectedContent && this.projectedContent.length > 0;
   }
 
   onClick(event: Event) {

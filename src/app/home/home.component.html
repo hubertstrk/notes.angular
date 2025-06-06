@@ -7,49 +7,43 @@
     </div>
     <div class="action-buttons flex items-center gap-2">
       <app-button
-        variant="transparent"
-        [rounded]="true"
-        [iconSvg]="collapsed ? chevronRight : chevronLeft"
+        [icon]="
+          collapsed
+            ? icons['fluent--chevron-right-24-regular']
+            : icons['fluent--chevron-left-24-regular']
+        "
         (clicked)="collapsed = !collapsed">
       </app-button>
       <app-button
-        variant="transparent"
-        [rounded]="true"
-        [iconSvg]="isDarkMode ? sunIcon : moonIcon"
+        [icon]="
+          isDarkMode
+            ? icons['fluent--weather-sunny-24-regular']
+            : icons['fluent--dark-theme-24-filled']
+        "
         (clicked)="toggleDarkMode()">
       </app-button>
       <app-button
         variant="transparent"
-        [rounded]="true"
-        [iconSvg]="search"
+        [icon]="icons['fluent--search-24-regular']"
         (clicked)="showSearch = !showSearch">
       </app-button>
       <app-button
-        variant="transparent"
-        [rounded]="true"
-        [iconSvg]="plus"
+        [icon]="icons['fluent--note-add-24-regular']"
         (clicked)="showTemplatePopup = true">
       </app-button>
     </div>
     <div class="flex items-center gap-2">
       <app-button
-        variant="transparent"
-        [rounded]="true"
-        [iconSvg]="minimizeIcon"
+        [icon]="icons['fluent--minimize-24-filled']"
         (clicked)="minimizeWindow()">
       </app-button>
       <app-button
-        variant="transparent"
-        [rounded]="true"
-        [iconSvg]="maximizeIcon"
+        [icon]="icons['fluent--maximize-24-regular']"
         (clicked)="maximizeWindow()">
       </app-button>
       <app-button
-        variant="transparent"
-        [rounded]="true"
-        [iconSvg]="closeIcon"
-        (clicked)="closeWindow()">
-      </app-button>
+        [icon]="icons['material-symbols--close-small-outline-rounded']"
+        (clicked)="closeWindow()"></app-button>
     </div>
   </header>
 
@@ -58,34 +52,27 @@
       'grid-cols-[60px_auto_1fr]': !collapsed,
       'grid-cols-[0_auto_1fr]': collapsed
     }"
-    class="grid h-full overflow-hidden bg-white dark:bg-zinc-800">
+    class="flex items-center h-full overflow-hidden bg-white dark:bg-zinc-800">
     <!-- tools -->
     <aside
-      class="flex flex-col items-center justify-between transition-all duration-300 overflow-hidden py-4"
+      class="flex flex-col items-center justify-between transition-all duration-300 overflow-hidden py-4 h-full px-2"
       [ngClass]="{ 'w-auto': !collapsed, 'w-0': collapsed }">
       <div class="flex flex-col items-center gap-2">
         <app-button
-          title="Notes"
-          variant="transparent"
-          [rounded]="true"
-          [iconSvg]="notesIcon"
-          (clicked)="setMode('notes')">
+          [variant]="currentMode === 'notes' ? 'primary' : 'transparent'"
+          [icon]="icons['fluent--note-24-regular']"
+          (clicked)="currentMode = 'notes'">
         </app-button>
         <app-button
-          title="Archived"
-          variant="transparent"
-          [rounded]="true"
-          [iconSvg]="archivedIcon"
-          [badgeCount]="archivedNotes?.length ?? null"
+          [variant]="currentMode === 'archived' ? 'primary' : 'transparent'"
+          [icon]="icons['fluent--delete-24-regular']"
           [badgeColor]="'bg-red-500'"
-          (clicked)="setMode('archived')">
+          (clicked)="currentMode = 'archived'">
         </app-button>
       </div>
-      <div class="flex flex-col items-center gap-2">
+      <div class="flex flex-col items-center gap-2 h-auto min-h-fit self-end">
         <app-button
-          variant="transparent"
-          [rounded]="true"
-          [iconSvg]="settings"
+          [icon]="icons['fluent--settings-28-regular']"
           (clicked)="routeToSettings()">
         </app-button>
       </div>
@@ -94,8 +81,8 @@
     <!-- notes-->
     <aside
       [ngClass]="{ 'w-80': !collapsed, 'w-0': collapsed }"
-      class="dark:bg-zinc-800 transition-all duration-300 overflow-auto py-4">
-      <div *ngIf="!collapsed" class="ml-4 mr-4">
+      class="flex h-full dark:bg-zinc-800 transition-all duration-300 overflow-auto py-4">
+      <div *ngIf="!collapsed" class="px-2">
         <app-sidebar [mode]="currentMode"></app-sidebar>
       </div>
     </aside>

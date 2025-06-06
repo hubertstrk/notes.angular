@@ -11,15 +11,9 @@ import { EditorComponent } from '@app/editor/editor.component';
 import { FooterComponent } from '@app/footer/footer.component';
 import { AppSearchComponent } from '@app/search/search.component';
 import { NoteTemplatePopupComponent } from './note-template-popup.component';
-import { selectArchived } from '@store/settings/settings.selectors';
-import { selectNotes } from '@store/note/note.selectors';
-
-import { Icon, IconService } from '@services/icon.service';
 
 import { v4 } from 'uuid';
 import { Store } from '@ngrx/store';
-import { combineLatest } from 'rxjs';
-import { differenceBy } from 'lodash';
 
 import { addNote, setActiveNote } from '@store/note/note.actions';
 import {
@@ -30,6 +24,7 @@ import { Note } from '@models/note.model';
 import { getCurrentWebviewWindow } from '@tauri-apps/api/webviewWindow';
 
 import { saveSettings } from '@store/settings/settings.actions';
+import { SvgIconService } from '@services/svg-icon.service';
 
 const appWindow = getCurrentWebviewWindow();
 
@@ -46,80 +41,54 @@ const appWindow = getCurrentWebviewWindow();
     AppSearchComponent,
     NoteTemplatePopupComponent,
   ],
-  providers: [IconService],
+  providers: [SvgIconService],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent implements OnInit, OnDestroy {
-  chevronLeft: SafeHtml;
-  chevronRight: SafeHtml;
-  plus: SafeHtml;
-  settings: SafeHtml;
-  search: SafeHtml;
-  sunIcon: SafeHtml;
-  moonIcon: SafeHtml;
-  readerIcon: SafeHtml;
-  minimizeIcon: SafeHtml;
-  maximizeIcon: SafeHtml;
-  closeIcon: SafeHtml;
-  notesIcon: SafeHtml;
-  archivedIcon: SafeHtml;
+  icons: { [key: string]: SafeHtml } = {};
 
-  // Mode can be 'notes' or 'archived'
   currentMode: 'notes' | 'archived' = 'notes';
 
   isDarkMode = false;
   collapsed = false;
   showSearch = false;
   showTemplatePopup = false;
-  accessibleNotes: Note[] | null = null;
-  archivedNotes: string[] | null = null;
 
   currentBasePath$ = this.store.select(selectBasePath);
   isDarkMode$ = this.store.select(selectDarkMode);
-  notes$ = this.store.select(selectNotes);
-  archivedNotes$ = this.store.select(selectArchived);
 
   constructor(
     private store: Store,
     private router: Router,
-    private icons: IconService
+    private iconService: SvgIconService
   ) {}
 
   ngOnInit() {
-    this.notesIcon = this.icons.getIcon(Icon.Notes);
-    this.archivedIcon = this.icons.getIcon(Icon.Archived);
-
-    this.chevronLeft = this.icons.getIcon(Icon.ChevronLeft);
-    this.chevronRight = this.icons.getIcon(Icon.ChevronRight);
-    this.plus = this.icons.getIcon(Icon.Plus);
-    this.settings = this.icons.getIcon(Icon.Settings);
-    this.search = this.icons.getIcon(Icon.Search);
-    this.sunIcon = this.icons.getIcon(Icon.Sun);
-    this.moonIcon = this.icons.getIcon(Icon.Moon);
-    this.readerIcon = this.icons.getIcon(Icon.Reader);
-
-    this.minimizeIcon = this.icons.getIcon(Icon.Minimize);
-    this.maximizeIcon = this.icons.getIcon(Icon.Maximize);
-    this.closeIcon = this.icons.getIcon(Icon.Close);
+    this.iconService
+      .getIcons([
+        'fluent--note-24-regular',
+        'fluent--delete-24-regular',
+        'fluent--settings-28-regular',
+        'fluent--chevron-left-24-regular',
+        'fluent--chevron-right-24-regular',
+        'fluent--dark-theme-24-filled',
+        'fluent--note-add-24-regular',
+        'fluent--search-24-regular',
+        'fluent--weather-sunny-24-regular',
+        'fluent--minimize-24-filled',
+        'fluent--maximize-24-regular',
+        'material-symbols--close-small-outline-rounded',
+      ])
+      .subscribe(icons => {
+        this.icons = icons;
+      });
 
     window.addEventListener('keydown', this.handleEsc, true);
 
     this.isDarkMode$.subscribe(darkMode => {
       this.isDarkMode = darkMode;
     });
-
-    combineLatest([this.notes$, this.archivedNotes$]).subscribe(
-      ([notes, archivedNotes]) => {
-        this.archivedNotes = archivedNotes;
-
-        this.accessibleNotes = differenceBy(
-          notes,
-          archivedNotes.map(x => ({ path: x, archived: true })),
-          'path'
-        );
-      }
-    );
   }
 
   ngOnDestroy() {
@@ -179,9 +148,5 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   routeToSettings() {
     void this.router.navigate(['/settings']);
-  }
-
-  setMode(mode: 'notes' | 'archived') {
-    this.currentMode = mode;
   }
 }

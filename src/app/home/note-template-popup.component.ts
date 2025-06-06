@@ -1,8 +1,15 @@
-import { AfterViewInit, Component, EventEmitter, Output } from '@angular/core';
+import {
+  OnInit,
+  AfterViewInit,
+  Component,
+  EventEmitter,
+  Output,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ButtonComponent } from '@app/shared/button/button.component';
-import { Icon, IconService } from '@services/icon.service';
+import { SvgIconService } from '@services/svg-icon.service';
+import { SafeHtml } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-note-template-popup',
@@ -10,26 +17,19 @@ import { Icon, IconService } from '@services/icon.service';
   styleUrls: ['./note-template-popup.component.scss'],
   standalone: true,
   imports: [FormsModule, CommonModule, ButtonComponent],
-  providers: [IconService],
+  providers: [SvgIconService],
 })
-export class NoteTemplatePopupComponent implements AfterViewInit {
+export class NoteTemplatePopupComponent implements OnInit, AfterViewInit {
   @Output() templateSelected = new EventEmitter<{
     title: string;
     content: string;
   }>();
+
   @Output() closed = new EventEmitter<void>();
 
-  constructor(private icons: IconService) {}
+  constructor(private iconService: SvgIconService) {}
 
-  closeIcon = this.icons.getIcon(Icon.Close);
-
-  templates: Array<{
-    icon: string;
-    title: string;
-    description: string;
-    content: string;
-  }> = [];
-
+  icons: { [key: string]: SafeHtml } = {};
   private templateFiles = [
     {
       icon: '📝',
@@ -66,22 +66,37 @@ export class NoteTemplatePopupComponent implements AfterViewInit {
     },
   ];
 
+  templates: Array<{
+    icon: string;
+    title: string;
+    description: string;
+    content: string;
+  }> = [];
+
+  ngOnInit(): void {
+    this.iconService
+      .getIcons(['material-symbols--close-small-outline-rounded'])
+      .subscribe(icons => {
+        this.icons = icons;
+      });
+  }
+
   async ngAfterViewInit() {
     this.templates = [];
-    for (const t of this.templateFiles) {
+    for (const template of this.templateFiles) {
       try {
         // Use fetch for static assets in Angular
-        const content = await fetch('assets/templates/' + t.file).then(r =>
-          r.text()
+        const content = await fetch('assets/templates/' + template.file).then(
+          result => result.text()
         );
         this.templates.push({
-          icon: t.icon,
-          title: t.title,
-          description: t.description,
+          icon: template.icon,
+          title: template.title,
+          description: template.description,
           content,
         });
-      } catch (e) {
-        console.error(`Error reading template file ${t.file}:`, e);
+      } catch (exe) {
+        console.error(`Error reading template file ${template.file}:`, exe);
       }
     }
   }

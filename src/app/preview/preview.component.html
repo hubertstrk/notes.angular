@@ -2,31 +2,21 @@
   <div class="flex justify-between mx-3">
     <div class="flex">
       <app-button
-        variant="transparent"
-        [rounded]="true"
-        [iconSvg]="zoomInIcon"
+        [icon]="icons['fluent--zoom-in-24-regular']"
         (clicked)="updateFontSize(0.2)">
       </app-button>
       <app-button
-        variant="transparent"
-        [rounded]="true"
-        [iconSvg]="zoomOutIcon"
+        [icon]="icons['fluent--zoom-out-24-regular']"
         (clicked)="updateFontSize(-0.2)">
       </app-button>
     </div>
     <div class="flex">
       <app-button
-        variant="transparent"
-        [rounded]="true"
-        [iconSvg]="printIcon"
-        (clicked)="print()">
-      </app-button>
+        [icon]="icons['fluent--print-24-regular']"
+        (clicked)="print()"></app-button>
       <app-button
-        variant="transparent"
-        [rounded]="true"
-        [iconSvg]="deleteNoteIcon"
-        (clicked)="deleteNote()">
-      </app-button>
+        [icon]="icons['fluent--delete-24-regular']"
+        (clicked)="deleteNote()"></app-button>
     </div>
   </div>
 

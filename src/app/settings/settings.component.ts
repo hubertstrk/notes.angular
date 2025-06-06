@@ -3,15 +3,16 @@ import { Store } from '@ngrx/store';
 import { selectBasePath } from '@store/settings/settings.selectors';
 import { Observable } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { map } from 'rxjs/operators';
 import { open } from '@tauri-apps/plugin-dialog';
 import { ButtonComponent } from '../shared/button/button.component';
 import { SafeHtml } from '@angular/platform-browser';
-import { Icon, IconService } from '@services/icon.service';
+import { SvgIconService } from '@services/svg-icon.service';
 import { getCurrentWebviewWindow } from '@tauri-apps/api/webviewWindow';
 import { saveSettings } from '@store/settings/settings.actions';
-const appWindow = getCurrentWebviewWindow()
+
+const appWindow = getCurrentWebviewWindow();
 
 @Component({
   selector: 'app-settings',
@@ -24,16 +25,12 @@ export class SettingsComponent implements OnInit {
     this.store.select(selectBasePath);
   reason$: Observable<string | null>;
 
-  chevronLeft: SafeHtml;
-  minimizeIcon: SafeHtml;
-  maximizeIcon: SafeHtml;
-  closeIcon: SafeHtml;
+  icons: { [key: string]: SafeHtml } = {};
 
   constructor(
     private store: Store,
     private route: ActivatedRoute,
-    private router: Router,
-    private icons: IconService
+    private iconService: SvgIconService
   ) {
     this.reason$ = this.route.queryParamMap.pipe(
       map(params => params.get('reason'))
@@ -50,10 +47,15 @@ export class SettingsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.chevronLeft = this.icons.getIcon(Icon.ChevronLeft);
-    this.minimizeIcon = this.icons.getIcon(Icon.Minimize);
-    this.maximizeIcon = this.icons.getIcon(Icon.Maximize);
-    this.closeIcon = this.icons.getIcon(Icon.Close);
+    this.iconService
+      .getIcons([
+        'fluent--minimize-24-filled',
+        'fluent--maximize-24-regular',
+        'material-symbols--close-small-outline-rounded',
+      ])
+      .subscribe(icons => {
+        this.icons = icons;
+      });
   }
 
   minimizeWindow() {
