@@ -29,7 +29,9 @@ export class PreviewComponent implements OnInit, OnDestroy {
   latestHtml: string = '';
   currentNoteSubscription: Subscription | null = null;
   icons: { [key: string]: SafeHtml } = {};
-
+  currentFontSize = 1.2;
+  minFontSize = 0.4;
+  maxFontSize = 4;
   private iframeLoaded$ = new Subject<void>();
   private currentNote$ = new BehaviorSubject<Note | null>(null);
   private activeNoteObservable$ = this.store.select(selectActiveNote);
@@ -39,10 +41,6 @@ export class PreviewComponent implements OnInit, OnDestroy {
     private store: Store,
     private iconService: SvgIconService
   ) {}
-
-  currentFontSize = 1.2;
-  minFontSize = 0.4;
-  maxFontSize = 4;
 
   ngOnInit(): void {
     this.iconService

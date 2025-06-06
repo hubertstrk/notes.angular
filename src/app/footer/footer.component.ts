@@ -12,13 +12,12 @@ import { Note } from '@models/note.model';
   imports: [CommonModule],
 })
 export class FooterComponent implements OnInit {
-  constructor(private store: Store) {}
-
   activeNote$ = this.store.select(selectActiveNote);
   cursorPosition$ = this.store.select(selectCursorPosition);
-
   activeNote: Note | null = null;
   cursorPosition: { line: number; column: number } = { line: 0, column: 0 };
+
+  constructor(private store: Store) {}
 
   ngOnInit(): void {
     this.activeNote$.subscribe(note => {

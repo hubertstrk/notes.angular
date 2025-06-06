@@ -26,10 +26,13 @@ export class NoteTemplatePopupComponent implements OnInit, AfterViewInit {
   }>();
 
   @Output() closed = new EventEmitter<void>();
-
-  constructor(private iconService: SvgIconService) {}
-
   icons: { [key: string]: SafeHtml } = {};
+  templates: Array<{
+    icon: string;
+    title: string;
+    description: string;
+    content: string;
+  }> = [];
   private templateFiles = [
     {
       icon: '📝',
@@ -66,12 +69,7 @@ export class NoteTemplatePopupComponent implements OnInit, AfterViewInit {
     },
   ];
 
-  templates: Array<{
-    icon: string;
-    title: string;
-    description: string;
-    content: string;
-  }> = [];
+  constructor(private iconService: SvgIconService) {}
 
   ngOnInit(): void {
     this.iconService

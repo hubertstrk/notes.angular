@@ -25,19 +25,15 @@ import { selectArchived } from '@store/settings/settings.selectors';
 })
 export class SidebarComponent implements OnInit, OnChanges, OnDestroy {
   @Input() mode: 'notes' | 'archived' = 'notes';
-
-  constructor(private store: Store) {}
-
   notes$ = this.store.select(selectNotes);
   archived$ = this.store.select(selectArchived);
-
   notes: Note[] = [];
-
   activeNote$ = this.store.select(selectActiveNote);
   activeNote: Note | null = null;
-
   private notesSubscription: Subscription | null = null;
   private activeNoteSubscription: Subscription | null = null;
+
+  constructor(private store: Store) {}
 
   ngOnInit(): void {
     this.updateNotesBasedOnMode();
@@ -60,6 +56,10 @@ export class SidebarComponent implements OnInit, OnChanges, OnDestroy {
     if (this.activeNoteSubscription) {
       this.activeNoteSubscription.unsubscribe();
     }
+  }
+
+  onNoteClick(note: Note) {
+    this.store.dispatch(setActiveNote({ notePath: note.path }));
   }
 
   private updateNotesBasedOnMode(): void {
@@ -89,9 +89,5 @@ export class SidebarComponent implements OnInit, OnChanges, OnDestroy {
         })
       )
       .subscribe();
-  }
-
-  onNoteClick(note: Note) {
-    this.store.dispatch(setActiveNote({ notePath: note.path }));
   }
 }

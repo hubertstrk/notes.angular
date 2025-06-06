@@ -23,18 +23,17 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit, OnDestroy {
+  isDarkMode$ = this.store.select(selectDarkMode);
+  selectBasePath$ = this.store.select(selectBasePath);
+  darkModeSubscription: Subscription;
+  basePathSubscription: Subscription;
+  notesSubscription: Subscription;
+
   constructor(
     private store: Store,
     private actions$: Actions,
     private router: Router
   ) {}
-
-  isDarkMode$ = this.store.select(selectDarkMode);
-  selectBasePath$ = this.store.select(selectBasePath);
-
-  darkModeSubscription: Subscription;
-  basePathSubscription: Subscription;
-  notesSubscription: Subscription;
 
   ngOnInit(): void {
     this.store.dispatch(loadSettings());

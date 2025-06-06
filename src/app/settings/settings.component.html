@@ -7,22 +7,22 @@
     overflow: hidden;
   ">
   <header
-    data-tauri-drag-region
     class="action-buttons py-4 px-2 flex items-center justify-between"
+    data-tauri-drag-region
     style="grid-row: 1">
     <div class="uppercase ml-4 text-2xl">Settings</div>
     <div class="flex items-center gap-2">
       <app-button
-        [icon]="icons['fluent--minimize-24-filled']"
-        (clicked)="minimizeWindow()">
+        (clicked)="minimizeWindow()"
+        [icon]="icons['fluent--minimize-24-filled']">
       </app-button>
       <app-button
-        [icon]="icons['fluent--maximize-24-regular']"
-        (clicked)="maximizeWindow()">
+        (clicked)="maximizeWindow()"
+        [icon]="icons['fluent--maximize-24-regular']">
       </app-button>
       <app-button
-        [icon]="icons['material-symbols--close-small-outline-rounded']"
-        (clicked)="closeWindow()"></app-button>
+        (clicked)="closeWindow()"
+        [icon]="icons['material-symbols--close-small-outline-rounded']"></app-button>
     </div>
   </header>
 
@@ -30,22 +30,22 @@
     class="px-6 py-2 h-full w-full flex flex-col gap-2"
     style="grid-row: 2; min-height: 0; min-width: 0; overflow: hidden">
     <div *ngIf="reason$ | async as reason">
-      <div class="alert p-3 rounded-md mb-4" *ngIf="reason === 'missing'">
+      <div *ngIf="reason === 'missing'" class="alert p-3 rounded-md mb-4">
         Please select a base path to continue.
       </div>
-      <div class="alert p-3 rounded-md mb-4" *ngIf="reason === 'invalid'">
+      <div *ngIf="reason === 'invalid'" class="alert p-3 rounded-md mb-4">
         The selected base path does not exist. Please choose a valid folder.
       </div>
     </div>
     <div class="flex flex-col gap-2">
       <div class="text-xl">Base Path</div>
-      <div class="text-sm italic" *ngIf="basePath$ | async as basePath">
+      <div *ngIf="basePath$ | async as basePath" class="text-sm italic">
         {{ basePath || 'Not set' }}
       </div>
       <app-button
-        [variant]="'primary'"
+        (clicked)="selectFolder()"
         [rounded]="false"
-        (clicked)="selectFolder()">
+        [variant]="'primary'">
         Select Folder
       </app-button>
     </div>

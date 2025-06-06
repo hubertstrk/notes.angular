@@ -2,21 +2,21 @@
   <div class="flex justify-between mx-3">
     <div class="flex">
       <app-button
-        [icon]="icons['fluent--zoom-in-24-regular']"
-        (clicked)="updateFontSize(0.2)">
+        (clicked)="updateFontSize(0.2)"
+        [icon]="icons['fluent--zoom-in-24-regular']">
       </app-button>
       <app-button
-        [icon]="icons['fluent--zoom-out-24-regular']"
-        (clicked)="updateFontSize(-0.2)">
+        (clicked)="updateFontSize(-0.2)"
+        [icon]="icons['fluent--zoom-out-24-regular']">
       </app-button>
     </div>
     <div class="flex">
       <app-button
-        [icon]="icons['fluent--print-24-regular']"
-        (clicked)="print()"></app-button>
+        (clicked)="print()"
+        [icon]="icons['fluent--print-24-regular']"></app-button>
       <app-button
-        [icon]="icons['fluent--delete-24-regular']"
-        (clicked)="deleteNote()"></app-button>
+        (clicked)="deleteNote()"
+        [icon]="icons['fluent--delete-24-regular']"></app-button>
     </div>
   </div>
 

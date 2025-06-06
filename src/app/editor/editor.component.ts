@@ -29,10 +29,7 @@ export class EditorComponent implements AfterViewInit, OnDestroy {
   @ViewChild('editorContainer') editorContainer!: ElementRef;
 
   resizeObserver!: ResizeObserver;
-  private darkModeObserver!: MutationObserver;
-
   activeNote$: Observable<Note | null> = this.store.select(selectActiveNote);
-
   editorOptions = {
     theme: document.body.classList.contains('dark') ? 'vs-dark' : 'vs-light',
     language: 'markdown',
@@ -47,7 +44,7 @@ export class EditorComponent implements AfterViewInit, OnDestroy {
     lineDecorationsWidth: 0,
     cursorSmoothCaretAnimation: true,
   };
-
+  private darkModeObserver!: MutationObserver;
   private monacoInstance!: monaco.editor.IStandaloneCodeEditor;
 
   constructor(

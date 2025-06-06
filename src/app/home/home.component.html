@@ -1,49 +1,49 @@
 <div class="relative h-screen w-screen grid grid-rows-[auto_1fr_auto]">
   <header
-    data-tauri-drag-region
-    class="title-bar bg-white dark:bg-zinc-800 py-4 px-2 flex items-center justify-between">
+    class="title-bar bg-white dark:bg-zinc-800 py-4 px-2 flex items-center justify-between"
+    data-tauri-drag-region>
     <div class="uppercase ml-4 text-2xl text-black dark:text-neutral-100">
       Notes
     </div>
     <div class="action-buttons flex items-center gap-2">
       <app-button
+        (clicked)="collapsed = !collapsed"
         [icon]="
           collapsed
             ? icons['fluent--chevron-right-24-regular']
             : icons['fluent--chevron-left-24-regular']
-        "
-        (clicked)="collapsed = !collapsed">
+        ">
       </app-button>
       <app-button
+        (clicked)="toggleDarkMode()"
         [icon]="
           isDarkMode
             ? icons['fluent--weather-sunny-24-regular']
             : icons['fluent--dark-theme-24-filled']
-        "
-        (clicked)="toggleDarkMode()">
+        ">
       </app-button>
       <app-button
-        variant="transparent"
+        (clicked)="showSearch = !showSearch"
         [icon]="icons['fluent--search-24-regular']"
-        (clicked)="showSearch = !showSearch">
+        variant="transparent">
       </app-button>
       <app-button
-        [icon]="icons['fluent--note-add-24-regular']"
-        (clicked)="showTemplatePopup = true">
+        (clicked)="showTemplatePopup = true"
+        [icon]="icons['fluent--note-add-24-regular']">
       </app-button>
     </div>
     <div class="flex items-center gap-2">
       <app-button
-        [icon]="icons['fluent--minimize-24-filled']"
-        (clicked)="minimizeWindow()">
+        (clicked)="minimizeWindow()"
+        [icon]="icons['fluent--minimize-24-filled']">
       </app-button>
       <app-button
-        [icon]="icons['fluent--maximize-24-regular']"
-        (clicked)="maximizeWindow()">
+        (clicked)="maximizeWindow()"
+        [icon]="icons['fluent--maximize-24-regular']">
       </app-button>
       <app-button
-        [icon]="icons['material-symbols--close-small-outline-rounded']"
-        (clicked)="closeWindow()"></app-button>
+        (clicked)="closeWindow()"
+        [icon]="icons['material-symbols--close-small-outline-rounded']"></app-button>
     </div>
   </header>
 
@@ -55,25 +55,25 @@
     class="flex items-center h-full overflow-hidden bg-white dark:bg-zinc-800">
     <!-- tools -->
     <aside
-      class="flex flex-col items-center justify-between transition-all duration-300 overflow-hidden py-4 h-full px-2"
-      [ngClass]="{ 'w-auto': !collapsed, 'w-0': collapsed }">
+      [ngClass]="{ 'w-auto': !collapsed, 'w-0': collapsed }"
+      class="flex flex-col items-center justify-between transition-all duration-300 overflow-hidden py-4 h-full px-2">
       <div class="flex flex-col items-center gap-2">
         <app-button
-          [variant]="currentMode === 'notes' ? 'primary' : 'transparent'"
+          (clicked)="currentMode = 'notes'"
           [icon]="icons['fluent--note-24-regular']"
-          (clicked)="currentMode = 'notes'">
+          [variant]="currentMode === 'notes' ? 'primary' : 'transparent'">
         </app-button>
         <app-button
-          [variant]="currentMode === 'archived' ? 'primary' : 'transparent'"
-          [icon]="icons['fluent--delete-24-regular']"
+          (clicked)="currentMode = 'archived'"
           [badgeColor]="'bg-red-500'"
-          (clicked)="currentMode = 'archived'">
+          [icon]="icons['fluent--delete-24-regular']"
+          [variant]="currentMode === 'archived' ? 'primary' : 'transparent'">
         </app-button>
       </div>
       <div class="flex flex-col items-center gap-2 h-auto min-h-fit self-end">
         <app-button
-          [icon]="icons['fluent--settings-28-regular']"
-          (clicked)="routeToSettings()">
+          (clicked)="routeToSettings()"
+          [icon]="icons['fluent--settings-28-regular']">
         </app-button>
       </div>
     </aside>
@@ -107,18 +107,18 @@
     *ngIf="showSearch"
     class="w-4/5 md:w-1/2 lg:w-1/3 fixed top-6 bg-white/50 dark:bg-neutral-800/50 backdrop-blur-sm left-1/2 -translate-x-1/2 flex justify-center z-[9999] shadow-xl rounded-lg">
     <app-search
-      class="w-full"
+      (closeClicked)="showSearch = false"
       (noteClicked)="onNoteClicked($event)"
-      (closeClicked)="showSearch = false"></app-search>
+      class="w-full"></app-search>
   </div>
 
   <div
     *ngIf="showTemplatePopup"
     class="w-4/5 md:w-1/2 lg:w-1/3 fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white/50 dark:bg-zinc-800/50 backdrop-blur-sm flex justify-center z-[9999] shadow-xl rounded-lg">
     <app-note-template-popup
-      class="w-full"
+      (closed)="showTemplatePopup = false"
       (templateSelected)="onTemplateSelected($event)"
-      (closed)="showTemplatePopup = false">
+      class="w-full">
     </app-note-template-popup>
   </div>
 </div>
