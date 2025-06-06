@@ -49,9 +49,9 @@ export class SettingsComponent implements OnInit {
   ngOnInit(): void {
     this.iconService
       .getIcons([
-        'fluent--minimize-24-filled',
-        'fluent--maximize-24-regular',
-        'material-symbols--close-small-outline-rounded',
+        'material-symbols-light--minimize-rounded',
+        'material-symbols-light--square-outline-rounded',
+        'material-symbols-light--close-rounded',
       ])
       .subscribe(icons => {
         this.icons = icons;

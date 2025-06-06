@@ -50,7 +50,7 @@ export class AppSearchComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.iconService
-      .getIcons(['material-symbols--close-small-outline-rounded'])
+      .getIcons(['material-symbols-light--close-rounded'])
       .subscribe(icons => {
         this.icons = icons;
       });

@@ -14,15 +14,17 @@
     <div class="flex items-center gap-2">
       <app-button
         (clicked)="minimizeWindow()"
-        [icon]="icons['fluent--minimize-24-filled']">
+        [icon]="icons['material-symbols-light--minimize-rounded']">
       </app-button>
       <app-button
         (clicked)="maximizeWindow()"
-        [icon]="icons['fluent--maximize-24-regular']">
+        [icon]="icons['material-symbols-light--square-outline-rounded']">
       </app-button>
       <app-button
         (clicked)="closeWindow()"
-        [icon]="icons['material-symbols--close-small-outline-rounded']"></app-button>
+        [icon]="
+          icons['material-symbols-light--close-rounded']
+        "></app-button>
     </div>
   </header>
 
