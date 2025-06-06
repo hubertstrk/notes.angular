@@ -1,12 +1,10 @@
 import { Injectable } from '@angular/core';
-import { Settings } from '@models/settings.model';
+import { Settings, SettingsFileName } from '@models/settings.model';
 import {
   BaseDirectory,
   readTextFile,
   writeTextFile,
 } from '@tauri-apps/plugin-fs';
-
-import { SettingsFileName } from '@models/settings.model';
 
 @Injectable({ providedIn: 'root' })
 export class SettingsService {

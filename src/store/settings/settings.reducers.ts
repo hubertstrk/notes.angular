@@ -1,9 +1,9 @@
 import { createReducer, on } from '@ngrx/store';
 import {
-  loadSettingsSuccess,
   loadSettingsFailure,
-  saveSettingsSuccess,
+  loadSettingsSuccess,
   saveSettingsFailure,
+  saveSettingsSuccess,
 } from './settings.actions';
 
 export interface SettingsState {

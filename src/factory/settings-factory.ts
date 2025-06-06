@@ -1,10 +1,8 @@
-import { appDataDir } from '@tauri-apps/api/path';
 import {
-  exists,
-  create,
-  writeTextFile,
-  mkdir,
   BaseDirectory,
+  exists,
+  mkdir,
+  writeTextFile,
 } from '@tauri-apps/plugin-fs';
 
 import { SettingsFileName } from '@models/settings.model';
@@ -32,7 +30,7 @@ export async function initSettingsFactory() {
         id: null,
         archived: [],
       }),
-      { baseDir: BaseDirectory.AppConfig },
+      { baseDir: BaseDirectory.AppConfig }
     );
     console.info('app initialize: created user settings');
   }

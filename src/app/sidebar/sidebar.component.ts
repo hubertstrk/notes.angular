@@ -1,9 +1,9 @@
 import {
   Component,
   Input,
-  OnInit,
   OnChanges,
   OnDestroy,
+  OnInit,
   SimpleChanges,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';

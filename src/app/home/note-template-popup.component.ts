@@ -1,8 +1,8 @@
 import {
-  OnInit,
   AfterViewInit,
   Component,
   EventEmitter,
+  OnInit,
   Output,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';

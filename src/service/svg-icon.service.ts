@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
-import { Observable, map, shareReplay, forkJoin } from 'rxjs';
+import { forkJoin, map, Observable, shareReplay } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',

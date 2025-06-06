@@ -2,11 +2,11 @@ import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import {
   loadSettings,
-  loadSettingsSuccess,
   loadSettingsFailure,
+  loadSettingsSuccess,
   saveSettings,
-  saveSettingsSuccess,
   saveSettingsFailure,
+  saveSettingsSuccess,
 } from './settings.actions';
 import { SettingsService } from '@services/settings.service';
 import { Settings } from '@models/settings.model';

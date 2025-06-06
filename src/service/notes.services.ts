@@ -3,12 +3,11 @@ import {
   readDir,
   readTextFile,
   remove,
-  writeTextFile,
   stat,
+  writeTextFile,
 } from '@tauri-apps/plugin-fs';
 import { join } from '@tauri-apps/api/path';
 import { NO_TITLE, Note } from '@models/note.model';
-import { LoadingService } from '@app/shared/loading-indicator/loading.service';
 
 import { unified } from 'unified';
 import remarkParse from 'remark-parse';
@@ -21,10 +20,7 @@ import { ProgressLoadingService } from '@app/shared/progress-indicator/progress-
   providedIn: 'root',
 })
 export class NotesService {
-  constructor(
-    private loadingService: LoadingService,
-    private progressLoadingService: ProgressLoadingService
-  ) {}
+  constructor(private progressLoadingService: ProgressLoadingService) {}
 
   private async readFilePathsRecursive(directory: string): Promise<string[]> {
     const notePaths: string[] = [];
@@ -113,11 +109,6 @@ export class NotesService {
   }
 
   async deleteFile(path: string): Promise<void> {
-    this.loadingService.show();
-    try {
-      await remove(path);
-    } finally {
-      this.loadingService.hide();
-    }
+    await remove(path);
   }
 }
