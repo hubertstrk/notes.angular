@@ -54,15 +54,15 @@
       class="flex flex-col items-center justify-between transition-all duration-300 ease-in-out overflow-hidden py-4 h-full px-2">
       <div class="flex flex-col items-center gap-2">
         <app-button
-          (clicked)="currentMode = 'notes'"
+          (clicked)="currentMode = mode.Notes"
           [icon]="icons['fluent--note-24-regular']"
-          [variant]="currentMode === 'notes' ? 'primary' : 'transparent'">
+          [variant]="currentMode === mode.Notes ? 'primary' : 'transparent'">
         </app-button>
         <app-button
-          (clicked)="currentMode = 'archived'"
+          (clicked)="currentMode = mode.Archived"
           [badgeColor]="'bg-red-500'"
           [icon]="icons['fluent--delete-24-regular']"
-          [variant]="currentMode === 'archived' ? 'primary' : 'transparent'">
+          [variant]="currentMode === mode.Archived ? 'primary' : 'transparent'">
         </app-button>
       </div>
       <div class="flex flex-col items-center gap-2 h-auto min-h-fit self-end">

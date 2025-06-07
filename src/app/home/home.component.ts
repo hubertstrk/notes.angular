@@ -22,6 +22,7 @@ import {
   selectDarkMode,
 } from '@store/settings/settings.selectors';
 import { Note } from '@models/note.model';
+import { NoteMode } from '@models/mode.model';
 import { saveSettings } from '@store/settings/settings.actions';
 import { SvgIconService } from '@services/svg-icon.service';
 
@@ -46,7 +47,8 @@ import { SvgIconService } from '@services/svg-icon.service';
 export class HomeComponent implements OnInit, OnDestroy {
   icons: { [key: string]: SafeHtml } = {};
 
-  currentMode: 'notes' | 'archived' = 'notes';
+  mode = NoteMode;
+  currentMode: NoteMode = NoteMode.Notes;
 
   isDarkMode = false;
   collapsed = false;
@@ -128,7 +130,6 @@ export class HomeComponent implements OnInit, OnDestroy {
   toggleDarkMode() {
     this.store.dispatch(saveSettings({ settings: { dark: !this.isDarkMode } }));
   }
-
 
   routeToSettings() {
     void this.router.navigate(['/settings']);

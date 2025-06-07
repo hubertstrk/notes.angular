@@ -12,7 +12,7 @@ const appWindow = getCurrentWebviewWindow();
   standalone: true,
   imports: [CommonModule, ButtonComponent],
   templateUrl: './window-controls.component.html',
-  styleUrls: ['./window-controls.component.scss']
+  styleUrls: ['./window-controls.component.scss'],
 })
 export class WindowControlsComponent implements OnInit {
   icons: { [key: string]: SafeHtml } = {};
