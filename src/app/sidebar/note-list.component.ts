@@ -12,7 +12,7 @@ import { Note } from '@models/note.model';
 import { NoteMode } from '@models/mode.model';
 import { differenceBy, intersectionBy } from 'lodash';
 import { combineLatest, Subject, takeUntil, tap } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, take } from 'rxjs/operators';
 
 import { selectActiveNote, selectNotes } from '@store/note/note.selectors';
 import { setActiveNote } from '@store/note/note.actions';
@@ -66,25 +66,23 @@ export class NoteListComponent implements OnInit, OnChanges, OnDestroy {
       .pipe(
         takeUntil(this.destroy$),
         map(([archived, notes]) => {
-          const withoutArchived = () => {
-            return differenceBy(
+          const activeNotes = () =>
+            differenceBy(
               notes,
               archived.map(x => ({ path: x })),
               'path'
             );
-          };
 
-          const archvied = () => {
-            return intersectionBy(
+          const archivedNotes = () =>
+            intersectionBy(
               notes,
               archived.map(x => ({ path: x })),
               'path'
             );
-          };
 
           return this.mode === NoteMode.Archived
-            ? archvied()
-            : withoutArchived();
+            ? archivedNotes()
+            : activeNotes();
         }),
         tap(filteredNotes => {
           this.displayNotes = filteredNotes;

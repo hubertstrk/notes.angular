@@ -12,6 +12,7 @@
     </div>
     <div class="flex">
       <app-button
+        *ngIf="isArchived"
         (clicked)="restoreNote()"
         [icon]="icons['material-symbols-light--recycling']"></app-button>
       <app-button

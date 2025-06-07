@@ -1,11 +1,16 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, RouterOutlet } from '@angular/router';
+import { RouterOutlet } from '@angular/router';
 import { NotesService } from '@services/notes.services';
 import { Store } from '@ngrx/store';
-import { loadNotes, notesLoaded } from '@store/note/note.actions';
+import {
+  loadNotes,
+  notesLoaded,
+  setActiveNote,
+} from '@store/note/note.actions';
 import { Actions, ofType } from '@ngrx/effects';
 import {
+  selectArchived,
   selectBasePath,
   selectDarkMode,
 } from '@store/settings/settings.selectors';
@@ -13,7 +18,7 @@ import { loadSettings } from '@store/settings/settings.actions';
 import { ProgressIndicatorComponent } from './shared/progress-indicator/progress-indicator.component';
 
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { take, takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
@@ -30,8 +35,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
   constructor(
     private store: Store,
-    private actions$: Actions,
-    private router: Router
+    private actions$: Actions
   ) {}
 
   ngOnInit(): void {
@@ -43,14 +47,24 @@ export class AppComponent implements OnInit, OnDestroy {
 
     this.selectBasePath$.pipe(takeUntil(this.destroy$)).subscribe(basePath => {
       if (basePath) this.store.dispatch(loadNotes({ directory: basePath }));
-      else void this.router.navigate(['/settings']);
+      // else void this.router.navigate(['/settings']);
     });
 
-    this.actions$
-      .pipe(ofType(notesLoaded), takeUntil(this.destroy$))
-      .subscribe(() => {
-        void this.router.navigate(['/home']);
-      });
+    this.actions$.pipe(ofType(notesLoaded), take(1)).subscribe(({ notes }) => {
+      this.store
+        .select(selectArchived)
+        .pipe(take(1))
+        .subscribe(archivedPaths => {
+          const activeNotes = notes.filter(
+            note => !archivedPaths.includes(note.path)
+          );
+
+          if (activeNotes.length > 0)
+            this.store.dispatch(
+              setActiveNote({ notePath: activeNotes[0].path })
+            );
+        });
+    });
   }
 
   ngOnDestroy(): void {

@@ -12,11 +12,13 @@ import { CommonModule } from '@angular/common';
 import { Note } from '@models/note.model';
 import { Store } from '@ngrx/store';
 import { selectNotes } from '@store/note/note.selectors';
+import { selectArchived } from '@store/settings/settings.selectors';
 import { SvgIconService } from '@services/svg-icon.service';
 import { SafeHtml } from '@angular/platform-browser';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { Subject, combineLatest } from 'rxjs';
+import { takeUntil, map } from 'rxjs/operators';
 import { ButtonComponent } from '@app/shared/button/button.component';
+import { differenceBy } from 'lodash';
 
 type SearchResult = {
   item: Note;
@@ -37,10 +39,10 @@ export class AppSearchComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('searchInput') searchInput!: ElementRef<HTMLInputElement>;
 
   notes$ = this.store.select(selectNotes);
+  archived$ = this.store.select(selectArchived);
   notes: Note[] = [];
   searchResults: SearchResult[] = [];
   icons: { [key: string]: SafeHtml } = {};
-  cancelIcon: SafeHtml;
 
   private destroy$ = new Subject<void>();
 
@@ -61,10 +63,20 @@ export class AppSearchComponent implements OnInit, AfterViewInit, OnDestroy {
         this.icons = icons;
       });
 
-    this.notes$
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(notes => {
-        this.notes = notes;
+    combineLatest([this.notes$, this.archived$])
+      .pipe(
+        takeUntil(this.destroy$),
+        map(([notes, archived]) => {
+          // Filter out archived notes
+          return differenceBy(
+            notes,
+            archived.map(x => ({ path: x })),
+            'path'
+          );
+        })
+      )
+      .subscribe(activeNotes => {
+        this.notes = activeNotes;
       });
   }
 

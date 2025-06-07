@@ -5,6 +5,7 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { Store } from '@ngrx/store';
 import { marked } from 'marked';
 import { selectActiveNote } from '@store/note/note.selectors';
@@ -22,7 +23,7 @@ import { deleteNote } from '@store/note/note.actions';
 @Component({
   selector: 'app-preview',
   standalone: true,
-  imports: [ButtonComponent],
+  imports: [CommonModule, ButtonComponent],
   templateUrl: './preview.component.html',
 })
 export class PreviewComponent implements OnInit, OnDestroy {
@@ -31,12 +32,15 @@ export class PreviewComponent implements OnInit, OnDestroy {
 
   icons: { [key: string]: SafeHtml } = {};
 
+  isArchived = false;
+
   private currentFontSize = 1.2;
   private minFontSize = 0.4;
   private maxFontSize = 4;
 
   private iframeLoaded$ = new Subject<void>();
   private activeNote$ = this.store.select(selectActiveNote);
+  private archivedNotes$ = this.store.select(selectArchived);
   private darkModeObserver!: MutationObserver;
   private destroy$ = new Subject<void>();
 
@@ -66,7 +70,7 @@ export class PreviewComponent implements OnInit, OnDestroy {
       this.sendToIFrame({ type: 'dark-mode', content: isDark });
     });
 
-    // Set up an observer for dark mode changes
+    // react on dark mode changes
     this.darkModeObserver = new MutationObserver(mutations => {
       mutations.forEach(mutation => {
         if (
@@ -95,35 +99,17 @@ export class PreviewComponent implements OnInit, OnDestroy {
           });
         }
       });
-  }
 
-  updateFontSize(increment: number) {
-    this.currentFontSize = clamp(
-      this.currentFontSize + increment,
-      this.minFontSize,
-      this.maxFontSize
-    );
-
-    this.sendToIFrame({ type: 'font-size', content: this.currentFontSize });
-  }
-
-  sendToIFrame(message: iFrameMessage<string | number | boolean>) {
-    this.iframe.nativeElement?.contentWindow?.postMessage(message, '*');
-  }
-
-  print() {
-    const iframe = this.iframe.nativeElement;
-    if (iframe) {
-      iframe.contentWindow?.focus();
-      iframe.contentWindow?.print();
-    }
+    combineLatest([this.archivedNotes$, this.activeNote$])
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(([archived, active]) => {
+        if (active) this.isArchived = archived.includes(active?.path);
+      });
   }
 
   deleteNote() {
-    const note = this.store.select(selectActiveNote);
-    const archived = this.store.select(selectArchived);
-
-    combineLatest([note, archived])
+    // take only the first emitted value and complete the observable
+    combineLatest([this.activeNote$, this.archivedNotes$])
       .pipe(take(1))
       .subscribe(([note, archived]) => {
         if (!note) return;
@@ -131,16 +117,15 @@ export class PreviewComponent implements OnInit, OnDestroy {
         archived.includes(note.path)
           ? this.store.dispatch(deleteNote({ notePath: note.path }))
           : this.store.dispatch(
-              saveSettings({ settings: { archived: [...archived, note.path] } })
+              saveSettings({
+                settings: { archived: [...archived, note.path] },
+              })
             );
       });
   }
 
   restoreNote() {
-    const currentNote = this.store.select(selectActiveNote);
-    const archived = this.store.select(selectArchived);
-
-    combineLatest([currentNote, archived])
+    combineLatest([this.activeNote$, this.archivedNotes$])
       .pipe(take(1))
       .subscribe(([note, archived]) => {
         if (!note) return;
@@ -155,6 +140,28 @@ export class PreviewComponent implements OnInit, OnDestroy {
           })
         );
       });
+  }
+
+  print() {
+    const iframe = this.iframe.nativeElement;
+    if (iframe) {
+      iframe.contentWindow?.focus();
+      iframe.contentWindow?.print();
+    }
+  }
+
+  updateFontSize(increment: number) {
+    this.currentFontSize = clamp(
+      this.currentFontSize + increment,
+      this.minFontSize,
+      this.maxFontSize
+    );
+
+    this.sendToIFrame({ type: 'font-size', content: this.currentFontSize });
+  }
+
+  sendToIFrame(message: iFrameMessage<string | number | boolean>) {
+    this.iframe.nativeElement?.contentWindow?.postMessage(message, '*');
   }
 
   ngOnDestroy() {
