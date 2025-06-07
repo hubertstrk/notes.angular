@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { SafeHtml } from '@angular/platform-browser';
 
 import { ButtonComponent } from '@app/shared/button/button.component';
+import { WindowControlsComponent } from '@app/shared/window-controls/window-controls.component';
 import { NoteListComponent } from '@app/sidebar/note-list.component';
 import { PreviewComponent } from '@app/preview/preview.component';
 import { EditorComponent } from '@app/editor/editor.component';
@@ -21,12 +22,8 @@ import {
   selectDarkMode,
 } from '@store/settings/settings.selectors';
 import { Note } from '@models/note.model';
-import { getCurrentWebviewWindow } from '@tauri-apps/api/webviewWindow';
-
 import { saveSettings } from '@store/settings/settings.actions';
 import { SvgIconService } from '@services/svg-icon.service';
-
-const appWindow = getCurrentWebviewWindow();
 
 @Component({
   selector: 'app-home',
@@ -34,6 +31,7 @@ const appWindow = getCurrentWebviewWindow();
   imports: [
     CommonModule,
     ButtonComponent,
+    WindowControlsComponent,
     NoteListComponent,
     PreviewComponent,
     EditorComponent,
@@ -76,9 +74,6 @@ export class HomeComponent implements OnInit, OnDestroy {
         'fluent--note-add-24-regular',
         'fluent--search-24-regular',
         'fluent--weather-sunny-24-regular',
-        'material-symbols-light--minimize-rounded',
-        'material-symbols-light--square-outline-rounded',
-        'material-symbols-light--close-rounded',
       ])
       .subscribe(icons => {
         this.icons = icons;
@@ -134,17 +129,6 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.store.dispatch(saveSettings({ settings: { dark: !this.isDarkMode } }));
   }
 
-  minimizeWindow() {
-    void appWindow.minimize();
-  }
-
-  maximizeWindow() {
-    void appWindow.toggleMaximize();
-  }
-
-  closeWindow() {
-    void appWindow.close();
-  }
 
   routeToSettings() {
     void this.router.navigate(['/settings']);

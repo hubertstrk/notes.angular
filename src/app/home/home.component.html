@@ -32,19 +32,7 @@
         [icon]="icons['fluent--note-add-24-regular']">
       </app-button>
     </div>
-    <div class="flex items-center gap-2">
-      <app-button
-        (clicked)="minimizeWindow()"
-        [icon]="icons['material-symbols-light--minimize-rounded']">
-      </app-button>
-      <app-button
-        (clicked)="maximizeWindow()"
-        [icon]="icons['material-symbols-light--square-outline-rounded']">
-      </app-button>
-      <app-button
-        (clicked)="closeWindow()"
-        [icon]="icons['material-symbols-light--close-rounded']"></app-button>
-    </div>
+    <app-window-controls></app-window-controls>
   </header>
 
   <div
