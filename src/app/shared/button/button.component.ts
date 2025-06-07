@@ -17,8 +17,12 @@ import { SafeHtml } from '@angular/platform-browser';
   templateUrl: './button.component.html',
 })
 export class ButtonComponent {
-  @Input() variant: 'primary' | 'secondary' | 'danger' | 'transparent' =
-    'transparent';
+  @Input() variant:
+    | 'primary'
+    | 'secondary'
+    | 'danger'
+    | 'transparent'
+    | 'light' = 'transparent';
   @Input() size: 'sm' | 'md' | 'lg' = 'md';
   @Input() disabled = false;
   @Input() rounded = true;
@@ -50,6 +54,11 @@ export class ButtonComponent {
         this.rounded
           ? ' hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full'
           : ' hover:bg-gray-100 dark:hover:bg-gray-700'
+      }`,
+      light: `bg-gray-200 text-gray-700 dark:bg-gray-700 dark:text-gray-200${
+        this.rounded
+          ? ' hover:bg-gray-200 dark:hover:bg-gray-700 rounded-full'
+          : ' hover:bg-gray-200 dark:hover:bg-gray-700'
       }`,
     };
 

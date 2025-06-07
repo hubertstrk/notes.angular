@@ -56,15 +56,13 @@
         <app-button
           (clicked)="currentMode = Modes.Notes"
           [icon]="icons['fluent--note-24-regular']"
-          [variant]="currentMode === Modes.Notes ? 'primary' : 'transparent'">
+          [variant]="currentMode === Modes.Notes ? 'light' : 'transparent'">
         </app-button>
         <app-button
           (clicked)="currentMode = Modes.Archived"
           [badgeColor]="'bg-red-500'"
           [icon]="icons['fluent--delete-24-regular']"
-          [variant]="
-            currentMode === Modes.Archived ? 'primary' : 'transparent'
-          ">
+          [variant]="currentMode === Modes.Archived ? 'light' : 'transparent'">
         </app-button>
       </div>
       <div class="flex flex-col items-center gap-2 h-auto min-h-fit self-end">
