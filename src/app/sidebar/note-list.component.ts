@@ -92,4 +92,8 @@ export class NoteListComponent implements OnInit, OnChanges, OnDestroy {
       )
       .subscribe();
   }
+
+  trackByFn(index: number, item: Note) {
+    return item.path;
+  }
 }
