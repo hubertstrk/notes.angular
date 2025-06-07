@@ -25,6 +25,7 @@ import { Note } from '@models/note.model';
 import { NoteMode } from '@models/mode.model';
 import { saveSettings } from '@store/settings/settings.actions';
 import { SvgIconService } from '@services/svg-icon.service';
+import { NoteTemplateWithContent } from '@app/home/note-template-popup/note-template.model';
 
 @Component({
   selector: 'app-home',
@@ -86,9 +87,14 @@ export class HomeComponent implements OnInit {
     });
   }
 
-  onTemplateSelected(template: { title: string; content: string }) {
+  onTemplateSelected(template: NoteTemplateWithContent) {
     this.currentBasePath$.subscribe(basePath => {
       if (basePath) {
+        // get bytes from template.content
+        const encoder = new TextEncoder();
+        const bytes = encoder.encode(template.content);
+        const contentSize = bytes.length;
+
         this.store.dispatch(
           addNote({
             note: {
@@ -97,7 +103,7 @@ export class HomeComponent implements OnInit {
               path: `${basePath}\\${v4()}.md`,
               createdAt: new Date(),
               updatedAt: new Date(),
-              size: 0,
+              size: contentSize,
             },
           })
         );

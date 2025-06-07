@@ -111,4 +111,8 @@ export class AppSearchComponent implements OnInit, AfterViewInit {
     this.closeClicked.emit();
     this.searchResults = [];
   }
+
+  trackByFn(index: number, item: SearchResult) {
+    return item.item.path;
+  }
 }

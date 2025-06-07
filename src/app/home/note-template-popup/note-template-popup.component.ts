@@ -11,6 +11,7 @@ import { ButtonComponent } from '@app/shared/button/button.component';
 import { SvgIconService } from '@services/svg-icon.service';
 import { SafeHtml } from '@angular/platform-browser';
 import { templateFiles } from './template-files';
+import { NoteTemplateWithContent } from '@app/home/note-template-popup/note-template.model';
 
 @Component({
   selector: 'app-note-template-popup',
@@ -21,19 +22,12 @@ import { templateFiles } from './template-files';
   providers: [SvgIconService],
 })
 export class NoteTemplatePopupComponent implements OnInit, AfterViewInit {
-  @Output() templateSelected = new EventEmitter<{
-    title: string;
-    content: string;
-  }>();
+  @Output() templateSelected = new EventEmitter<NoteTemplateWithContent>();
 
   @Output() closed = new EventEmitter<void>();
+
   icons: { [key: string]: SafeHtml } = {};
-  templates: Array<{
-    icon: string;
-    title: string;
-    description: string;
-    content: string;
-  }> = [];
+  templates: Array<NoteTemplateWithContent> = [];
 
   constructor(private iconService: SvgIconService) {}
 
@@ -46,30 +40,27 @@ export class NoteTemplatePopupComponent implements OnInit, AfterViewInit {
   }
 
   async ngAfterViewInit() {
-    this.templates = [];
     for (const template of templateFiles) {
       try {
-        // Use fetch for static assets in Angular
         const content = await fetch('assets/templates/' + template.file).then(
           result => result.text()
         );
-        this.templates.push({
-          icon: template.icon,
-          title: template.title,
-          description: template.description,
-          content,
-        });
+        this.templates.push({ ...template, content });
       } catch (exe) {
         console.error(`Error reading template file ${template.file}:`, exe);
       }
     }
   }
 
-  selectTemplate(template: { title: string; content: string }) {
+  selectTemplate(template: NoteTemplateWithContent) {
     this.templateSelected.emit(template);
   }
 
   close() {
     this.closed.emit();
+  }
+
+  trackByFn(index: number, item: NoteTemplateWithContent) {
+    return item.title;
   }
 }

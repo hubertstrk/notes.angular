@@ -24,7 +24,7 @@
   <div *ngIf="searchResults.length > 0" class="w-full">
     <div
       (click)="openNote(result.item)"
-      *ngFor="let result of searchResults"
+      *ngFor="let result of searchResults; trackBy: trackByFn"
       class="p-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-zinc-600 transition duration-200">
       <h2 class="text-lg font-semibold text-zinc-800 dark:text-zinc-200">
         {{ result.item.heading }}
