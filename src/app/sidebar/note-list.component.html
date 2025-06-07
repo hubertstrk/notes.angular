@@ -1,4 +1,4 @@
-<div *ngFor="let note of notes" class="mb-2 text-black dark:text-neutral-100">
+<div *ngFor="let note of displayNotes" class="mb-2 text-black dark:text-neutral-100">
   <div
     (click)="onNoteClick(note)"
     [class.bg-zinc-100]="activeNote?.path === note.path"

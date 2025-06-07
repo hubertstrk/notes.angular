@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 
@@ -44,7 +44,7 @@ import { SvgIconService } from '@services/svg-icon.service';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
 })
-export class HomeComponent implements OnInit, OnDestroy {
+export class HomeComponent implements OnInit {
   icons: { [key: string]: SafeHtml } = {};
 
   mode = NoteMode;
@@ -81,26 +81,10 @@ export class HomeComponent implements OnInit, OnDestroy {
         this.icons = icons;
       });
 
-    window.addEventListener('keydown', this.handleEsc, true);
-
     this.isDarkMode$.subscribe(darkMode => {
       this.isDarkMode = darkMode;
     });
   }
-
-  ngOnDestroy() {
-    window.removeEventListener('keydown', this.handleEsc, true);
-  }
-
-  handleEsc = (event: KeyboardEvent) => {
-    if (event.key === 'Escape') {
-      if (this.showTemplatePopup) {
-        this.showTemplatePopup = false;
-      } else if (this.showSearch) {
-        this.showSearch = false;
-      }
-    }
-  };
 
   onTemplateSelected(template: { title: string; content: string }) {
     this.currentBasePath$.subscribe(basePath => {
@@ -133,5 +117,11 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   routeToSettings() {
     void this.router.navigate(['/settings']);
+  }
+
+  @HostListener('window:keydown.escape')
+  handleEscapeKey() {
+    this.showTemplatePopup = false;
+    this.showSearch = false;
   }
 }

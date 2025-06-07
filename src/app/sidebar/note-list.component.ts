@@ -11,7 +11,7 @@ import { Store } from '@ngrx/store';
 import { Note } from '@models/note.model';
 import { NoteMode } from '@models/mode.model';
 import { differenceBy, intersectionBy } from 'lodash';
-import { combineLatest, Subscription } from 'rxjs';
+import { combineLatest, Subject, takeUntil, tap } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { selectActiveNote, selectNotes } from '@store/note/note.selectors';
@@ -26,20 +26,22 @@ import { selectArchived } from '@store/settings/settings.selectors';
 })
 export class NoteListComponent implements OnInit, OnChanges, OnDestroy {
   @Input() mode: NoteMode = NoteMode.Notes;
+
   notes$ = this.store.select(selectNotes);
   archived$ = this.store.select(selectArchived);
-  notes: Note[] = [];
+  displayNotes: Note[] = [];
+
   activeNote$ = this.store.select(selectActiveNote);
   activeNote: Note | null = null;
-  private notesSubscription: Subscription | null = null;
-  private activeNoteSubscription: Subscription | null = null;
+
+  private destroy$ = new Subject<void>();
 
   constructor(private store: Store) {}
 
   ngOnInit(): void {
     this.updateNotesBasedOnMode();
 
-    this.activeNoteSubscription = this.activeNote$.subscribe(note => {
+    this.activeNote$.pipe(takeUntil(this.destroy$)).subscribe(note => {
       this.activeNote = note;
     });
   }
@@ -51,12 +53,8 @@ export class NoteListComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if (this.notesSubscription) {
-      this.notesSubscription.unsubscribe();
-    }
-    if (this.activeNoteSubscription) {
-      this.activeNoteSubscription.unsubscribe();
-    }
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   onNoteClick(note: Note) {
@@ -64,29 +62,32 @@ export class NoteListComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private updateNotesBasedOnMode(): void {
-    // Unsubscribe from previous subscription if it exists
-    if (this.notesSubscription) {
-      this.notesSubscription.unsubscribe();
-    }
-
-    // Create new subscription
-    this.notesSubscription = combineLatest([this.archived$, this.notes$])
+    combineLatest([this.archived$, this.notes$])
       .pipe(
+        takeUntil(this.destroy$),
         map(([archived, notes]) => {
-          if (this.mode === NoteMode.Notes) {
-            // For 'notes' mode: show all notes except archived
-            this.notes = differenceBy(
+          const withoutArchived = () => {
+            return differenceBy(
               notes,
               archived.map(x => ({ path: x })),
               'path'
             );
-          } else if (this.mode === NoteMode.Archived) {
-            this.notes = intersectionBy(
+          };
+
+          const archvied = () => {
+            return intersectionBy(
               notes,
               archived.map(x => ({ path: x })),
               'path'
             );
-          }
+          };
+
+          return this.mode === NoteMode.Archived
+            ? archvied()
+            : withoutArchived();
+        }),
+        tap(filteredNotes => {
+          this.displayNotes = filteredNotes;
         })
       )
       .subscribe();
