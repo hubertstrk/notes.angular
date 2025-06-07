@@ -88,30 +88,28 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   onTemplateSelected(template: NoteTemplateWithContent) {
-    this.currentBasePath$
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(basePath => {
-        if (basePath) {
-          // get bytes from template.content
-          const encoder = new TextEncoder();
-          const bytes = encoder.encode(template.content);
-          const contentSize = bytes.length;
+    this.currentBasePath$.pipe(takeUntil(this.destroy$)).subscribe(basePath => {
+      if (basePath) {
+        // get bytes from template.content
+        const encoder = new TextEncoder();
+        const bytes = encoder.encode(template.content);
+        const contentSize = bytes.length;
 
-          this.store.dispatch(
-            addNote({
-              note: {
-                content: template.content,
-                heading: template.title,
-                path: `${basePath}\\${v4()}.md`,
-                createdAt: new Date(),
-                updatedAt: new Date(),
-                size: contentSize,
-              },
-            })
-          );
-          this.showTemplatePopup = false;
-        }
-      });
+        this.store.dispatch(
+          addNote({
+            note: {
+              content: template.content,
+              heading: template.title,
+              path: `${basePath}\\${v4()}.md`,
+              createdAt: new Date(),
+              updatedAt: new Date(),
+              size: contentSize,
+            },
+          })
+        );
+        this.showTemplatePopup = false;
+      }
+    });
   }
 
   onNoteClicked(note: Note) {

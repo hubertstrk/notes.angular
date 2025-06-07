@@ -12,7 +12,8 @@ import {
 import { loadSettings } from '@store/settings/settings.actions';
 import { ProgressIndicatorComponent } from './shared/progress-indicator/progress-indicator.component';
 
-import { Subscription } from 'rxjs';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
@@ -25,9 +26,7 @@ import { Subscription } from 'rxjs';
 export class AppComponent implements OnInit, OnDestroy {
   isDarkMode$ = this.store.select(selectDarkMode);
   selectBasePath$ = this.store.select(selectBasePath);
-  darkModeSubscription: Subscription;
-  basePathSubscription: Subscription;
-  notesSubscription: Subscription;
+  private destroy$ = new Subject<void>();
 
   constructor(
     private store: Store,
@@ -38,25 +37,24 @@ export class AppComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.store.dispatch(loadSettings());
 
-    this.darkModeSubscription = this.isDarkMode$.subscribe(darkMode => {
+    this.isDarkMode$.pipe(takeUntil(this.destroy$)).subscribe(darkMode => {
       document.body.classList.toggle('dark', darkMode);
     });
 
-    this.basePathSubscription = this.selectBasePath$.subscribe(basePath => {
+    this.selectBasePath$.pipe(takeUntil(this.destroy$)).subscribe(basePath => {
       if (basePath) this.store.dispatch(loadNotes({ directory: basePath }));
       else void this.router.navigate(['/settings']);
     });
 
-    this.notesSubscription = this.actions$
-      .pipe(ofType(notesLoaded))
+    this.actions$
+      .pipe(ofType(notesLoaded), takeUntil(this.destroy$))
       .subscribe(() => {
         void this.router.navigate(['/home']);
       });
   }
 
   ngOnDestroy(): void {
-    this.darkModeSubscription.unsubscribe();
-    this.basePathSubscription.unsubscribe();
-    this.notesSubscription.unsubscribe();
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }
