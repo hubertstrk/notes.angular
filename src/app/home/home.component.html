@@ -17,7 +17,7 @@
       <app-button
         (clicked)="toggleDarkMode()"
         [icon]="
-          isDarkMode
+          (isDarkMode$ | async)
             ? icons['fluent--weather-sunny-24-regular']
             : icons['fluent--dark-theme-24-filled']
         ">
@@ -54,15 +54,17 @@
       class="flex flex-col items-center justify-between transition-all duration-300 ease-in-out overflow-hidden py-4 h-full px-2">
       <div class="flex flex-col items-center gap-2">
         <app-button
-          (clicked)="currentMode = mode.Notes"
+          (clicked)="currentMode = Modes.Notes"
           [icon]="icons['fluent--note-24-regular']"
-          [variant]="currentMode === mode.Notes ? 'primary' : 'transparent'">
+          [variant]="currentMode === Modes.Notes ? 'primary' : 'transparent'">
         </app-button>
         <app-button
-          (clicked)="currentMode = mode.Archived"
+          (clicked)="currentMode = Modes.Archived"
           [badgeColor]="'bg-red-500'"
           [icon]="icons['fluent--delete-24-regular']"
-          [variant]="currentMode === mode.Archived ? 'primary' : 'transparent'">
+          [variant]="
+            currentMode === Modes.Archived ? 'primary' : 'transparent'
+          ">
         </app-button>
       </div>
       <div class="flex flex-col items-center gap-2 h-auto min-h-fit self-end">

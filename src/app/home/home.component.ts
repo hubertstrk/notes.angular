@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 
 import { SafeHtml } from '@angular/platform-browser';
+import { take } from 'rxjs/operators';
 
 import { ButtonComponent } from '@app/shared/button/button.component';
 import { WindowControlsComponent } from '@app/shared/window-controls/window-controls.component';
@@ -48,10 +49,9 @@ import { NoteTemplateWithContent } from '@app/home/note-template-popup/note-temp
 export class HomeComponent implements OnInit {
   icons: { [key: string]: SafeHtml } = {};
 
-  mode = NoteMode;
+  Modes = NoteMode;
   currentMode: NoteMode = NoteMode.Notes;
 
-  isDarkMode = false;
   collapsed = false;
   showSearch = false;
   showTemplatePopup = false;
@@ -81,10 +81,6 @@ export class HomeComponent implements OnInit {
       .subscribe(icons => {
         this.icons = icons;
       });
-
-    this.isDarkMode$.subscribe(darkMode => {
-      this.isDarkMode = darkMode;
-    });
   }
 
   onTemplateSelected(template: NoteTemplateWithContent) {
@@ -118,7 +114,9 @@ export class HomeComponent implements OnInit {
   }
 
   toggleDarkMode() {
-    this.store.dispatch(saveSettings({ settings: { dark: !this.isDarkMode } }));
+    this.isDarkMode$.pipe(take(1)).subscribe(isDarkMode => {
+      this.store.dispatch(saveSettings({ settings: { dark: !isDarkMode } }));
+    });
   }
 
   routeToSettings() {
