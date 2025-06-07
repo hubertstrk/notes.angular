@@ -18,12 +18,12 @@ import { setActiveNote } from '@store/note/note.actions';
 import { selectArchived } from '@store/settings/settings.selectors';
 
 @Component({
-  selector: 'app-sidebar',
+  selector: 'app-notes-list',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './sidebar.component.html',
+  templateUrl: './note-list.component.html',
 })
-export class SidebarComponent implements OnInit, OnChanges, OnDestroy {
+export class NoteListComponent implements OnInit, OnChanges, OnDestroy {
   @Input() mode: 'notes' | 'archived' = 'notes';
   notes$ = this.store.select(selectNotes);
   archived$ = this.store.select(selectArchived);

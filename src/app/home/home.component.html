@@ -43,22 +43,27 @@
       </app-button>
       <app-button
         (clicked)="closeWindow()"
-        [icon]="
-          icons['material-symbols-light--close-rounded']
-        "></app-button>
+        [icon]="icons['material-symbols-light--close-rounded']"></app-button>
     </div>
   </header>
 
   <div
     [ngClass]="{
-      'grid-cols-[60px_auto_1fr]': !collapsed,
-      'grid-cols-[0_auto_1fr]': collapsed
+      'grid-cols-[60px_320px_1fr]': !collapsed,
+      'grid-cols-[0_0_1fr]': collapsed
     }"
-    class="flex items-center h-full overflow-hidden bg-white dark:bg-zinc-800">
+    class="grid h-full overflow-hidden bg-white dark:bg-zinc-800 transition-all duration-300">
     <!-- tools -->
     <aside
-      [ngClass]="{ 'w-auto': !collapsed, 'w-0': collapsed }"
-      class="flex flex-col items-center justify-between transition-all duration-300 overflow-hidden py-4 h-full px-2">
+      [ngClass]="{
+        'w-[60px]': !collapsed,
+        'w-0': collapsed,
+        'opacity-0': collapsed,
+        'opacity-100': !collapsed,
+        invisible: collapsed,
+        visible: !collapsed
+      }"
+      class="flex flex-col items-center justify-between transition-all duration-300 ease-in-out overflow-hidden py-4 h-full px-2">
       <div class="flex flex-col items-center gap-2">
         <app-button
           (clicked)="currentMode = 'notes'"
@@ -82,20 +87,32 @@
 
     <!-- notes-->
     <aside
-      [ngClass]="{ 'w-80': !collapsed, 'w-0': collapsed }"
-      class="flex h-full dark:bg-zinc-800 transition-all duration-300 overflow-auto py-4">
-      <div *ngIf="!collapsed" class="px-2">
-        <app-sidebar [mode]="currentMode"></app-sidebar>
+      [ngClass]="{
+        'w-[320px]': !collapsed,
+        'w-0': collapsed,
+        'opacity-0': collapsed,
+        'opacity-100': !collapsed
+      }"
+      class="h-full dark:bg-zinc-800 transition-all duration-300 ease-in-out overflow-auto py-4">
+      <div
+        [ngClass]="{
+          'opacity-0': collapsed,
+          'opacity-100': !collapsed,
+          invisible: collapsed,
+          visible: !collapsed
+        }"
+        class="px-2 w-full transition-all duration-200">
+        <app-notes-list [mode]="currentMode"></app-notes-list>
       </div>
     </aside>
 
     <!-- editor and preview -->
-    <main class="flex flex-col md:flex-row h-full">
-      <div class="w-full md:w-1/2 h-full">
+    <main class="grid grid-cols-2 h-full overflow-hidden">
+      <div class="h-full overflow-auto">
         <app-editor></app-editor>
       </div>
 
-      <div class="w-full md:w-1/2 h-full">
+      <div class="h-full overflow-auto">
         <app-preview class="flex w-full h-full"></app-preview>
       </div>
     </main>

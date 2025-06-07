@@ -5,12 +5,12 @@ import { Router } from '@angular/router';
 import { SafeHtml } from '@angular/platform-browser';
 
 import { ButtonComponent } from '@app/shared/button/button.component';
-import { SidebarComponent } from '@app/sidebar/sidebar.component';
+import { NoteListComponent } from '@app/sidebar/note-list.component';
 import { PreviewComponent } from '@app/preview/preview.component';
 import { EditorComponent } from '@app/editor/editor.component';
 import { FooterComponent } from '@app/footer/footer.component';
 import { AppSearchComponent } from '@app/search/search.component';
-import { NoteTemplatePopupComponent } from './note-template-popup.component';
+import { NoteTemplatePopupComponent } from './note-template-popup/note-template-popup.component';
 
 import { v4 } from 'uuid';
 import { Store } from '@ngrx/store';
@@ -34,7 +34,7 @@ const appWindow = getCurrentWebviewWindow();
   imports: [
     CommonModule,
     ButtonComponent,
-    SidebarComponent,
+    NoteListComponent,
     PreviewComponent,
     EditorComponent,
     FooterComponent,
