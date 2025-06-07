@@ -73,8 +73,8 @@ export class HomeComponent implements OnInit {
         'fluent--settings-28-regular',
         'fluent--chevron-left-24-regular',
         'fluent--chevron-right-24-regular',
-        'fluent--dark-theme-24-filled',
-        'fluent--note-add-24-regular',
+        'material-symbols-light--dark-mode-outline',
+        'material-symbols-light--add',
         'fluent--search-24-regular',
         'fluent--weather-sunny-24-regular',
       ])

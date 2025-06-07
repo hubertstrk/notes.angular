@@ -19,7 +19,7 @@
         [icon]="
           (isDarkMode$ | async)
             ? icons['fluent--weather-sunny-24-regular']
-            : icons['fluent--dark-theme-24-filled']
+            : icons['material-symbols-light--dark-mode-outline']
         ">
       </app-button>
       <app-button
@@ -29,7 +29,7 @@
       </app-button>
       <app-button
         (clicked)="showTemplatePopup = true"
-        [icon]="icons['fluent--note-add-24-regular']">
+        [icon]="icons['material-symbols-light--add']">
       </app-button>
     </div>
     <app-window-controls></app-window-controls>
