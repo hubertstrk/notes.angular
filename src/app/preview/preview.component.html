@@ -12,6 +12,9 @@
     </div>
     <div class="flex">
       <app-button
+        (clicked)="restoreNote()"
+        [icon]="icons['material-symbols-light--recycling']"></app-button>
+      <app-button
         (clicked)="print()"
         [icon]="icons['fluent--print-24-regular']"></app-button>
       <app-button

@@ -13,7 +13,6 @@ import { Settings } from '@models/settings.model';
 import { Store } from '@ngrx/store';
 import { from, of } from 'rxjs';
 import { catchError, map, switchMap, withLatestFrom } from 'rxjs/operators';
-import { union, uniq } from 'lodash';
 import { selectSettingsState } from './settings.selectors';
 
 @Injectable()
@@ -41,19 +40,13 @@ export class SettingsEffects {
       ofType(saveSettings),
       withLatestFrom(this.store.select(selectSettingsState)),
       switchMap(([action, state]) => {
-        const basePath = action.settings.basePath ?? state.basePath;
-        const dark = action.settings.dark ?? state.dark;
-        const id = action.settings.id ?? state.id;
-        const archived = uniq(union(state.archived, action.settings.archived));
-
         const mergedSettings = {
-          basePath,
-          dark,
-          id,
-          archived,
+          basePath: action.settings.basePath ?? state.basePath,
+          dark: action.settings.dark ?? state.dark,
+          id: action.settings.id ?? state.id,
+          archived: action.settings.archived ?? state.archived,
         } as Settings;
 
-        // Use tap to handle the side effect and then immediately emit the success action
         return this.settingsService
           .saveSettings(mergedSettings)
           .then(() => saveSettingsSuccess({ settings: mergedSettings }))

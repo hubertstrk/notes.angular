@@ -1,5 +1,7 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 import { SettingsState } from './settings.reducers';
+import { selectNotes } from '@store/note/note.selectors';
+import { uniq } from 'lodash';
 
 export const selectSettingsState =
   createFeatureSelector<SettingsState>('settings');
@@ -16,7 +18,11 @@ export const selectDarkMode = createSelector(
 
 export const selectArchived = createSelector(
   selectSettingsState,
-  state => state.archived
+  selectNotes,
+  (state, notes) => {
+    const validPaths = notes.map(x => x.path);
+    return uniq(state.archived.filter(x => validPaths.includes(x)));
+  }
 );
 
 export const selectSettingsError = createSelector(

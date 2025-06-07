@@ -70,7 +70,7 @@ export class NotesService {
     return sortBy(results, 'heading');
   }
 
-  async importFiles(directory: string): Promise<Note[]> {
+  async importNotes(directory: string): Promise<Note[]> {
     try {
       this.progressLoadingService.show('Loading...');
       const paths = await this.readFilePathsRecursive(directory);

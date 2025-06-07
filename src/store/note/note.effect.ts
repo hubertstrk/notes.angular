@@ -27,7 +27,7 @@ export class NoteEffects {
     return this.actions$.pipe(
       ofType(loadNotes),
       switchMap(action =>
-        from(this.notesService.importFiles(action.directory)).pipe(
+        from(this.notesService.importNotes(action.directory)).pipe(
           map(notes => {
             return notesLoaded({ notes, basePath: action.directory });
           }),

@@ -8,15 +8,16 @@ import {
 import { Store } from '@ngrx/store';
 import { marked } from 'marked';
 import { selectActiveNote } from '@store/note/note.selectors';
+import { selectArchived } from '@store/settings/settings.selectors';
 import { ButtonComponent } from '../shared/button/button.component';
 import { clamp } from 'lodash';
 import { SafeHtml } from '@angular/platform-browser';
-import { BehaviorSubject, combineLatest, Subject, Subscription } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { combineLatest, Subject } from 'rxjs';
+import { take, takeUntil } from 'rxjs/operators';
 import { saveSettings } from '@store/settings/settings.actions';
-import { Note } from '@models/note.model';
 import { iFrameMessage } from '@models/preview.model';
 import { SvgIconService } from '@services/svg-icon.service';
+import { deleteNote } from '@store/note/note.actions';
 
 @Component({
   selector: 'app-preview',
@@ -27,15 +28,15 @@ import { SvgIconService } from '@services/svg-icon.service';
 export class PreviewComponent implements OnInit, OnDestroy {
   @ViewChild('previewIframe', { static: true })
   iframe!: ElementRef<HTMLIFrameElement>;
-  latestHtml: string = '';
-  currentNoteSubscription: Subscription | null = null;
+
   icons: { [key: string]: SafeHtml } = {};
-  currentFontSize = 1.2;
-  minFontSize = 0.4;
-  maxFontSize = 4;
+
+  private currentFontSize = 1.2;
+  private minFontSize = 0.4;
+  private maxFontSize = 4;
+
   private iframeLoaded$ = new Subject<void>();
-  private currentNote$ = new BehaviorSubject<Note | null>(null);
-  private activeNoteObservable$ = this.store.select(selectActiveNote);
+  private activeNote$ = this.store.select(selectActiveNote);
   private darkModeObserver!: MutationObserver;
   private destroy$ = new Subject<void>();
 
@@ -51,6 +52,7 @@ export class PreviewComponent implements OnInit, OnDestroy {
         'fluent--zoom-out-24-regular',
         'fluent--print-24-regular',
         'fluent--delete-24-regular',
+        'material-symbols-light--recycling',
       ])
       .pipe(takeUntil(this.destroy$))
       .subscribe(icons => {
@@ -82,22 +84,15 @@ export class PreviewComponent implements OnInit, OnDestroy {
       attributeFilter: ['class'],
     });
 
-    this.activeNoteObservable$
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(note => {
-        if (note) {
-          this.currentNote$.next(note);
-        }
-      });
-
-    combineLatest([this.iframeLoaded$, this.currentNote$])
+    combineLatest([this.iframeLoaded$, this.activeNote$])
       .pipe(takeUntil(this.destroy$))
       .subscribe(([, note]) => {
         this.updateFontSize(0);
         if (note) {
-          const html = marked(note.content) as string;
-          this.latestHtml = html;
-          this.sendToIFrame({ type: 'html', content: html });
+          this.sendToIFrame({
+            type: 'html',
+            content: marked(note.content) as string,
+          });
         }
       });
   }
@@ -112,26 +107,6 @@ export class PreviewComponent implements OnInit, OnDestroy {
     this.sendToIFrame({ type: 'font-size', content: this.currentFontSize });
   }
 
-  deleteNote() {
-    const note = this.currentNote$.getValue();
-    if (note) {
-      this.store.dispatch(
-        saveSettings({ settings: { archived: [note.path] } })
-      );
-    }
-  }
-
-  ngOnDestroy() {
-    if (this.currentNoteSubscription) {
-      this.currentNoteSubscription.unsubscribe();
-    }
-    if (this.darkModeObserver) {
-      this.darkModeObserver.disconnect();
-    }
-    this.destroy$.next();
-    this.destroy$.complete();
-  }
-
   sendToIFrame(message: iFrameMessage<string | number | boolean>) {
     this.iframe.nativeElement?.contentWindow?.postMessage(message, '*');
   }
@@ -142,5 +117,51 @@ export class PreviewComponent implements OnInit, OnDestroy {
       iframe.contentWindow?.focus();
       iframe.contentWindow?.print();
     }
+  }
+
+  deleteNote() {
+    const note = this.store.select(selectActiveNote);
+    const archived = this.store.select(selectArchived);
+
+    combineLatest([note, archived])
+      .pipe(take(1))
+      .subscribe(([note, archived]) => {
+        if (!note) return;
+
+        archived.includes(note.path)
+          ? this.store.dispatch(deleteNote({ notePath: note.path }))
+          : this.store.dispatch(
+              saveSettings({ settings: { archived: [...archived, note.path] } })
+            );
+      });
+  }
+
+  restoreNote() {
+    const currentNote = this.store.select(selectActiveNote);
+    const archived = this.store.select(selectArchived);
+
+    combineLatest([currentNote, archived])
+      .pipe(take(1))
+      .subscribe(([note, archived]) => {
+        if (!note) return;
+
+        const archivedWithoutCurrent = [
+          ...archived.filter(p => p !== note.path),
+        ];
+
+        this.store.dispatch(
+          saveSettings({
+            settings: { archived: archivedWithoutCurrent },
+          })
+        );
+      });
+  }
+
+  ngOnDestroy() {
+    if (this.darkModeObserver) {
+      this.darkModeObserver.disconnect();
+    }
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }
