@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SafeHtml } from '@angular/platform-browser';
 import { SvgIconService } from '@services/svg-icon.service';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { getCurrentWebviewWindow } from '@tauri-apps/api/webviewWindow';
 import { ButtonComponent } from '../button/button.component';
 
@@ -14,8 +16,9 @@ const appWindow = getCurrentWebviewWindow();
   templateUrl: './window-controls.component.html',
   styleUrls: ['./window-controls.component.scss'],
 })
-export class WindowControlsComponent implements OnInit {
+export class WindowControlsComponent implements OnInit, OnDestroy {
   icons: { [key: string]: SafeHtml } = {};
+  private destroy$ = new Subject<void>();
 
   constructor(private iconService: SvgIconService) {}
 
@@ -26,6 +29,7 @@ export class WindowControlsComponent implements OnInit {
         'material-symbols-light--square-outline-rounded',
         'material-symbols-light--close-rounded',
       ])
+      .pipe(takeUntil(this.destroy$))
       .subscribe(icons => {
         this.icons = icons;
       });
@@ -41,5 +45,10 @@ export class WindowControlsComponent implements OnInit {
 
   closeWindow() {
     void appWindow.close();
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

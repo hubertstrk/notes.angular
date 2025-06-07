@@ -2,6 +2,7 @@ import {
   AfterViewInit,
   Component,
   EventEmitter,
+  OnDestroy,
   OnInit,
   Output,
 } from '@angular/core';
@@ -10,6 +11,8 @@ import { FormsModule } from '@angular/forms';
 import { ButtonComponent } from '@app/shared/button/button.component';
 import { SvgIconService } from '@services/svg-icon.service';
 import { SafeHtml } from '@angular/platform-browser';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { templateFiles } from './template-files';
 import { NoteTemplateWithContent } from '@app/home/note-template-popup/note-template.model';
 
@@ -21,7 +24,7 @@ import { NoteTemplateWithContent } from '@app/home/note-template-popup/note-temp
   imports: [FormsModule, CommonModule, ButtonComponent],
   providers: [SvgIconService],
 })
-export class NoteTemplatePopupComponent implements OnInit, AfterViewInit {
+export class NoteTemplatePopupComponent implements OnInit, AfterViewInit, OnDestroy {
   @Output() templateSelected = new EventEmitter<NoteTemplateWithContent>();
 
   @Output() closed = new EventEmitter<void>();
@@ -29,11 +32,14 @@ export class NoteTemplatePopupComponent implements OnInit, AfterViewInit {
   icons: { [key: string]: SafeHtml } = {};
   templates: Array<NoteTemplateWithContent> = [];
 
+  private destroy$ = new Subject<void>();
+
   constructor(private iconService: SvgIconService) {}
 
   ngOnInit(): void {
     this.iconService
       .getIcons(['material-symbols-light--close-rounded'])
+      .pipe(takeUntil(this.destroy$))
       .subscribe(icons => {
         this.icons = icons;
       });
@@ -62,5 +68,10 @@ export class NoteTemplatePopupComponent implements OnInit, AfterViewInit {
 
   trackByFn(index: number, item: NoteTemplateWithContent) {
     return item.title;
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

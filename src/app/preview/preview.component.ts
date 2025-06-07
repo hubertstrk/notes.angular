@@ -12,6 +12,7 @@ import { ButtonComponent } from '../shared/button/button.component';
 import { clamp } from 'lodash';
 import { SafeHtml } from '@angular/platform-browser';
 import { BehaviorSubject, combineLatest, Subject, Subscription } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { saveSettings } from '@store/settings/settings.actions';
 import { Note } from '@models/note.model';
 import { iFrameMessage } from '@models/preview.model';
@@ -36,6 +37,7 @@ export class PreviewComponent implements OnInit, OnDestroy {
   private currentNote$ = new BehaviorSubject<Note | null>(null);
   private activeNoteObservable$ = this.store.select(selectActiveNote);
   private darkModeObserver!: MutationObserver;
+  private destroy$ = new Subject<void>();
 
   constructor(
     private store: Store,
@@ -50,6 +52,7 @@ export class PreviewComponent implements OnInit, OnDestroy {
         'fluent--print-24-regular',
         'fluent--delete-24-regular',
       ])
+      .pipe(takeUntil(this.destroy$))
       .subscribe(icons => {
         this.icons = icons;
       });
@@ -79,22 +82,24 @@ export class PreviewComponent implements OnInit, OnDestroy {
       attributeFilter: ['class'],
     });
 
-    this.activeNoteObservable$.subscribe(note => {
-      if (note) {
-        this.currentNote$.next(note);
-      }
-    });
+    this.activeNoteObservable$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(note => {
+        if (note) {
+          this.currentNote$.next(note);
+        }
+      });
 
-    combineLatest([this.iframeLoaded$, this.currentNote$]).subscribe(
-      ([, note]) => {
+    combineLatest([this.iframeLoaded$, this.currentNote$])
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(([, note]) => {
         this.updateFontSize(0);
         if (note) {
           const html = marked(note.content) as string;
           this.latestHtml = html;
           this.sendToIFrame({ type: 'html', content: html });
         }
-      }
-    );
+      });
   }
 
   updateFontSize(increment: number) {
@@ -123,6 +128,8 @@ export class PreviewComponent implements OnInit, OnDestroy {
     if (this.darkModeObserver) {
       this.darkModeObserver.disconnect();
     }
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   sendToIFrame(message: iFrameMessage<string | number | boolean>) {

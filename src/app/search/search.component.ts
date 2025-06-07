@@ -3,6 +3,7 @@ import {
   Component,
   ElementRef,
   EventEmitter,
+  OnDestroy,
   OnInit,
   Output,
   ViewChild,
@@ -13,6 +14,8 @@ import { Store } from '@ngrx/store';
 import { selectNotes } from '@store/note/note.selectors';
 import { SvgIconService } from '@services/svg-icon.service';
 import { SafeHtml } from '@angular/platform-browser';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { ButtonComponent } from '@app/shared/button/button.component';
 
 type SearchResult = {
@@ -27,7 +30,7 @@ type SearchResult = {
   templateUrl: './search.component.html',
   providers: [SvgIconService],
 })
-export class AppSearchComponent implements OnInit, AfterViewInit {
+export class AppSearchComponent implements OnInit, AfterViewInit, OnDestroy {
   @Output() noteClicked = new EventEmitter<Note>();
   @Output() closeClicked = new EventEmitter<void>();
 
@@ -38,6 +41,8 @@ export class AppSearchComponent implements OnInit, AfterViewInit {
   searchResults: SearchResult[] = [];
   icons: { [key: string]: SafeHtml } = {};
   cancelIcon: SafeHtml;
+
+  private destroy$ = new Subject<void>();
 
   constructor(
     private iconService: SvgIconService,
@@ -51,13 +56,16 @@ export class AppSearchComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     this.iconService
       .getIcons(['material-symbols-light--close-rounded'])
+      .pipe(takeUntil(this.destroy$))
       .subscribe(icons => {
         this.icons = icons;
       });
 
-    this.notes$.subscribe(notes => {
-      this.notes = notes;
-    });
+    this.notes$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(notes => {
+        this.notes = notes;
+      });
   }
 
   onSearchInput(event: Event) {
@@ -114,5 +122,10 @@ export class AppSearchComponent implements OnInit, AfterViewInit {
 
   trackByFn(index: number, item: SearchResult) {
     return item.item.path;
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

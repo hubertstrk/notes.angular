@@ -1,9 +1,10 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 
 import { SafeHtml } from '@angular/platform-browser';
-import { take } from 'rxjs/operators';
+import { take, takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 
 import { ButtonComponent } from '@app/shared/button/button.component';
 import { WindowControlsComponent } from '@app/shared/window-controls/window-controls.component';
@@ -46,7 +47,7 @@ import { NoteTemplateWithContent } from '@app/home/note-template-popup/note-temp
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnDestroy {
   icons: { [key: string]: SafeHtml } = {};
 
   Modes = NoteMode;
@@ -58,6 +59,8 @@ export class HomeComponent implements OnInit {
 
   currentBasePath$ = this.store.select(selectBasePath);
   isDarkMode$ = this.store.select(selectDarkMode);
+
+  private destroy$ = new Subject<void>();
 
   constructor(
     private store: Store,
@@ -78,34 +81,37 @@ export class HomeComponent implements OnInit {
         'fluent--search-24-regular',
         'fluent--weather-sunny-24-regular',
       ])
+      .pipe(takeUntil(this.destroy$))
       .subscribe(icons => {
         this.icons = icons;
       });
   }
 
   onTemplateSelected(template: NoteTemplateWithContent) {
-    this.currentBasePath$.subscribe(basePath => {
-      if (basePath) {
-        // get bytes from template.content
-        const encoder = new TextEncoder();
-        const bytes = encoder.encode(template.content);
-        const contentSize = bytes.length;
+    this.currentBasePath$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(basePath => {
+        if (basePath) {
+          // get bytes from template.content
+          const encoder = new TextEncoder();
+          const bytes = encoder.encode(template.content);
+          const contentSize = bytes.length;
 
-        this.store.dispatch(
-          addNote({
-            note: {
-              content: template.content,
-              heading: template.title,
-              path: `${basePath}\\${v4()}.md`,
-              createdAt: new Date(),
-              updatedAt: new Date(),
-              size: contentSize,
-            },
-          })
-        );
-        this.showTemplatePopup = false;
-      }
-    });
+          this.store.dispatch(
+            addNote({
+              note: {
+                content: template.content,
+                heading: template.title,
+                path: `${basePath}\\${v4()}.md`,
+                createdAt: new Date(),
+                updatedAt: new Date(),
+                size: contentSize,
+              },
+            })
+          );
+          this.showTemplatePopup = false;
+        }
+      });
   }
 
   onNoteClicked(note: Note) {
@@ -127,5 +133,10 @@ export class HomeComponent implements OnInit {
   handleEscapeKey() {
     this.showTemplatePopup = false;
     this.showSearch = false;
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }
