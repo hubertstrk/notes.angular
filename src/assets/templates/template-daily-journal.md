@@ -1,4 +1,4 @@
-# 📓 Daily Journal — {{date}}
+# 📄 Daily Journal — {{date}}
 
 ## 🌤️ Mood & Energy
 

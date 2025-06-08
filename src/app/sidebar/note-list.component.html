@@ -3,9 +3,9 @@
   class="mb-2 text-black dark:text-neutral-100">
   <div
     (click)="onNoteClick(note)"
-    [class.bg-zinc-100]="activeNote?.path === note.path"
-    [class.dark:bg-zinc-700]="activeNote?.path === note.path"
-    class="cursor-pointer p-2 rounded-md transition-all duration-150 text-sm hover:bg-zinc-100 dark:hover:bg-zinc-700">
+    [class.bg-gray-100]="activeNote?.path === note.path"
+    [class.dark:bg-gray-700]="activeNote?.path === note.path"
+    class="cursor-pointer p-2 rounded-md transition-all duration-150 text-sm hover:bg-gray-200 dark:hover:bg-gray-700">
     <div class="">
       {{ note.heading }}
     </div>

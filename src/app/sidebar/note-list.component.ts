@@ -12,7 +12,7 @@ import { Note } from '@models/note.model';
 import { NoteMode } from '@models/mode.model';
 import { differenceBy, intersectionBy } from 'lodash';
 import { combineLatest, Subject, takeUntil, tap } from 'rxjs';
-import { map, take } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 
 import { selectActiveNote, selectNotes } from '@store/note/note.selectors';
 import { setActiveNote } from '@store/note/note.actions';
@@ -52,11 +52,6 @@ export class NoteListComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
-  }
-
   onNoteClick(note: Note) {
     this.store.dispatch(setActiveNote({ notePath: note.path }));
   }
@@ -93,5 +88,10 @@ export class NoteListComponent implements OnInit, OnChanges, OnDestroy {
 
   trackByFn(index: number, item: Note) {
     return item.path;
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

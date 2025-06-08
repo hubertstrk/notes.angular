@@ -7,16 +7,22 @@ export const templateFiles = [
       'Simple blank note template for freeform writing or note-taking.',
   },
   {
-    icon: '📈',
+    icon: '⬆️',
+    file: 'template-simple-task-list.md',
+    title: 'Task List',
+    description: 'Simple task list for managing daily tasks and priorities.',
+  },
+  {
+    icon: '🗓️',
     file: 'template-meeting-notes.md',
     title: 'Meeting Notes',
     description:
       'Structure for capturing meeting details, attendees, agenda, and action items.',
   },
   {
-    icon: '📅',
+    icon: '📄',
     file: 'template-daily-journal.md',
-    title: 'Daily Journal Telate',
+    title: 'Daily Journal',
     description: 'A daily log for thoughts, tasks, and reflections.',
   },
   {

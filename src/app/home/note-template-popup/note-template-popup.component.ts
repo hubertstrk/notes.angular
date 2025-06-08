@@ -24,7 +24,9 @@ import { NoteTemplateWithContent } from '@app/home/note-template-popup/note-temp
   imports: [FormsModule, CommonModule, ButtonComponent],
   providers: [SvgIconService],
 })
-export class NoteTemplatePopupComponent implements OnInit, AfterViewInit, OnDestroy {
+export class NoteTemplatePopupComponent
+  implements OnInit, AfterViewInit, OnDestroy
+{
   @Output() templateSelected = new EventEmitter<NoteTemplateWithContent>();
 
   @Output() closed = new EventEmitter<void>();
