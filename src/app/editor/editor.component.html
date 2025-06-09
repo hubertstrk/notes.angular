@@ -2,7 +2,7 @@
   <ngx-monaco-editor
     (ngModelChange)="onTextChange($event)"
     (onInit)="onEditorInit($event)"
-    [ngModel]="(activeNote$ | async)?.content"
+    [ngModel]="activeNote?.content"
     [options]="editorOptions"
     class="flex-1 h-full w-full">
   </ngx-monaco-editor>

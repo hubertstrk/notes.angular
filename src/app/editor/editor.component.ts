@@ -4,17 +4,18 @@ import {
   ElementRef,
   HostListener,
   OnDestroy,
+  OnInit,
   ViewChild,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { selectActiveNote } from '@store/note/note.selectors';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { Note } from '@models/note.model';
 import { MonacoEditorModule } from 'ngx-monaco-editor-v2';
 import { updateContent } from '@store/note/note.actions';
-import { filter, map, take } from 'rxjs/operators';
+import { takeUntil } from 'rxjs/operators';
 import * as monaco from 'monaco-editor';
 import { updateCursorPosition } from '@store/editor/editor.actions';
 import { NotesService } from '@services/notes.services';
@@ -25,11 +26,15 @@ import { NotesService } from '@services/notes.services';
   imports: [FormsModule, CommonModule, MonacoEditorModule],
   templateUrl: './editor.component.html',
 })
-export class EditorComponent implements AfterViewInit, OnDestroy {
+export class EditorComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('editorContainer') editorContainer!: ElementRef;
 
   resizeObserver!: ResizeObserver;
+
+  private destroy$ = new Subject<void>();
   activeNote$: Observable<Note | null> = this.store.select(selectActiveNote);
+  activeNote: Note | null = null;
+
   editorOptions = {
     theme: document.body.classList.contains('dark') ? 'vs-dark' : 'vs-light',
     language: 'markdown',
@@ -51,6 +56,12 @@ export class EditorComponent implements AfterViewInit, OnDestroy {
     private store: Store,
     private noteService: NotesService
   ) {}
+
+  ngOnInit() {
+    this.activeNote$.pipe(takeUntil(this.destroy$)).subscribe(note => {
+      this.activeNote = note;
+    });
+  }
 
   ngAfterViewInit() {
     this.resizeObserver = new ResizeObserver(() => {
@@ -82,15 +93,6 @@ export class EditorComponent implements AfterViewInit, OnDestroy {
     });
   }
 
-  ngOnDestroy() {
-    if (this.resizeObserver) {
-      this.resizeObserver.disconnect();
-    }
-    if (this.darkModeObserver) {
-      this.darkModeObserver.disconnect();
-    }
-  }
-
   onEditorInit(editor: monaco.editor.IStandaloneCodeEditor) {
     this.monacoInstance = editor;
 
@@ -113,23 +115,30 @@ export class EditorComponent implements AfterViewInit, OnDestroy {
   }
 
   onTextChange(content: string): void {
+    if (!this.activeNote) return;
     if (!content || content.length === 0) return;
-    this.activeNote$
-      .pipe(
-        filter(note => !!note),
-        take(1),
-        map(note => {
-          const heading = this.noteService.extractHeading(content);
+    if (this.activeNote.content === content) return;
 
-          return {
-            notePath: note!.path,
-            content,
-            heading,
-          };
-        })
-      )
-      .subscribe(payload => {
-        this.store.dispatch(updateContent(payload));
-      });
+    const heading = this.noteService.extractHeading(content);
+
+    this.store.dispatch(
+      updateContent({
+        notePath: this.activeNote!.path,
+        content,
+        heading,
+      })
+    );
+  }
+
+  ngOnDestroy() {
+    if (this.resizeObserver) {
+      this.resizeObserver.disconnect();
+    }
+    if (this.darkModeObserver) {
+      this.darkModeObserver.disconnect();
+    }
+
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }
