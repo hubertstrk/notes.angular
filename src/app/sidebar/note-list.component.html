@@ -1,13 +1,12 @@
 <div
   *ngFor="let note of displayNotes; trackBy: trackByFn"
-  class="mb-2 text-black dark:text-neutral-100">
-  <div
-    (click)="onNoteClick(note)"
-    [class.bg-gray-100]="activeNote?.path === note.path"
-    [class.dark:bg-gray-700]="activeNote?.path === note.path"
-    class="cursor-pointer p-2 rounded-md transition-all duration-150 text-sm hover:bg-gray-200 dark:hover:bg-gray-700">
-    <div class="">
+  class="mb-3 text-black dark:text-neutral-100">
+  <div (click)="onNoteClick(note)" [class]="getNoteClasses(note)">
+    <div class="font-medium">
       {{ note.heading }}
+    </div>
+    <div class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+      {{ note.updatedAt | date: 'medium' || 'No date' }}
     </div>
   </div>
 </div>

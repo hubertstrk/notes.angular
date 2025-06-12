@@ -56,6 +56,30 @@ export class NoteListComponent implements OnInit, OnChanges, OnDestroy {
     this.store.dispatch(setActiveNote({ notePath: note.path }));
   }
 
+  isNoteActive(note: Note): boolean {
+    return this.activeNote?.path === note.path;
+  }
+
+  getNoteClasses(note: Note): string {
+    const baseClasses =
+      'cursor-pointer p-3 rounded-lg shadow-sm transition-all duration-200 hover:shadow-md hover:bg-gray-50 dark:hover:bg-gray-700';
+
+    if (this.isNoteActive(note)) {
+      return `${baseClasses} bg-blue-50 dark:bg-gray-700 border-l-4 border-blue-500`;
+    }
+
+    return baseClasses;
+  }
+
+  trackByFn(index: number, item: Note) {
+    return item.path;
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
   private updateNotesBasedOnMode(): void {
     combineLatest([this.archived$, this.notes$])
       .pipe(
@@ -84,14 +108,5 @@ export class NoteListComponent implements OnInit, OnChanges, OnDestroy {
         })
       )
       .subscribe();
-  }
-
-  trackByFn(index: number, item: Note) {
-    return item.path;
-  }
-
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
   }
 }
