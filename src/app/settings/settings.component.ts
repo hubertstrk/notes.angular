@@ -1,13 +1,16 @@
 import { Component } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { selectBasePath } from '@store/settings/settings.selectors';
-import { Observable } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { Store } from '@ngrx/store';
 import { ActivatedRoute } from '@angular/router';
+import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+
 import { open } from '@tauri-apps/plugin-dialog';
+
 import { ButtonComponent } from '../shared/button/button.component';
 import { WindowControlsComponent } from '../shared/window-controls/window-controls.component';
+
+import { selectBasePath } from '@store/settings/settings.selectors';
 import { saveSettings } from '@store/settings/settings.actions';
 
 @Component({

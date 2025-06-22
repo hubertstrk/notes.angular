@@ -1,10 +1,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { Store } from '@ngrx/store';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+
 import { selectActiveNote } from '@store/note/note.selectors';
 import { selectCursorPosition } from '@store/editor/editor.selectors';
-import { CommonModule } from '@angular/common';
 import { Note } from '@models/note.model';
-import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-footer',

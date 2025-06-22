@@ -1,8 +1,10 @@
 import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-
 import { SafeHtml } from '@angular/platform-browser';
+
+import { Store } from '@ngrx/store';
+
 import { take, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 
@@ -16,16 +18,15 @@ import { AppSearchComponent } from '@app/search/search.component';
 import { NoteTemplatePopupComponent } from './note-template-popup/note-template-popup.component';
 
 import { v4 } from 'uuid';
-import { Store } from '@ngrx/store';
 
 import { addNote, setActiveNote } from '@store/note/note.actions';
+import { saveSettings } from '@store/settings/settings.actions';
 import {
   selectBasePath,
   selectDarkMode,
 } from '@store/settings/settings.selectors';
 import { Note } from '@models/note.model';
 import { NoteMode } from '@models/mode.model';
-import { saveSettings } from '@store/settings/settings.actions';
 import { SvgIconService } from '@services/svg-icon.service';
 import { NoteTemplateWithContent } from '@app/home/note-template-popup/note-template.model';
 

@@ -10,16 +10,17 @@ import {
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
-import { MonacoEditorModule } from 'ngx-monaco-editor-v2';
 import * as monaco from 'monaco-editor';
+import { MonacoEditorModule } from 'ngx-monaco-editor-v2';
 import { Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+
+import { Store } from '@ngrx/store';
 
 import { Note } from '@models/note.model';
 import { NotesService } from '@services/notes.services';
 import { DefaultEditorConfig } from '@app/editor/editor.config';
 
-import { Store } from '@ngrx/store';
 import { updateContent } from '@store/note/note.actions';
 import { selectActiveNote } from '@store/note/note.selectors';
 import { updateCursorPosition } from '@store/editor/editor.actions';

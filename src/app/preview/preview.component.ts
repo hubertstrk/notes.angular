@@ -7,18 +7,23 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Store } from '@ngrx/store';
-import { marked } from 'marked';
-import { selectActiveNote } from '@store/note/note.selectors';
-import { selectArchived } from '@store/settings/settings.selectors';
-import { ButtonComponent } from '../shared/button/button.component';
-import { clamp } from 'lodash';
 import { SafeHtml } from '@angular/platform-browser';
+
 import { combineLatest, Subject } from 'rxjs';
 import { take, takeUntil } from 'rxjs/operators';
+
+import { marked } from 'marked';
+import { clamp } from 'lodash';
+
+import { ButtonComponent } from '../shared/button/button.component';
+
+import { selectActiveNote } from '@store/note/note.selectors';
+import { selectArchived } from '@store/settings/settings.selectors';
 import { saveSettings } from '@store/settings/settings.actions';
+import { deleteNote } from '@store/note/note.actions';
+
 import { iFrameMessage } from '@models/preview.model';
 import { SvgIconService } from '@services/svg-icon.service';
-import { deleteNote } from '@store/note/note.actions';
 
 @Component({
   selector: 'app-preview',

@@ -9,15 +9,20 @@ import {
   ViewChild,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Note } from '@models/note.model';
+import { SafeHtml } from '@angular/platform-browser';
+
 import { Store } from '@ngrx/store';
+
+import { Subject, combineLatest } from 'rxjs';
+import { takeUntil, map } from 'rxjs/operators';
+
+import { ButtonComponent } from '@app/shared/button/button.component';
+
+import { Note } from '@models/note.model';
 import { selectNotes } from '@store/note/note.selectors';
 import { selectArchived } from '@store/settings/settings.selectors';
 import { SvgIconService } from '@services/svg-icon.service';
-import { SafeHtml } from '@angular/platform-browser';
-import { Subject, combineLatest } from 'rxjs';
-import { takeUntil, map } from 'rxjs/operators';
-import { ButtonComponent } from '@app/shared/button/button.component';
+
 import { differenceBy } from 'lodash';
 
 type SearchResult = {

@@ -8,11 +8,14 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Store } from '@ngrx/store';
+
+import { combineLatest, Subject } from 'rxjs';
+import { takeUntil, tap, map } from 'rxjs/operators';
+
+import { differenceBy, intersectionBy } from 'lodash';
+
 import { Note } from '@models/note.model';
 import { NoteMode } from '@models/mode.model';
-import { differenceBy, intersectionBy } from 'lodash';
-import { combineLatest, Subject, takeUntil, tap } from 'rxjs';
-import { map } from 'rxjs/operators';
 
 import { selectActiveNote, selectNotes } from '@store/note/note.selectors';
 import { setActiveNote } from '@store/note/note.actions';

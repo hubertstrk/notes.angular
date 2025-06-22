@@ -1,7 +1,8 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
+import { uniq } from 'lodash';
+
 import { SettingsState } from './settings.reducers';
 import { selectNotes } from '@store/note/note.selectors';
-import { uniq } from 'lodash';
 
 export const selectSettingsState =
   createFeatureSelector<SettingsState>('settings');
