@@ -9,16 +9,21 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Store } from '@ngrx/store';
-import { selectActiveNote } from '@store/note/note.selectors';
-import { Observable, Subject } from 'rxjs';
-import { Note } from '@models/note.model';
+
 import { MonacoEditorModule } from 'ngx-monaco-editor-v2';
-import { updateContent } from '@store/note/note.actions';
-import { takeUntil } from 'rxjs/operators';
 import * as monaco from 'monaco-editor';
-import { updateCursorPosition } from '@store/editor/editor.actions';
+import { Observable, Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+
+import { Note } from '@models/note.model';
 import { NotesService } from '@services/notes.services';
+import { DefaultEditorConfig } from '@app/editor/editor.config';
+
+import { Store } from '@ngrx/store';
+import { updateContent } from '@store/note/note.actions';
+import { selectActiveNote } from '@store/note/note.selectors';
+import { updateCursorPosition } from '@store/editor/editor.actions';
+import { selectDarkMode } from '@store/settings/settings.selectors';
 
 @Component({
   selector: 'app-editor',
@@ -34,22 +39,11 @@ export class EditorComponent implements OnInit, AfterViewInit, OnDestroy {
   private destroy$ = new Subject<void>();
   activeNote$: Observable<Note | null> = this.store.select(selectActiveNote);
   activeNote: Note | null = null;
+  editorOptions = DefaultEditorConfig;
 
-  editorOptions = {
-    theme: document.body.classList.contains('dark') ? 'vs-dark' : 'vs-light',
-    language: 'markdown',
-    mouseWheelZoom: true,
-    wordWrap: 'on',
-    automaticLayout: true,
-    renderWhitespace: 'boundary',
-    tabSize: 2,
-    insertSpaces: true,
-    wrappingIndent: 'same',
-    smoothScrolling: true,
-    lineDecorationsWidth: 0,
-    cursorSmoothCaretAnimation: true,
-  };
-  private darkModeObserver!: MutationObserver;
+  isDarkMode$ = this.store.select(selectDarkMode);
+  isDarkMode = false;
+
   private monacoInstance!: monaco.editor.IStandaloneCodeEditor;
 
   constructor(
@@ -61,6 +55,11 @@ export class EditorComponent implements OnInit, AfterViewInit, OnDestroy {
     this.activeNote$.pipe(takeUntil(this.destroy$)).subscribe(note => {
       this.activeNote = note;
     });
+
+    this.isDarkMode$.pipe(takeUntil(this.destroy$)).subscribe(isDark => {
+      this.isDarkMode = isDark;
+      this.updateEditorOptions();
+    });
   }
 
   ngAfterViewInit() {
@@ -68,33 +67,12 @@ export class EditorComponent implements OnInit, AfterViewInit, OnDestroy {
       this.monacoInstance?.layout();
     });
     this.resizeObserver.observe(this.editorContainer.nativeElement);
-
-    // Set up observer for dark mode changes
-    this.darkModeObserver = new MutationObserver(mutations => {
-      mutations.forEach(mutation => {
-        if (
-          mutation.type === 'attributes' &&
-          mutation.attributeName === 'class'
-        ) {
-          const isDark = document.body.classList.contains('dark');
-          if (this.monacoInstance) {
-            this.editorOptions = {
-              ...this.editorOptions,
-              theme: isDark ? 'vs-dark' : 'vs-light',
-            };
-          }
-        }
-      });
-    });
-
-    this.darkModeObserver.observe(document.body, {
-      attributes: true,
-      attributeFilter: ['class'],
-    });
   }
 
   onEditorInit(editor: monaco.editor.IStandaloneCodeEditor) {
     this.monacoInstance = editor;
+
+    this.updateEditorOptions();
 
     this.monacoInstance.onDidChangeCursorPosition(e => {
       const position = e.position;
@@ -105,6 +83,16 @@ export class EditorComponent implements OnInit, AfterViewInit, OnDestroy {
         })
       );
     });
+  }
+
+  updateEditorOptions() {
+    if (this.monacoInstance) {
+      const updatedEditorOptions = {
+        ...this.editorOptions,
+        theme: this.isDarkMode ? 'vs-dark' : 'vs-light',
+      };
+      this.monacoInstance.updateOptions(updatedEditorOptions);
+    }
   }
 
   @HostListener('window:resize', ['$event'])
@@ -133,9 +121,6 @@ export class EditorComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnDestroy() {
     if (this.resizeObserver) {
       this.resizeObserver.disconnect();
-    }
-    if (this.darkModeObserver) {
-      this.darkModeObserver.disconnect();
     }
 
     this.destroy$.next();
