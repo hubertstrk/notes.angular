@@ -22,7 +22,8 @@
         "$APPDATA/**",
         "$APPDATA/*",
         "$APPDATA/",
-        "$APPDATA"
+        "$APPDATA",
+        "G:/My Drive/**"
       ]
     },
     {

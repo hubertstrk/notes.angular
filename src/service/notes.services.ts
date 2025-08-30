@@ -74,8 +74,13 @@ export class NotesService {
     try {
       this.progressLoadingService.show('Loading...');
       const paths = await this.readFilePathsRecursive(directory);
-      return await this.readFiles(paths);
-    } finally {
+      const notes = await this.readFiles(paths);
+      return notes ?? [];
+    } catch (e) {
+      console.error(e)
+      return [];
+    }
+    finally {
       this.progressLoadingService.hide();
     }
   }
