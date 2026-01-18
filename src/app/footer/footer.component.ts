@@ -25,9 +25,11 @@ export class FooterComponent implements OnInit, OnDestroy {
   constructor(private store: Store) {}
 
   ngOnInit(): void {
+    // get active note
     this.activeNote$.pipe(takeUntil(this.destroy$)).subscribe(note => {
       this.activeNote = note;
     });
+    // set cursor position
     this.cursorPosition$.pipe(takeUntil(this.destroy$)).subscribe(position => {
       this.cursorPosition = position;
     });
