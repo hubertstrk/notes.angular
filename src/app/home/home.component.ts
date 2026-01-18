@@ -18,6 +18,7 @@ import { AppSearchComponent } from '@app/search/search.component';
 import { NoteTemplatePopupComponent } from './note-template-popup/note-template-popup.component';
 
 import { v4 } from 'uuid';
+import { join } from '@tauri-apps/api/path';
 
 import { addNote, setActiveNote } from '@store/note/note.actions';
 import { saveSettings } from '@store/settings/settings.actions';
@@ -88,29 +89,33 @@ export class HomeComponent implements OnInit, OnDestroy {
       });
   }
 
-  onTemplateSelected(template: NoteTemplateWithContent) {
-    this.currentBasePath$.pipe(takeUntil(this.destroy$)).subscribe(basePath => {
-      if (basePath) {
-        // get bytes from template.content
-        const encoder = new TextEncoder();
-        const bytes = encoder.encode(template.content);
-        const contentSize = bytes.length;
+  async onTemplateSelected(template: NoteTemplateWithContent) {
+    this.currentBasePath$
+      .pipe(take(1), takeUntil(this.destroy$))
+      .subscribe(async basePath => {
+        if (basePath) {
+          // get bytes from template.content
+          const encoder = new TextEncoder();
+          const bytes = encoder.encode(template.content);
+          const contentSize = bytes.length;
 
-        this.store.dispatch(
-          addNote({
-            note: {
-              content: template.content,
-              heading: template.title,
-              path: `${basePath}\\${v4()}.md`,
-              createdAt: new Date(),
-              updatedAt: new Date(),
-              size: contentSize,
-            },
-          })
-        );
-        this.showTemplatePopup = false;
-      }
-    });
+          const path = await join(basePath, `${v4()}.md`);
+
+          this.store.dispatch(
+            addNote({
+              note: {
+                content: template.content,
+                heading: template.title,
+                path: path,
+                createdAt: new Date(),
+                updatedAt: new Date(),
+                size: contentSize,
+              },
+            })
+          );
+          this.showTemplatePopup = false;
+        }
+      });
   }
 
   onNoteClicked(note: Note) {

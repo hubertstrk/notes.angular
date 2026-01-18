@@ -30,7 +30,7 @@ export async function initSettingsFactory() {
         id: null,
         archived: [],
       }),
-      { baseDir: BaseDirectory.AppConfig }
+      { baseDir: BaseDirectory.AppData }
     );
     console.info('app initialize: created user settings');
   }

@@ -4,10 +4,8 @@ import { SafeHtml } from '@angular/platform-browser';
 import { SvgIconService } from '@services/svg-icon.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { getCurrentWebviewWindow } from '@tauri-apps/api/webviewWindow';
+import { getCurrentWebviewWindow, WebviewWindow } from '@tauri-apps/api/webviewWindow';
 import { ButtonComponent } from '../button/button.component';
-
-const appWindow = getCurrentWebviewWindow();
 
 @Component({
   selector: 'app-window-controls',
@@ -19,6 +17,7 @@ const appWindow = getCurrentWebviewWindow();
 export class WindowControlsComponent implements OnInit, OnDestroy {
   icons: { [key: string]: SafeHtml } = {};
   private destroy$ = new Subject<void>();
+  private appWindow = getCurrentWebviewWindow();
 
   constructor(private iconService: SvgIconService) {}
 
@@ -36,15 +35,15 @@ export class WindowControlsComponent implements OnInit, OnDestroy {
   }
 
   minimizeWindow() {
-    void appWindow.minimize();
+    void this.appWindow.minimize();
   }
 
   maximizeWindow() {
-    void appWindow.toggleMaximize();
+    void this.appWindow.toggleMaximize();
   }
 
   closeWindow() {
-    void appWindow.close();
+    void this.appWindow.close();
   }
 
   ngOnDestroy() {
