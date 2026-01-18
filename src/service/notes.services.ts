@@ -77,10 +77,9 @@ export class NotesService {
       const notes = await this.readFiles(paths);
       return notes ?? [];
     } catch (e) {
-      console.error(e)
+      console.error(e);
       return [];
-    }
-    finally {
+    } finally {
       this.progressLoadingService.hide();
     }
   }
