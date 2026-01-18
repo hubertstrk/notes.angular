@@ -135,6 +135,12 @@ export class AppSearchComponent implements OnInit, AfterViewInit, OnDestroy {
           preview: `${front}<mark>${highlighted}</mark>${tail}`,
         };
       });
+
+    // sort search results by updatedAt descending
+    this.searchResults.sort(
+      (a, b) =>
+        (b.note.updatedAt?.getTime() ?? 0) - (a.note.updatedAt?.getTime() ?? 0)
+    );
   }
 
   openNote(note: Note) {

@@ -26,10 +26,13 @@
       (click)="openNote(result.note)"
       *ngFor="let result of searchResults; trackBy: trackByFn"
       class="p-2 cursor-pointer hover:bg-gray-300 dark:hover:bg-zinc-800 transition duration-200">
-      <h2 class="text-lg font-semibold text-zinc-800 dark:text-zinc-200">
+      <div class="text-zinc-600 dark:text-zinc-400 text-sm">
+        {{ result.note.updatedAt | date: 'medium' }}
+      </div>
+      <h2 class="text-lg font-semibold text-zinc-800 dark:text-zinc-100">
         {{ result.note.heading }}
       </h2>
-      <p class="text-zinc-500 text-sm">
+      <p class="text-zinc-600 dark:text-zinc-400 text-sm">
         <span [innerHTML]="result.preview"></span>
       </p>
     </div>
