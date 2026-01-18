@@ -50,6 +50,7 @@ export class AppSearchComponent implements OnInit, AfterViewInit, OnDestroy {
   notes: Note[] = [];
   searchResults: SearchResult[] = [];
   icons: { [key: string]: SafeHtml } = {};
+  value: string = '';
 
   private destroy$ = new Subject<void>();
 
@@ -88,10 +89,13 @@ export class AppSearchComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   onSearchInput(event: Event) {
-    const value = (event.target as HTMLInputElement).value;
-    const searchValue: string = value.trim();
+    this.value = (event.target as HTMLInputElement).value;
+    const searchValue: string = this.value.trim();
 
-    if (searchValue.length === 0) return;
+    if (searchValue.length === 0) {
+      this.searchResults = [];
+      return;
+    }
 
     const regex = new RegExp(`${searchValue}`, 'i');
 
