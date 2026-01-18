@@ -1,10 +1,10 @@
 <div
   *ngFor="let note of displayNotes; trackBy: trackByFn"
-  class="mb-3 text-black dark:text-neutral-100">
+  class="mb-1 text-black dark:text-neutral-100">
   <div (click)="onNoteClick(note)" [class]="getNoteClasses(note)">
     <div class="font-medium">{{ note.heading }}</div>
     <div class="text-xs text-gray-500 dark:text-gray-400 mt-1">
-      {{ note.updatedAt | date: 'medium' || 'No date' }}
+      {{ note.updatedAt | date: 'medium' }}
     </div>
   </div>
 </div>

@@ -65,7 +65,7 @@ export class NoteListComponent implements OnInit, OnChanges, OnDestroy {
 
   getNoteClasses(note: Note): string {
     const baseClasses =
-      'cursor-pointer p-3 rounded-lg shadow-sm transition-all duration-200 hover:shadow-md hover:bg-gray-50 dark:hover:bg-gray-700';
+      'cursor-pointer p-2 rounded-md shadow-sm transition-all duration-200 hover:shadow-md hover:bg-gray-50 dark:hover:bg-gray-700';
 
     if (this.isNoteActive(note)) {
       return `${baseClasses} bg-blue-50 dark:bg-gray-700 border-l-4 border-blue-500`;
