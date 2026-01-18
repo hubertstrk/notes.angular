@@ -16,6 +16,8 @@ import { Store } from '@ngrx/store';
 import { Subject, combineLatest } from 'rxjs';
 import { takeUntil, map } from 'rxjs/operators';
 
+import markdownToTxt from 'markdown-to-txt';
+
 import { ButtonComponent } from '@app/shared/button/button.component';
 
 import { Note } from '@models/note.model';
@@ -26,7 +28,7 @@ import { SvgIconService } from '@services/svg-icon.service';
 import { differenceBy } from 'lodash';
 
 type SearchResult = {
-  item: Note;
+  note: Note;
   preview: string;
 };
 
@@ -94,11 +96,15 @@ export class AppSearchComponent implements OnInit, AfterViewInit, OnDestroy {
     const regex = new RegExp(`${searchValue}`, 'i');
 
     this.searchResults = this.notes
-      .filter(note => regex.test(note.content))
-      .map(note => {
-        const match = regex.exec(note.content);
+      .map(note => ({
+        note,
+        plainText: markdownToTxt(note.content),
+      }))
+      .filter(({ plainText }) => regex.test(plainText))
+      .map(({ note, plainText }) => {
+        const match = regex.exec(plainText);
 
-        if (!match) return { item: note, preview: '' };
+        if (!match) return { note, preview: '' };
 
         const matchIndex = match.index;
 
@@ -110,18 +116,18 @@ export class AppSearchComponent implements OnInit, AfterViewInit, OnDestroy {
 
         // text before match
         const front = match.input.substring(
-          Math.max(0, matchIndex - 60),
+          Math.max(0, matchIndex - 120),
           matchIndex
         );
 
         // text after match
         const tail = match.input.substring(
           matchIndex + searchValue.length,
-          Math.min(note.content.length, matchIndex + searchValue.length + 60)
+          Math.min(plainText.length, matchIndex + searchValue.length + 120)
         );
 
         return {
-          item: note,
+          note,
           preview: `${front}<mark>${highlighted}</mark>${tail}`,
         };
       });
@@ -138,7 +144,7 @@ export class AppSearchComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   trackByFn(index: number, item: SearchResult) {
-    return item.item.path;
+    return item.note?.path;
   }
 
   ngOnDestroy() {
