@@ -27,6 +27,7 @@
     "@tauri-apps/api": "^2.0.0",
     "@tauri-apps/plugin-dialog": "^2.2.2",
     "@tauri-apps/plugin-fs": "^2.3.0",
+    "@tauri-apps/plugin-http": "^2.5.8",
     "lodash": "^4.17.21",
     "lodash-es": "^4.17.21",
     "markdown-to-txt": "^2.0.1",

@@ -1,4 +1,12 @@
 <div #editorContainer class="editor h-full w-full flex flex-col">
+  <div class="flex justify-between mx-3">
+    <div class="flex">
+      <app-button
+        (clicked)="summarizeNote()"
+        [icon]="icons['material-symbols-light--recycling']">
+      </app-button>
+    </div>
+  </div>
   <ngx-monaco-editor
     (ngModelChange)="onTextChange($event)"
     (onInit)="onEditorInit($event)"
@@ -7,3 +15,10 @@
     class="flex-1 h-full w-full">
   </ngx-monaco-editor>
 </div>
+
+<app-summary-dialog
+  [isOpen]="dialogOpen"
+  [summary]="summaryText"
+  (accepted)="onSummaryAccepted()"
+  (cancelled)="onSummaryCancelled()">
+</app-summary-dialog>

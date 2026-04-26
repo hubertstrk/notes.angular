@@ -9,14 +9,17 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { SafeHtml } from '@angular/platform-browser';
 
 import * as monaco from 'monaco-editor';
 import { MonacoEditorModule } from 'ngx-monaco-editor-v2';
-import { Observable, Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { Observable, Subject, throwError } from 'rxjs';
+import { takeUntil, catchError } from 'rxjs/operators';
 
 import { Store } from '@ngrx/store';
 
+import { ButtonComponent } from '../shared/button/button.component';
+import { SummaryDialogComponent } from './summary-dialog/summary-dialog.component';
 import { Note } from '@models/note.model';
 import { NotesService } from '@services/notes.services';
 import { DefaultEditorConfig } from '@app/editor/editor.config';
@@ -26,10 +29,13 @@ import { selectActiveNote } from '@store/note/note.selectors';
 import { updateCursorPosition } from '@store/editor/editor.actions';
 import { selectDarkMode } from '@store/settings/settings.selectors';
 
+import { SvgIconService } from '@services/svg-icon.service';
+import { LlmService } from '@app/services/llm.service';
+
 @Component({
   selector: 'app-editor',
   standalone: true,
-  imports: [FormsModule, CommonModule, MonacoEditorModule],
+  imports: [FormsModule, CommonModule, MonacoEditorModule, ButtonComponent, SummaryDialogComponent],
   templateUrl: './editor.component.html',
 })
 export class EditorComponent implements OnInit, AfterViewInit, OnDestroy {
@@ -45,14 +51,30 @@ export class EditorComponent implements OnInit, AfterViewInit, OnDestroy {
   isDarkMode$ = this.store.select(selectDarkMode);
   isDarkMode = false;
 
+  icons: { [key: string]: SafeHtml } = {};
+
+  dialogOpen = false;
+  summaryText = '';
+
   private monacoInstance!: monaco.editor.IStandaloneCodeEditor;
 
   constructor(
     private store: Store,
-    private noteService: NotesService
+    private noteService: NotesService,
+    private iconService: SvgIconService,
+    private llmService: LlmService
   ) {}
 
   ngOnInit() {
+    this.iconService
+      .getIcons([
+        'material-symbols-light--recycling',
+      ])
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(icons => {
+        this.icons = icons;
+      });
+
     this.activeNote$.pipe(takeUntil(this.destroy$)).subscribe(note => {
       this.activeNote = note;
     });
@@ -94,6 +116,55 @@ export class EditorComponent implements OnInit, AfterViewInit, OnDestroy {
       };
       this.monacoInstance.updateOptions(updatedEditorOptions);
     }
+  }
+
+  async summarizeNote() {
+    if (!this.activeNote || !this.monacoInstance) {
+      console.error('Cannot summarize note: Note content or editor not available.');
+      return;
+    }
+
+    console.log('Starting summary generation...');
+    
+    try {
+      const notesText = this.activeNote.content || '';
+
+      this.llmService.summarizeNote(notesText).subscribe({
+        next: (summary) => {
+          console.log('✅ Summary received from LLM Studio:', summary);
+          this.summaryText = summary;
+          this.dialogOpen = true;
+        },
+        error: (err) => {
+          console.error('❌ Error generating summary:', err);
+        },
+        complete: () => {
+          console.log('Summary generation process finished.');
+        }
+      });
+    } catch (error) {
+      console.error('An unexpected error occurred while calling summarizeNote:', error);
+    }
+  }
+
+  onSummaryAccepted() {
+    if (this.activeNote) {
+      const heading = this.noteService.extractHeading(this.summaryText);
+      this.store.dispatch(
+        updateContent({
+          notePath: this.activeNote.path,
+          content: this.summaryText,
+          heading,
+        })
+      );
+    }
+    this.dialogOpen = false;
+    this.summaryText = '';
+  }
+
+  onSummaryCancelled() {
+    this.dialogOpen = false;
+    this.summaryText = '';
   }
 
   @HostListener('window:resize', ['$event'])
