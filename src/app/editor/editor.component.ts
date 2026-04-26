@@ -55,6 +55,7 @@ export class EditorComponent implements OnInit, AfterViewInit, OnDestroy {
 
   dialogOpen = false;
   summaryText = '';
+  isSummarizing = false;
 
   private monacoInstance!: monaco.editor.IStandaloneCodeEditor;
 
@@ -68,7 +69,7 @@ export class EditorComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnInit() {
     this.iconService
       .getIcons([
-        'material-symbols-light--recycling',
+        'material-symbols-light--wand',
       ])
       .pipe(takeUntil(this.destroy$))
       .subscribe(icons => {
@@ -124,10 +125,15 @@ export class EditorComponent implements OnInit, AfterViewInit, OnDestroy {
       return;
     }
 
+    if (this.isSummarizing) {
+      return;
+    }
+
     console.log('Starting summary generation...');
     
     try {
       const notesText = this.activeNote.content || '';
+      this.isSummarizing = true;
 
       this.llmService.summarizeNote(notesText).subscribe({
         next: (summary) => {
@@ -137,13 +143,16 @@ export class EditorComponent implements OnInit, AfterViewInit, OnDestroy {
         },
         error: (err) => {
           console.error('❌ Error generating summary:', err);
+          this.isSummarizing = false;
         },
         complete: () => {
           console.log('Summary generation process finished.');
+          this.isSummarizing = false;
         }
       });
     } catch (error) {
       console.error('An unexpected error occurred while calling summarizeNote:', error);
+      this.isSummarizing = false;
     }
   }
 
@@ -167,7 +176,7 @@ export class EditorComponent implements OnInit, AfterViewInit, OnDestroy {
     this.summaryText = '';
   }
 
-  @HostListener('window:resize', ['$event'])
+  @HostListener('window:resize')
   onWindowResize() {
     if (this.monacoInstance) {
       this.monacoInstance.layout();

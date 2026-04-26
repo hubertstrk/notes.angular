@@ -3,7 +3,11 @@
     <div class="flex">
       <app-button
         (clicked)="summarizeNote()"
-        [icon]="icons['material-symbols-light--recycling']">
+        [disabled]="isSummarizing"
+        [icon]="icons['material-symbols-light--wand']"
+        [rounded]="false"
+        [variant]="'transparent'">
+        <span class="ml-2">{{ isSummarizing ? 'Summarizing...' : 'Summarize with AI' }}</span>
       </app-button>
     </div>
   </div>

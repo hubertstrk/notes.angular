@@ -1,0 +1,51 @@
+.prose {
+  line-height: 1.6;
+}
+
+.prose p {
+  margin: 1em 0;
+}
+
+.prose h1,
+.prose h2,
+.prose h3,
+.prose h4,
+.prose h5,
+.prose h6 {
+  margin-top: 1em;
+  margin-bottom: 0.5em;
+  font-weight: 600;
+}
+
+.prose ul,
+.prose ol {
+  margin: 1em 0;
+  padding-left: 2em;
+}
+
+.prose li {
+  margin: 0.25em 0;
+}
+
+.prose code {
+  background: rgba(113, 113, 122, 0.16);
+  padding: 0.2em 0.4em;
+  border-radius: 3px;
+  font-family: monospace;
+}
+
+.prose blockquote {
+  border-left: 4px solid #d4d4d8;
+  padding-left: 1em;
+  margin-left: 0;
+  color: #52525b;
+}
+
+:host-context(.dark) .prose code {
+  background: rgba(212, 212, 216, 0.16);
+}
+
+:host-context(.dark) .prose blockquote {
+  border-left-color: #52525b;
+  color: #a1a1aa;
+}

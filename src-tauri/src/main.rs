@@ -5,11 +5,17 @@ use serde_json::json;
 
 #[tauri::command]
 async fn llm_summarize(text: String) -> Result<String, String> {
+
+    const prompt: &str = "Format Note into professional markdown. Use emojis where appropriate.
+    Take your best guess at formatting, structure, and organization.
+    Use headings, bullet points, and other markdown features to make the note clear and easy to read.
+    If you have several ideas for how to format the note, choose the one you think is best.";
+
     let client = reqwest::Client::new();
     let body = json!({
         "model": "local-model",
         "messages": [
-            { "role": "user", "content": format!("Format Note into professional markdown\n\n--- Note Content ---\n{}", text) }
+            { "role": "user", "content": format!("{}\n\n--- Note Content ---\n{}", prompt, text) }
         ],
         "temperature": 0.2,
         "max_tokens": 5000
