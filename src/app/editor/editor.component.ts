@@ -30,7 +30,6 @@ import { updateCursorPosition } from '@store/editor/editor.actions';
 import { selectDarkMode } from '@store/settings/settings.selectors';
 
 import { SvgIconService } from '@services/svg-icon.service';
-import { LlmService } from '@app/services/llm.service';
 
 @Component({
   selector: 'app-editor',
@@ -63,7 +62,6 @@ export class EditorComponent implements OnInit, AfterViewInit, OnDestroy {
     private store: Store,
     private noteService: NotesService,
     private iconService: SvgIconService,
-    private llmService: LlmService
   ) {}
 
   ngOnInit() {
@@ -116,43 +114,6 @@ export class EditorComponent implements OnInit, AfterViewInit, OnDestroy {
         theme: this.isDarkMode ? 'vs-dark' : 'vs-light',
       };
       this.monacoInstance.updateOptions(updatedEditorOptions);
-    }
-  }
-
-  async summarizeNote() {
-    if (!this.activeNote || !this.monacoInstance) {
-      console.error('Cannot summarize note: Note content or editor not available.');
-      return;
-    }
-
-    if (this.isSummarizing) {
-      return;
-    }
-
-    console.log('Starting summary generation...');
-    
-    try {
-      const notesText = this.activeNote.content || '';
-      this.isSummarizing = true;
-
-      this.llmService.summarizeNote(notesText).subscribe({
-        next: (summary) => {
-          console.log('✅ Summary received from LLM Studio:', summary);
-          this.summaryText = summary;
-          this.dialogOpen = true;
-        },
-        error: (err) => {
-          console.error('❌ Error generating summary:', err);
-          this.isSummarizing = false;
-        },
-        complete: () => {
-          console.log('Summary generation process finished.');
-          this.isSummarizing = false;
-        }
-      });
-    } catch (error) {
-      console.error('An unexpected error occurred while calling summarizeNote:', error);
-      this.isSummarizing = false;
     }
   }
 

@@ -1,16 +1,4 @@
 <div #editorContainer class="editor h-full w-full flex flex-col">
-  <div class="flex justify-between mx-3">
-    <div class="flex">
-      <app-button
-        (clicked)="summarizeNote()"
-        [disabled]="isSummarizing"
-        [icon]="icons['material-symbols-light--wand']"
-        [rounded]="false"
-        [variant]="'transparent'">
-        <span class="ml-2">{{ isSummarizing ? 'Summarizing...' : 'Summarize with AI' }}</span>
-      </app-button>
-    </div>
-  </div>
   <ngx-monaco-editor
     (ngModelChange)="onTextChange($event)"
     (onInit)="onEditorInit($event)"
